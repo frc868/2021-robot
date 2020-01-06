@@ -6,7 +6,6 @@ package frc.robot.subsystems;
  * @author 
  */
 public class Intake {
-
     private static Intake instance;
 
     private Intake() {

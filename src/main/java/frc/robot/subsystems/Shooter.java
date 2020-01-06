@@ -6,7 +6,6 @@ package frc.robot.subsystems;
  * @author 
  */
 public class Shooter {
-
     private static Shooter instance;
 
     private Shooter() {

@@ -8,42 +8,53 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
  * @author dri
  */
 public class Robot extends TimedRobot {
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
-  @Override
-  public void robotInit() {
-  }
+    /**
+     * This function is run when the robot is first started up and should be used
+     * for any initialization code.
+     */
+    @Override
+    public void robotInit() {
+    }
 
-  @Override
-  public void autonomousInit() {
-  }
+    @Override
+    public void robotPeriodic() {
+    }
 
-  @Override
-  public void autonomousPeriodic() {
-  }
+    @Override
+    public void autonomousInit() {
+    }
 
-  @Override
-  public void teleopInit() {
-  }
+    @Override
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+    }
 
-  @Override
-  public void teleopPeriodic() {
-  }
+    @Override
+    public void teleopInit() {
+        OI.init();
+    }
 
-  @Override
-  public void testInit() {
-  }
+    @Override
+    public void teleopPeriodic() {
+        OI.update();
+        Scheduler.getInstance().run();
+    }
 
-  @Override
-  public void testPeriodic() {
-  }
+    @Override
+    public void testInit() {
+        OI.init();
+    }
 
+    @Override
+    public void testPeriodic() {
+        OI.update();
+        Scheduler.getInstance().run();
+    }
 }
