@@ -6,7 +6,6 @@ package frc.robot.subsystems;
  * @author 
  */
 public class Drivetrain {
-
     private static Drivetrain instance;
 
     private Drivetrain() {

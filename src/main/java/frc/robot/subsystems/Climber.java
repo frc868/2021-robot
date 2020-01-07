@@ -6,7 +6,6 @@ package frc.robot.subsystems;
  * @author 
  */
 public class Climber {
-
     private static Climber instance;
 
     private Climber() {

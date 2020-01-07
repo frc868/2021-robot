@@ -6,7 +6,6 @@ package frc.robot.subsystems;
  * @author 
  */
 public class WheelOfFortune {
-
     private static WheelOfFortune instance;
 
     private WheelOfFortune() {

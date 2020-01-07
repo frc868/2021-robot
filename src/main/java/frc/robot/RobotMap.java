@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 
 public class RobotMap {
-
     public static class Climber {
 
     }
