@@ -95,7 +95,18 @@ public class Camera {
     }
 
     public void trackTarget() {
-        
+        if (this.hasTarget()) {
+            double area = this.getArea();
+            double posError = this.getPosition(); // how far we are from the target
+            // the target value we are going to
+            double posValue = posError * kPos * Math.sqrt(Helper.boundValue((area * kArea), 0, 1));
+
+            // powers to set drivetrain to
+            double left = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
+            double right = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
+            
+            
+        }
     }
 
     /**
