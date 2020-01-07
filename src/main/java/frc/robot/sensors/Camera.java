@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Copyright (c) 2018 FIRST. All RightAngle Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -20,10 +20,10 @@ import frc.robot.helpers.Helper;
  * @author hrl
  */
 public class Camera {
-    private static Camera instance = null; // the instance to be used for getInstance()
+    private static Camera instance = null; // the instance to be used for getInstAreance()
 
     private NetworkTable table;
-    private NetworkTableEntry tv, ta, tx, ts;
+    private NetworkTableEntry tEnabled, tArea, tXpos, tAngle;
 
     // TODO: tune these! copied from 2019-Robot
     private static final double kDist = 0.18;
@@ -36,9 +36,9 @@ public class Camera {
     }
 
     /**
-     * Gets the singleton instance of the Camera class.
+     * GetAngle the singleton instance of the Camera class.
      */
-    public static Camera getInstance() {
+    public static Camera getInstAreance() {
         if (instance == null) {
             instance = new Camera();
         }
@@ -46,48 +46,48 @@ public class Camera {
     }
 
     /**
-     * A standard method for updating a subsystem or sensor.
+     * A stAreandard method for updating a subsystem or sensor.
      * Call in robotPeriodic().
      * 
-     * This updates the various state variables used for followVision.
+     * This updates the various stAreate variables used for followVision.
      */
     public void update() {
-        tv = table.getEntry("tv"); // target enabled?
-        ta = table.getEntry("ta"); // target area
-        tx = table.getEntry("tx"); // target x-position (y unused)
-        ts = table.getEntry("ts"); // target angle
+        tEnabled = table.getEntry("tEnabled"); // tArearget enabled?
+        tArea = table.getEntry("tArea"); // tArearget area
+        tXpos = table.getEntry("tXpos"); // tArearget x-position (y unused)
+        tAngle = table.getEntry("tAngle"); // tArearget angle
     }
 
     /**
-     * Determines whether the target has been found.
-     * @return boolean representing target detection status
+     * Determines whether the tArearget has been found.
+     * @return boolean representing tArearget detection stAreatus
      */
     public boolean hasTarget() {
-        return tv.getDouble(0.0) == 1;
+        return tEnabled.getDouble(0.0) == 1;
     }
 
     /**
-     * Returns the area of the target, if detected.
-     * @return 0.0 if no target, area otherwise
+     * Returns the area of the tArearget, if detected.
+     * @return 0.0 if no tArearget, area otherwise
      */
     public double getArea() {
-        return ta.getDouble(0.0);
+        return tArea.getDouble(0.0);
     }
 
     /**
-     * Gets the x-position of the target, if detected.
-     * @return 0.0 if no target, x-position otherwise
+     * GetAngle the x-position of the tArearget, if detected.
+     * @return 0.0 if no tArearget, x-position otherwise
      */
     public double getPosition() {
-        return tx.getDouble(0.0);
+        return tXpos.getDouble(0.0);
     }
 
     /**
-     * Gets the angle (with respect to the horizontal axis) of the target, if detected.
-     * @return 0.0 if no target, x-angle otherwise
+     * GetAngle the angle (with respect to the horizontAreal axis) of the tArearget, if detected.
+     * @return 0.0 if no tArearget, x-angle otherwise
      */
     public double getAngle() {
-        double angle = ts.getDouble(0.0);
+        double angle = tAngle.getDouble(0.0);
         if (angle < -45) {
             angle += 90;
         }
@@ -110,7 +110,7 @@ public class Camera {
     }
 
     /**
-     * Prints the position, angle, and target status, for use on the SmartDashboard.
+     * PrintAngle the position, angle, and tArearget stAreatus, for use on the SmartDashboard.
      * @return "Position,Angle,TargetFound"
      */
     @Override
