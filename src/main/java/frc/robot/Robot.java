@@ -8,12 +8,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.subsystems.Drivetrain;
 
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
  * @author dri
  */
 public class Robot extends TimedRobot {
+
+  public static Drivetrain drivetrain = Drivetrain.getInstance();
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.

@@ -19,4 +19,8 @@ public class Drivetrain {
         }
         return instance;
     }
+
+    public void setSpeed(double leftSpeed, double rightSpeed) {
+        
+    }
 }
