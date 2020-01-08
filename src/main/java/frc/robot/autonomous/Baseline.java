@@ -4,7 +4,7 @@
  * @author 
  */
 import frc.robot.Robot;
-import frc.robot.subsystems.drivetrain;
+import frc.robot.subsystems.Drivetrain;
 
  public class Baseline {
      private double distance;
@@ -13,8 +13,8 @@ import frc.robot.subsystems.drivetrain;
         this.distance = distance;
     }
 
-    private double final startPwr = 1; //TODO: untested
-    private double final endPwr = 2; //TODO: untested
+    private final double startPwr = 1; //TODO: untested
+    private final double endPwr = 2; //TODO: untested
 
     public void execute(){
         Robot.drivetrain.driveStraight(distance, startPwr, endPwr);
