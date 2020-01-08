@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All RightAngle Reserved.                         */
+/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -11,8 +11,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.OI;
-import frc.robot.Robot;
 import frc.robot.helpers.Helper;
 
 /**
@@ -21,7 +19,7 @@ import frc.robot.helpers.Helper;
  * @author hrl
  */
 public class Camera {
-    private static Camera instance = null; // the instance to be used for getInstAreance()
+    private static Camera instance = null;
 
     private NetworkTable table;
     private NetworkTableEntry tEnabled, tArea, tXpos, tAngle;
@@ -37,7 +35,7 @@ public class Camera {
     }
 
     /**
-     * GetAngle the singleton instance of the Camera class.
+     * Get the singleton instance of the Camera class.
      */
     public static Camera getInstance() {
         if (instance == null) {
@@ -84,7 +82,7 @@ public class Camera {
     }
 
     /**
-     * GetAngle the angle (with respect to the horizontal axis) of the target, if detected.
+     * Get the angle (with respect to the horizontal axis) of the target, if detected.
      * @return 0.0 if no target, x-angle otherwise
      */
     public double getAngle() {

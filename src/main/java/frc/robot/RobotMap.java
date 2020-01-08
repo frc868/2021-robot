@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
  * This is the RobotMap class, which stores constants for use throughout the
  * project. These constants include motor controller constants, controller
  * mappings, etc.
- * @author
+ * @author common
  */
 
 public class RobotMap {
@@ -24,8 +24,8 @@ public class RobotMap {
     }
 
     public static class Shooter {
-        public static final int MOTOR = 0; //TODO: untested
-
+        public static final int MOTOR = 0; // TODO: untested
+        public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
     }
 
     public static class WheelOfFortune {
@@ -33,7 +33,7 @@ public class RobotMap {
     }
 
     public static class Sensors {
-        public static final Port GYRO = SPI.Port.kMXP; //TODO: untested
+        public static final Port GYRO = SPI.Port.kMXP;
     }
 
     public static class Controllers {
