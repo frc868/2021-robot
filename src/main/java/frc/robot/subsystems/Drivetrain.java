@@ -22,4 +22,17 @@ public class Drivetrain {
     public void setSpeed(double leftSpeed, double rightSpeed) {
         
     }
+
+    public void driveStraight(double targetDist, double startPower, double endPower) {
+        double pGain = 0.5;
+        double initialDist = getAveragePosition();
+        double distanceToTarget = Math.abs(targetDist) - Math.abs(getAveragePosition() - initialDist);
+
+        double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
+
+        if(distanceToTarget > 0) {
+            setSpeed(targetSpeed, targetSpeed); // TODO: code sanity check
+        }
+    }
+                    
 }
