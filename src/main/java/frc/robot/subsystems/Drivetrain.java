@@ -34,5 +34,8 @@ public class Drivetrain {
             setSpeed(targetSpeed, targetSpeed); // TODO: code sanity check
         }
     }
-                    
+    
+    public double getAveragePosition() {
+        return 0; //TODO: implement this method
+    }
 }
