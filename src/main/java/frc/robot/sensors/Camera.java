@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All RightAngle Reserved.                             */
+/* Copyright (c) 2018 FIRST. All RightAngle Reserved.                         */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -10,6 +10,7 @@ package frc.robot.sensors;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.helpers.Helper;
@@ -38,7 +39,7 @@ public class Camera {
     /**
      * GetAngle the singleton instance of the Camera class.
      */
-    public static Camera getInstAreance() {
+    public static Camera getInstance() {
         if (instance == null) {
             instance = new Camera();
         }
@@ -46,45 +47,45 @@ public class Camera {
     }
 
     /**
-     * A stAreandard method for updating a subsystem or sensor.
+     * A standard method for updating a subsystem or sensor.
      * Call in robotPeriodic().
      * 
-     * This updates the various stAreate variables used for followVision.
+     * This updates the various state variables used for followVision.
      */
     public void update() {
-        tEnabled = table.getEntry("tEnabled"); // tArearget enabled?
-        tArea = table.getEntry("tArea"); // tArearget area
-        tXpos = table.getEntry("tXpos"); // tArearget x-position (y unused)
-        tAngle = table.getEntry("tAngle"); // tArearget angle
+        tEnabled = table.getEntry("tEnabled"); // target enabled?
+        tArea = table.getEntry("tArea"); // target area
+        tXpos = table.getEntry("tXpos"); // target x-position (y unused)
+        tAngle = table.getEntry("tAngle"); // target angle
     }
 
     /**
-     * Determines whether the tArearget has been found.
-     * @return boolean representing tArearget detection stAreatus
+     * Determines whether the target has been found.
+     * @return boolean representing target detection status
      */
     public boolean hasTarget() {
         return tEnabled.getDouble(0.0) == 1;
     }
 
     /**
-     * Returns the area of the tArearget, if detected.
-     * @return 0.0 if no tArearget, area otherwise
+     * Returns the area of the target, if detected.
+     * @return 0.0 if no target, area otherwise
      */
     public double getArea() {
         return tArea.getDouble(0.0);
     }
 
     /**
-     * GetAngle the x-position of the tArearget, if detected.
-     * @return 0.0 if no tArearget, x-position otherwise
+     * Get the x-position of the target, if detected.
+     * @return 0.0 if no target, x-position otherwise
      */
     public double getPosition() {
         return tXpos.getDouble(0.0);
     }
 
     /**
-     * GetAngle the angle (with respect to the horizontAreal axis) of the tArearget, if detected.
-     * @return 0.0 if no tArearget, x-angle otherwise
+     * GetAngle the angle (with respect to the horizontal axis) of the target, if detected.
+     * @return 0.0 if no target, x-angle otherwise
      */
     public double getAngle() {
         double angle = tAngle.getDouble(0.0);
@@ -105,12 +106,13 @@ public class Camera {
             double left = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
             double right = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
             
-            
+            SmartDashboard.putNumber("Vision: Left Power", left);
+            SmartDashboard.putNumber("Vision: Right Power", right);
         }
     }
 
     /**
-     * PrintAngle the position, angle, and tArearget stAreatus, for use on the SmartDashboard.
+     * Print the position, angle, and target status, for use on the SmartDashboard.
      * @return "Position,Angle,TargetFound"
      */
     @Override
