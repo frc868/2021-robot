@@ -24,6 +24,7 @@ public class RobotMap {
     }
 
     public static class Shooter {
+        public static final int MOTOR = 0; //TODO: untested
 
     }
 
@@ -32,7 +33,7 @@ public class RobotMap {
     }
 
     public static class Sensors {
-        public static final Port GYRO = SPI.Port.kMXP; // untested
+        public static final Port GYRO = SPI.Port.kMXP; //TODO: untested
     }
 
     public static class Controllers {

@@ -1,5 +1,3 @@
-package frc.robot.subsystems;
-
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2020 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -9,15 +7,12 @@ package frc.robot.subsystems;
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_SparkMAX;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
-import frc.robot.sensors.PotLimit;
 
 /** 
  * This is the code for the shooter. It initializes motor controllers and has methods
@@ -30,21 +25,13 @@ import frc.robot.sensors.PotLimit;
  public class Shooter {
     private static Shooter instance = null;
 
-    private WPI_TalonSRX motor;
-    private AnalogPotentiometer potentiometer;
-    private PotLimit limit;
+    private CANSparkMax motor;
 
     private PIDController pid;
-    private PIDSource pidSource;
-    private PIDOutput pidOutput;
 
     // Setpoints and Potentiometer limits
-    private final double LOWER = 0.85, MIDDLE = 0.831, UPPER = 0.726;
-    private final boolean BRAKE_MODE = false;
-    private static final double kP = 14, kI = 1, kD = 15;
-
-    // Set to true if at upper limit
-    private boolean limitPower = false;
+    // private final double LOWER = 0.85, MIDDLE = 0.831, UPPER = 0.726;
+    private static final double kP = 0, kI = 0, kD = 0; //TODO: untested
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -54,96 +41,17 @@ import frc.robot.sensors.PotLimit;
     }
 
     private Shooter() {
-        motor = new WPI_SparkMAX(RobotMap.Shooter.MOTOR);
-        brake = new Solenoid(RobotMap.Shooter.BRAKE);
-        limit = new PotLimit(potentiometer, UPPER, LOWER);
+        motor = new CANSparkMax(RobotMap.Shooter.MOTOR,MotorType.kBrushless);
+        motor.setInverted(true); //TODO: untested
 
-        motor.setInverted(true);
+        pid = new PIDController(kP, kI, kD);
+    }
 
-        pidSource = new PIDSource() {
-            @Override
-            public void setPIDSourceType(PIDSourceType pidSource) {
-                // should not be used
-            }
-        
-            @Override
-            public double pidGet() {
-                return getPotPosition();
-            }
-        
-            @Override
-            public PIDSourceType getPIDSourceType() {
-                return PIDSourceType.kDisplacement;
-            }
-        };
+    public void setSpeed(double speed) {
+            motor.set(pid.calculate(Helper.boundValue(motor.getEncoder().getVelocity(), -1, 1)));
+    }
 
-        pidOutput = new PIDOutput() {
-            @Override
-            public void pidWrite(double output) {
-                setSpeed(Helper.boundValue(-output, -0.3, 0.6));
-                // These values may have to be changed
-            }
-        };
-
-        pid = new PIDController(kP, kI, kD, pidSource, pidOutput);
-        pid.setAbsoluteTolerance(0.001);
-        // This value may have to be changed
-
-        public void setSpeed(double speed) {
-            setShooterBrake(false);
-    
-            if (limitPower) {
-                motor.set(Helper.boundValue(speed, -0.25, 0.25));
-                // These values may have to be changed
-            } else {
-                motor.set(Helper.boundValue(speed));
-            }
-    
-            setBrake(speed == 0.0);
-        }
-        
-        public void stop() {
-            motor.stopMotor();
-        }
-
-        public double getPotPosition() {
-            return potentiometer.get();
-        }
-        
-        public void setPosition(ShooterPosition pos) {
-            if (!pid.isEnabled()) {
-                startPid();
-            }
-            stopBrake();
-            this.limitPower = false;
-            switch (pos) {
-                case LOW:
-                    pid.setSetpoint(LOWER);
-                    break;
-                case MIDDLE: 
-                    pid.setSetpoint(MIDDLE);
-                    break;
-                case HIGH:
-                    this.limitPower = true;
-                    pid.setSetpoint(UPPER);
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        /**
-        * Starts the PID controller.
-        */
-        public void startPid() {
-            pid.enable();
-        }
-
-        /**
-        * Stops the PID controller.
-        */
-        public void stopPid() {
-            pid.disable();
-        }
+    public void stop() {
+        motor.stopMotor();
     }
 }
