@@ -5,8 +5,6 @@ package frc.robot.autonomous;
  * @author 
  */
 
- package frc.robot.autonomous;
-
 import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain;
 
