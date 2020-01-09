@@ -51,10 +51,10 @@ public class Camera {
      * This updates the various state variables used for followVision.
      */
     public void update() {
-        tEnabled = table.getEntry("tEnabled"); // target enabled?
-        tArea = table.getEntry("tArea"); // target area
-        tXpos = table.getEntry("tXpos"); // target x-position (y unused)
-        tAngle = table.getEntry("tAngle"); // target angle
+        tEnabled = table.getEntry("tv"); // target enabled?
+        tArea = table.getEntry("ta"); // target area
+        tXpos = table.getEntry("tx"); // target x-position (y unused)
+        tAngle = table.getEntry("ts"); // target angle/"skew"
     }
 
     /**
