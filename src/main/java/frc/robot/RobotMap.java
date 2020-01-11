@@ -29,7 +29,7 @@ public class RobotMap {
     }
 
     public static class Turret {
-        public static final int MOTOR = 15;
+        public static final int MOTOR = 15; //TODO: untested
         public static final boolean MOTOR_IS_INVERTED = false; // TODO: untested
     }
 
