@@ -10,8 +10,9 @@ package frc.robot.sensors;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.helpers.Helper;
+import frc.robot.Robot;
 
 /**
  * Controls the Limelight camera connected to the robot over NetworkTables.
@@ -23,15 +24,16 @@ public class Camera {
 
     private NetworkTable table;
     private NetworkTableEntry tEnabled, tArea, tXpos, tAngle;
+    private PIDController pid;
 
-    // TODO: tune these! copied from 2019-Robot
-    private static final double kDist = 0.18;
-    private static final double kPos = 0.008;
-    private static final double kArea = 0.1;
+    private final double kP = 0.01, kI = 0, kD = 0;
+    private final double MAX_POS = 30; // maximum angle for x-position
 
     private Camera() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         this.update(); // initial run
+
+        pid = new PIDController(kP, kI, kD);
     }
 
     /**
@@ -94,21 +96,15 @@ public class Camera {
     }
 
     public void trackTarget() {
-        if (this.hasTarget()) {
-            double area = this.getArea();
-            double posError = this.getPosition(); // how far we are from the target
-            // the target value we are going to
-            double posValue = posError * kPos * Math.sqrt(Helper.boundValue((area * kArea), 0, 1));
-
-            // powers to set drivetrain to
-            double left = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
-            double right = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
-            
-            SmartDashboard.putNumber("Vision: Left Power", left);
-            SmartDashboard.putNumber("Vision: Right Power", right);
+        if (this.hasTarget() && (Math.abs(this.getPosition()) < MAX_POS)) {
+            Robot.turret.setSpeed(pid.calculate(this.getPosition(), 0));
+        } else {
+            Robot.turret.stop();
         }
-    }
 
+        SmartDashboard.putData(this.pid);
+    }
+    
     /**
      * Print the position, angle, and target status, for use on the SmartDashboard.
      * @return "Position,Angle,TargetFound"
