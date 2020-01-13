@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 
 public class RobotMap {
+    public static class Camera {
+        public static final double SHOOTER_PIPELINE = 1.0;
+        public static final double BALL_PIPELINE = 2.0;
+    }
+
     public static class Climber {
 
     }
