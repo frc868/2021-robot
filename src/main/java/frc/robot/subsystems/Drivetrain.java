@@ -30,12 +30,12 @@ public class Drivetrain {
 
         double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
 
-        if(distanceToTarget > 0) {
+        if (distanceToTarget > 0) {
             setSpeed(targetSpeed, targetSpeed); // TODO: code sanity check
         }
     }
     
     public double getAveragePosition() {
-        return 0; //TODO: implement this method
+        return 0; // TODO: implement this method
     }
 }
