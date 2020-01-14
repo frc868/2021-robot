@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -40,6 +41,11 @@ import frc.robot.helpers.Helper;
 
     private Shooter() {
         motor = new CANSparkMax(RobotMap.Shooter.MOTOR, MotorType.kBrushless);
+        CANError err =  motor.restoreFactoryDefaults(); // Reset the Spark Max to factory defaults to avoid sticky values from previous deploys
+        if(err != CANError.kOk) {
+            System.out.println("Error resetting Spark Max to factory defaults: " + err.toString()); // TODO: untested
+        }
+        
         motor.setInverted(RobotMap.Shooter.MOTOR_IS_INVERTED); // TODO: untested
 
         pid = new PIDController(kP, kI, kD);

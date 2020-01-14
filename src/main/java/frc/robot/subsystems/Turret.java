@@ -26,7 +26,7 @@ public class Turret {
     private WPI_TalonSRX motor;
     
     private Turret() {
-        motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);
+        motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);        
         motor.setInverted(RobotMap.Turret.MOTOR_IS_INVERTED);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); // TODO: untested
     }
