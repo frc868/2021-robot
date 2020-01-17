@@ -16,6 +16,10 @@ public class RobotMap {
     }
 
     public static class Drivetrain {
+        public static final int LEFT_PRIMARY = 0; //TODO: untested
+        public static final int LEFT_SECONDARY = 1; //TODO: untested
+        public static final int RIGHT_PRIMARY = 2; //TODO: untested
+        public static final int RIGHT_SECONDARY = 3; //TODO: untested
 
     }
 
