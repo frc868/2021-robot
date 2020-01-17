@@ -25,7 +25,23 @@ public class RobotMap {
     }
 
     public static class Intake {
+        public static class Limit {
+            public static final int BOTTOM_LEFT = 0; // TODO: untested
+            public static final int BOTTOM_RIGHT = 1; // TODO: untested
+            public static final int MIDDLE_LEFT = 2; // TODO: untested
+            public static final int MIDDLE_RIGHT = 3; // TODO: untested
+            public static final int TOP_LEFT = 4; // TODO: untested
+            public static final int TOP_RIGHT = 5; // TODO: untested
+        }
 
+        public static class Motor {
+            public static final int INTAKE = 2; // TODO: untested
+            public static final int MIDDLE = 0; // TODO: untested
+            public static final int OUTTAKE = 21; // TODO: untested
+            public static final boolean INTAKE_IS_INVERTED = true; // TODO: untested
+            public static final boolean MIDDLE_IS_INVERTED = true; // TODO: untested
+            public static final boolean OUTTAKE_IS_INVERTED = true; // TODO: untested
+        }
     }
 
     public static class Shooter {
