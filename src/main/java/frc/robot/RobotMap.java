@@ -25,6 +25,11 @@ public class RobotMap {
     }
 
     public static class Intake {
+        public static final int PRIMARY = 0;
+        public static final int SECONDARY = 0;
+    }
+
+    public static class Hopper {
         public static class Limit {
             public static final int BOTTOM_LEFT = 0; // TODO: untested
             public static final int BOTTOM_RIGHT = 1; // TODO: untested
