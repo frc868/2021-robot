@@ -25,18 +25,12 @@ public class RobotMap {
     }
 
     public static class Shooter {
-        public static final int MOTOR = 0; //TODO: untested
-
+        public static final int MOTOR = 0; // TODO: untested
     }
 
     public static class WheelOfFortune {
-        public static final int MOTOR = 21; //TODO: untested
-        public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; //TODO: untested
-        // public static final double RED_VALUE = 0;
-        // public static final double BLUE_VALUE = 0;
-        // public static final double GREEN_VALUE = 0;
-        // public static final double YELLOW_VALUE_G = 0;
-        // public static final double YELLOW_VALUE_R = 0;
+        public static final int MOTOR = 21; // TODO: untested
+        public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; // TODO: untested
         public static final double[] RED_VALUES = {0.36,0.415,0.216};
         public static final double[] GREEN_VALUES = {0.22,0.501,0.275};
         public static final double[] BLUE_VALUES = {0.191,0.451,0.349};
