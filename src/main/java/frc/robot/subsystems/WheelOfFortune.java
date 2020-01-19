@@ -147,7 +147,8 @@ public class WheelOfFortune {
     /**
      * update values on the SmartDashboard
      */
-    public void updateSD() {
-        SmartDashboard.putString("Detected color", Robot.wheel.getDetectedColor().toString());
+    @Override
+    public String toString() {
+        return Robot.wheel.getDetectedColor().toString();
     }
 }

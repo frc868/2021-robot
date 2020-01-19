@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 
 /**
@@ -24,6 +25,6 @@ public class OI {
     }
 
     public static void updateSD() {
-        
+        SmartDashboard.putString("WoF Color", Robot.wheel.toString());
     }
 }
