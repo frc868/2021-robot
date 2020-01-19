@@ -133,6 +133,8 @@ public class WheelOfFortune {
 
         if (!result.color.equals(getPCValue(gameData.charAt(0)))) { //TODO: handle exceptions
             primary.set(0.1); //TODO: change motor values
+        } else {
+            primary.set(0); //stop the motor when the color is reached
         }
 
     }
