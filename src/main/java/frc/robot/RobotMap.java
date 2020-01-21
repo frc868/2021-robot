@@ -16,10 +16,6 @@ public class RobotMap {
         public static final double PIPELINE = 0.0;
     }
 
-    public static class Climber {
-
-    }
-
     public static class Drivetrain {
         public static final int LEFT_PRIMARY = 0; // TODO: untested
         public static final int LEFT_SECONDARY = 1; // TODO: untested
@@ -76,6 +72,15 @@ public class RobotMap {
         public static final double[] YELLOW_VALUES = {0.299,0.536,0.164};
         public static final double[] BLANK = {0,0,0};
 
+    }
+
+    public static class Climber {
+        public static final int PRIMARY_WINCH = 0; //TODO: untested
+        public static final int SECONDARY_WINCH = 0; //TODO: untested
+        public static final int ARM = 0; // TODO: untested
+        public static final double ARM_SETPOINT = 0; //TODO: untested
+        public static final double WINCH_SETPOINT = 0; // TODO: untested
+        public static final double ARM_DOWNPOINT = 0; //dont think we need to test this as this is reseting the arm to the down postion
     }
 
     public static class Sensors {
