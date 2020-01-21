@@ -10,7 +10,7 @@ import frc.robot.RobotMap;
 /** 
  * This is the code for the robot drivetrain. It initializes motor controllers and has methods
  * for various functions of the drivetrain.
- * @author ya boi gus
+ * @author gjs
  */
 public class Drivetrain {
     private CANSparkMax l_primary, l_secondary, r_primary, r_secondary; 
@@ -27,23 +27,14 @@ public class Drivetrain {
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
         rightSpeedControl = new SpeedControllerGroup(r_primary, r_secondary);
 
-        leftSpeedControl.setInverted(false); //TODO: untested, please test when given robot
-        rightSpeedControl.setInverted(false); //TODO: ditto as above, MUST TEST
-    }
-    public void setLeftSpeed(double speed){
-        leftSpeedControl.set(speed);
-    }
-    public void setRightSpeed(double speed){
-        rightSpeedControl.set(speed);
-    }
-    public void arcadeDrive(double speed){
-        double y = OI.driver.getLY();
-        double x = OI.driver.getRX();
-        y = -1 * y * speed; //TODO equation untested
-        x = 1 * x * speed; //TODO equation untested
-        setSpeed(x+y, x-y); // TODO equation untested
+        leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
+        rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
     }
 
+    /**
+     * creates a new instance of the drivetrain class if one has not been made
+     * @return an instance of the drivetrain class
+     */
     public static Drivetrain getInstance() {
         if (instance == null) {
             return new Drivetrain();
@@ -51,11 +42,50 @@ public class Drivetrain {
         return instance;
     }
 
+    /**
+     * Sets the left speed of the drivetrain
+     * @param speed tbe speed to set from -1 to 1
+     */
+    public void setLeftSpeed(double speed){
+        leftSpeedControl.set(speed);
+    }
+
+    /**
+     * Sets the right side speed of the drivetrain.
+     * @param speed the speed to set to from -1 to 1
+     */
+    public void setRightSpeed(double speed){
+        rightSpeedControl.set(speed);
+    }
+
+    /**
+     * Maps joysticks to the drivetrain for Arcade layout
+     * @param speed scaling factor for robot speed
+     */
+    public void arcadeDrive(double speed){
+        double y = OI.driver.getLY();
+        double x = OI.driver.getRX();
+        y = -1 * y * speed;
+        x = 1 * x * speed;
+        setSpeed(x+y, x-y);
+    }
+
+    /**
+     * Sets the speed of both the control groups
+     * @param leftSpeed speed of the left side of the drivetrain from -1 to 1
+     * @param rightSpeed speed of the right side of the drivetrain from -1 to 1
+     */
     public void setSpeed(double leftSpeed, double rightSpeed) {
         setRightSpeed(rightSpeed);
         setLeftSpeed(leftSpeed);
     }
 
+    /**
+     * drives straight using a P controller
+     * @param targetDist the distance you want the robot to travel
+     * @param startPower the starting power 
+     * @param endPower the ending power
+     */
     public void driveStraight(double targetDist, double startPower, double endPower) {
         double pGain = 0.5;
         double initialDist = getAveragePosition();
@@ -68,6 +98,10 @@ public class Drivetrain {
         }
     }
     
+    /**
+     * not written yet
+     * @return 0, currently
+     */
     public double getAveragePosition() {
         return 0; // TODO: implement this method
     }
