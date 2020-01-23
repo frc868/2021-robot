@@ -97,12 +97,31 @@ public class Drivetrain {
             setSpeed(targetSpeed, targetSpeed); // TODO: code sanity check
         }
     }
+
+    /**
+     * gets the right side primary motor's encoder position
+     * @return right encoder position
+     * @author dri
+     */
+    public double getRightPosition() {
+        return r_primary.getEncoder().getPosition();
+    }
+
+    /**
+     * gets the left side primary motor's encoder position
+     * @return left encoder position
+     * @author dri
+     */
+    public double getLeftPosition() {
+        return l_primary.getEncoder().getPosition();
+    }
     
     /**
-     * not written yet
-     * @return 0, currently
+     * gets the average encoder position of the drivetrain
+     * @return average encoder position
+     * @author dri
      */
     public double getAveragePosition() {
-        return 0; // TODO: implement this method
+        return (l_primary.getEncoder().getPosition() + r_primary.getEncoder().getPosition())/2;
     }
 }
