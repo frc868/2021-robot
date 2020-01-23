@@ -87,7 +87,7 @@ public class Drivetrain {
      * @param endPower the ending power
      */
     public void driveStraight(double targetDist, double startPower, double endPower) {
-        double pGain = 0.5;
+        double pGain = 0.5; // TODO: check this constant
         double initialDist = getAveragePosition();
         double distanceToTarget = Math.abs(targetDist) - Math.abs(getAveragePosition() - initialDist);
 
