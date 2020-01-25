@@ -9,7 +9,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
@@ -24,11 +27,19 @@ public class Turret {
     private static Turret instance;
 
     private WPI_TalonSRX motor;
+
+    private PIDController pid;
+
+    // for tracking target, TODO; tune
+    private final double kP = 0.01, kI = 0, kD = 0;
+    private final double MAX_POS = 30; // maximum angle for x-position
     
     private Turret() {
         motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);        
         motor.setInverted(RobotMap.Turret.MOTOR_IS_INVERTED);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); // TODO: untested
+
+        pid = new PIDController(kP, kI, kD);
     }
 
     /**
@@ -62,5 +73,18 @@ public class Turret {
      */
     public void stop() {
         this.setSpeed(0);
+    }
+
+    /**
+     * Tracks the current shooting target.
+     */
+    public void track() {
+        if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
+            this.setSpeed(pid.calculate(Robot.camera.getPosition(), 0));
+        } else {
+            this.stop();
+        }
+
+        SmartDashboard.putData(this.pid);
     }
 }
