@@ -16,7 +16,9 @@ public class Drivetrain {
     private CANSparkMax l_primary, l_secondary, r_primary, r_secondary; 
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
-    private SpeedControllerGroup rightSpeedControl; 
+    private SpeedControllerGroup rightSpeedControl;
+
+    private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
 
     private Drivetrain() {
         l_primary = new CANSparkMax(RobotMap.Drivetrain.LEFT_PRIMARY, MotorType.kBrushless);
