@@ -135,7 +135,7 @@ public class Drivetrain {
      * @author dri
      */
     public double getRightPosition() {
-        return r_primary.getEncoder().getPosition();
+        return r_primary.getEncoder().getPosition() * INCHES_PER_TICK;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Drivetrain {
      * @author dri
      */
     public double getLeftPosition() {
-        return l_primary.getEncoder().getPosition();
+        return l_primary.getEncoder().getPosition() * INCHES_PER_TICK;
     }
     
     /**
