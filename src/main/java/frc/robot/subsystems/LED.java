@@ -40,7 +40,7 @@ public class LED {
     }
 
     /**
-     * Updates the current state of the LED strip. To be called in robotPeriodic().
+     * Updates the current state of the LED strip to a solid blue.
      */
     public void solidColor() {
         for (int i = 0; i < data.getLength(); i++) {
@@ -50,4 +50,47 @@ public class LED {
 
         leds.start();
     }
+
+    /**
+     * Updates the current state of the LED strip to a rainbow pattern.
+     */
+    
+
+    public void colorInventory() {
+        int cellCount = 5;
+
+if(cellCount == 1){
+for (var i = 0; i < data.getLength(); i++) {
+   // Sets the specified LED to the RGB values for red
+   data.setRGB(i, 255, 255, 255);
+}leds.setData(data);
+}else if(cellCount == 2){
+for (var i = 0; i < data.getLength(); i++) {
+   // Sets the specified LED to the RGB values for red
+   data.setRGB(i, 255, 0, 255);
+}
+leds.setData(data);
+}else if(cellCount == 3){
+for (var i = 0; i < data.getLength(); i++) {
+   // Sets the specified LED to the RGB values for red
+data.setRGB(i, 0, 0, 255);
+}
+leds.setData(data);
+}else if(cellCount == 4){
+for (var i = 0; i < data.getLength(); i++) {
+   // Sets the specified LED to the RGB values for red
+   data.setRGB(i, 255, 40, 0);
+}
+leds.setData(data);
+}else if(cellCount == 5){
+for (var i = 0; i < data.getLength(); i++) {
+   // Sets the specified LED to the RGB values for red
+   data.setRGB(i, 255, 255, 0);
+}
+leds.setData(data);
+}
+
+    
+
+}
 }
