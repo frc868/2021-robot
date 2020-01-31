@@ -2,16 +2,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.OI;
 import frc.robot.RobotMap;
 
 /**
  * The Hopper subsystem consists of 3 motors to move the power cells in stages. Positions one and
  * two are on the bottom, position three is the transition to the upper level of the hopper, and
  * positions four and five are on the top level.
- *
- * TODO: This code is über messy and needs cleanup badly.
- * 
- * @author dri, JW, AF
+ *  
+ * @author dri
  */
 
 public class Hopper {
@@ -26,30 +25,34 @@ public class Hopper {
     private DigitalInput topLeftLim;
     private DigitalInput topRightLim;
 
-    private WPI_TalonSRX intake;
-    private WPI_TalonSRX middle;
-    private WPI_TalonSRX outtake;
+    private WPI_TalonSRX belt;
+    private WPI_TalonSRX indexer;
 
-    private final int MID_CYCLE_TIME = 100000; // in ms
-    private final int CHAIN_CYCLE_TIME = 100000;
+    private int count = 3;
 
-    private int count = 0;
-    private int prev_count = 0;
+    private double initialBeltPosition;
+    private double initialIndexerPosition;
+
+    // store the last value of the limit switches to see if they have been triggered after
+    private boolean lastBotState;
+    private boolean lastTopState;
 
     private Hopper() {
-        botLeftLim = new DigitalInput(RobotMap.Intake.Limit.BOTTOM_LEFT);
-        botRightLim = new DigitalInput(RobotMap.Intake.Limit.BOTTOM_RIGHT);
-        // midLeftLim = new DigitalInput(RobotMap.Intake.Limit.MIDDLE_LEFT);
-        // midRightLim = new DigitalInput(RobotMap.Intake.Limit.MIDDLE_RIGHT);
-        topLeftLim = new DigitalInput(RobotMap.Intake.Limit.TOP_LEFT);
-        topRightLim = new DigitalInput(RobotMap.Intake.Limit.TOP_RIGHT);
+        botLeftLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_LEFT);
+        botRightLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_RIGHT);
+        topLeftLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_LEFT);
+        topRightLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_RIGHT);
 
-        intake = new WPI_TalonSRX(RobotMap.Intake.Motor.INTAKE);
-        middle = new WPI_TalonSRX(RobotMap.Intake.Motor.MIDDLE);
-        outtake = new WPI_TalonSRX(RobotMap.Intake.Motor.OUTTAKE);
-        intake.setInverted(RobotMap.Intake.Motor.INTAKE_IS_INVERTED);
-        middle.setInverted(RobotMap.Intake.Motor.MIDDLE_IS_INVERTED);
-        outtake.setInverted(RobotMap.Intake.Motor.OUTTAKE_IS_INVERTED);
+        belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.BELT);
+        indexer = new WPI_TalonSRX(RobotMap.Hopper.Motor.INDEXER);
+        belt.setInverted(RobotMap.Hopper.Motor.BELT_IS_INVERTED);
+        indexer.setInverted(RobotMap.Hopper.Motor.INDEXER_IS_INVERTED);
+
+        lastBotState = getBotLimit();
+        lastTopState = getTopLimit();
+
+        initialBeltPosition = belt.getSensorCollection().getQuadraturePosition();
+        initialIndexerPosition = indexer.getSensorCollection().getQuadraturePosition();
     }
 
     /**
@@ -63,62 +66,102 @@ public class Hopper {
     }
 
     /**
-     * Updates the current state of the turret. To be called in robotPeriodic().
-     * TODO: "Add logic back in" (???)
-     * TODO: Needs documentation, very obfuscated
+     * Stops the belt and indexer motors. Untested.
      */
-    public void update() {
-        // adding a ball
-        if (prev_count < count) {
-            enableAndSleep();
-            prev_count = count;
-        } else if (prev_count > count) {  // want to remove a ball
-            for (int i = 0; i<=5-count; i++) {
-                enableAndSleep();
-            }
-            /* Ping that the shooter is ready, or set the shooter to delay:
-             * CHAIN_CYCLE_TIME * i calculation (extra for loop)
-             */
-            count--;
-            prev_count = count;
-        }
+    private void stop() {
+        belt.set(0);
+        indexer.set(0);
     }
 
     /**
-     * Enables the motors, sleeps, and then disables the motors.
-     * TODO: is sleeping the thread necessary?
+     * Updates the current state of the turret. To be called in robotPeriodic().
      */
-    private boolean enableAndSleep() {
-        intake.set(1);
-        middle.set(1);
-        outtake.set(1);
-        Thread.sleep(MID_CYCLE_TIME/2);
-        middle.set(0);
-        Thread.sleep(CHAIN_CYCLE_TIME-MID_CYCLE_TIME/2);
-        outtake.set(0);
-        intake.set(0);
+    public void update() {
+        if (OI.operator.bA.get()) {
+            readyToShoot();
+        }
+        else if (getBotLimitToggled()) {
+            count++;
+            cycleIntake();
+        }
+        else if (getTopLimitToggled()) {
+            count--;
+        }
+        else if (getTopLimitToggled() && count >= 5) {
+            stop();
+        }
     }
 
     /**
      * Determine whether we are in a state where shooting is possible.
      */
     public boolean readyToShoot() {
-        return top();
+        return getTopLimit();
+    }
+
+    private boolean getTopLimit() {
+        return topLeftLim.get() || topRightLim.get();
+    }
+
+    private boolean getBotLimit() {
+        return botLeftLim.get() || botRightLim.get();
     }
 
     /**
-     * Gets the current state of the bottom limit switches.
-     * TODO: Should count be incremented here?
+     * returns true if bottom limit switch is toggled from true to false
+     * (unsimplified expression:
+     * current left state is false and last state is true, or current right state is false
+     * and last state is true)
+     * 
+     * @return toggled
      */
-    private boolean getBottomLimit() {
-        count++;
-        return botLeftLim.get() || botRightLim.get();
+    private boolean getBotLimitToggled() {
+        return !(botLeftLim.get() && botRightLim.get()) && lastBotState;
     }
 
     /**
      * Gets the current state of the top limit switches.
      */
-    private boolean getTopLimit() {
-        return topLeftLim.get() || topRightLim.get();
+    private boolean getTopLimitToggled() {
+        return !(topLeftLim.get() && topRightLim.get()) && lastTopState;
+    }
+
+    /**
+     * index balls in the hopper, but not the belts that feedd into the shooter
+     */
+    private void cycleIntake() {
+        double currentBeltPosition = belt.getSensorCollection().getQuadraturePosition();
+        double currentIndexerPosition = indexer.getSensorCollection().getQuadraturePosition();
+        if (currentBeltPosition - initialBeltPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
+            belt.set(RobotMap.Hopper.BELT_SPEED); // TODO: check motor speed with balls
+        }
+        else {        
+            belt.set(0);
+        }
+
+        if (currentIndexerPosition - initialIndexerPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
+            indexer.set(RobotMap.Hopper.INDEXER_SPEED); // TODO: check motor speed with balls
+        }
+        else {
+            indexer.set(0);
+        }
+    }
+
+    /**
+     * called when the driver is ready to shoot (pushing the button on the controller)
+     * sets the belt speed to the tested value necessary to feed 
+     */
+    public void shoot() {
+        belt.set(RobotMap.Hopper.BELT_SPEED);
+        indexer.set(RobotMap.Hopper.INDEXER_SPEED);
+    }
+
+    /**
+     * returns count of how many balls are currently held in the hopper
+     * @author dri
+     * @return count
+     */
+    public int getBallCount() {
+        return count;
     }
 }
