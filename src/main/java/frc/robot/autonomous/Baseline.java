@@ -18,8 +18,8 @@ public class Baseline {
         this.distance = distance;
     }
 
-    private final double startPwr = 1; //TODO: untested
-    private final double endPwr = 0; //TODO: untested
+    private final double startPwr = 1; // TODO: untested
+    private final double endPwr = 0; // TODO: untested
 
     /**
      * Drives straight until the given distance (in inches) specified in the constructor.
