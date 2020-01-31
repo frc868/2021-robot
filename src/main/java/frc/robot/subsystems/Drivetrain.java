@@ -101,6 +101,33 @@ public class Drivetrain {
     }
 
     /**
+     * drives in an arc
+     * loosely adapted from 2018-robot
+     * @param rightInitial the current (at the beginning of driveArc) drivetrain position for the right side
+     * @param leftInitial the current (at the beginning of driveArc) drivetrain position for the left side
+     * @param rightInches the number of inches to move the right side of the drivetrain
+     * @param leftInches the number of inches to move the left side of the drivetrain
+     * @param rightPower the power to set the right side of the drivetrain to
+     * @param leftPower the power to set the left side of the drivetrain to
+     */
+    public void driveArc(double rightInitial, double leftInitial, double rightInches, double leftInches, double rightPower, double leftPower) {
+        double setRight = rightPower;
+        double setLeft = leftPower;
+
+        // is the right side of the drivetrain finished moving?
+        if (Math.abs(this.getRightPosition() - rightInitial) > Math.abs(rightInches)) {
+            setRight = 0;
+        }
+
+        // is the left side of the drivetrain finished moving?
+        if (Math.abs(this.getLeftPosition() - leftInitial) > Math.abs(leftInches)) {
+            setLeft = 0;
+        }
+        
+        this.setSpeed(setLeft, setRight);
+    }
+
+    /**
      * gets the right side primary motor's encoder position
      * @return right encoder position
      * @author dri
