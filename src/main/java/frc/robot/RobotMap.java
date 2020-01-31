@@ -24,7 +24,12 @@ public class RobotMap {
 
     }
 
-    public static class Intake {
+    public static class Hopper {
+
+        public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
+        public static final double BELT_SPEED = 0.1; // TODO: untested
+        public static final double INDEXER_SPEED = 0.1; // TODO: untested
+
         public static class Limit {
             public static final int BOTTOM_LEFT = 0; // TODO: untested
             public static final int BOTTOM_RIGHT = 1; // TODO: untested
@@ -35,12 +40,10 @@ public class RobotMap {
         }
 
         public static class Motor {
-            public static final int INTAKE = 2; // TODO: untested
-            public static final int MIDDLE = 0; // TODO: untested
-            public static final int OUTTAKE = 21; // TODO: untested
-            public static final boolean INTAKE_IS_INVERTED = true; // TODO: untested
-            public static final boolean MIDDLE_IS_INVERTED = true; // TODO: untested
-            public static final boolean OUTTAKE_IS_INVERTED = true; // TODO: untested
+            public static final int BELT = 2; // TODO: untested
+            public static final int INDEXER = 21; // TODO: untested
+            public static final boolean BELT_IS_INVERTED = true; // TODO: untested
+            public static final boolean INDEXER_IS_INVERTED = true; // TODO: untested
         }
     }
 
