@@ -12,4 +12,8 @@ package frc.robot.autonomous;
  */
 public class HeadOn {
     
+    private TrenchRun(double distance) {
+        this.distance = distance;
+    }
+    
 }
