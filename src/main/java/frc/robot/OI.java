@@ -18,8 +18,6 @@ public class OI {
     }
 
     public static void update() {
-        driver.bA.whileHeld(() -> Robot.wheel.positionControl()); // TODO: fix controller mappings
-        driver.bB.whileHeld(() -> Robot.wheel.rotationControl(Robot.wheel.setInitialColor()));
         updateSD();
 
     }
