@@ -20,7 +20,8 @@ public class OI {
     public static void update() {
         driver.bA.whenPressed(() -> Robot.hopper.shoot());
         driver.bA.whenReleased(() -> Robot.hopper.resetOverride());
-
+      
+        Robot.turret.setSpeed(driver.getLX());
         updateSD();
     }
 

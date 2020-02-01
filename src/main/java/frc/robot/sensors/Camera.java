@@ -10,9 +10,7 @@ package frc.robot.sensors;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
+
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
@@ -24,18 +22,8 @@ import frc.robot.helpers.Helper;
 public class Camera {
     private static Camera instance = null;
 
-    // represents the current mode of the camera
-    public static enum CameraPipeline {
-        SHOOTER, BALL;
-    }
-
     private NetworkTable table;
     private NetworkTableEntry tEnabled, tArea, tXpos, tAngle, tPipeline;
-    private PIDController pid;
-
-    // for tracking target, TODO; tune
-    private final double kP = 0.01, kI = 0, kD = 0;
-    private final double MAX_POS = 30; // maximum angle for x-position
 
     // for tracking ball, TODO: tune
     private final double kDist = 0;
@@ -46,7 +34,8 @@ public class Camera {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         this.update(); // initial run
 
-        pid = new PIDController(kP, kI, kD);
+        // be extra sure about pipeline
+        table.getEntry("pipeline").setDouble(RobotMap.Camera.PIPELINE);
     }
 
     /**
@@ -57,25 +46,6 @@ public class Camera {
             instance = new Camera();
         }
         return instance;
-    }
-
-    /**
-     * Gets the current camera pipeline.
-     * @return the current pipeline as a double
-     */
-    public double getMode() {
-        return tPipeline.getDouble(0.0);
-    }
-
-    /**
-     * Switches the mode of the Limelight from shooter target to ball (and vice versa).
-     */
-    public void toggleMode() {
-        if (this.getMode() == RobotMap.Camera.SHOOTER_PIPELINE) {
-            tPipeline.setDouble(RobotMap.Camera.BALL_PIPELINE);
-        } else if (this.getMode() == RobotMap.Camera.BALL_PIPELINE) {
-            tPipeline.setDouble(RobotMap.Camera.SHOOTER_PIPELINE);
-        }
     }
 
     /**
@@ -126,50 +96,6 @@ public class Camera {
             angle += 90;
         }
         return angle;
-    }
-
-    /**
-     * Tracks the current shooting target. Only to be used in shooter mode.
-     */
-    public void trackTarget() {
-        if (this.hasTarget() && (Math.abs(this.getPosition()) < MAX_POS)) {
-            Robot.turret.setSpeed(pid.calculate(this.getPosition(), 0));
-        } else {
-            Robot.turret.stop();
-        }
-
-        SmartDashboard.putData(this.pid);
-    }
-
-    /**
-     * Tracks the current ball. Only to be used in ball mode.
-     * An adaptation of 2019-Robot-B3's followVision() method.
-     * (And when I mean adaptation, I mean literally the same method.)
-     */
-    public void trackBall() {
-        if (this.hasTarget()) {
-            double area = this.getArea();
-            double posError = this.getPosition(); // how far we are from the target
-            // the target value we are going to
-            double posValue = posError * kPos * Math.sqrt(Helper.boundValue((area * kArea), 0, 1));
-
-            // powers to set drivetrain to
-            double left = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
-            double right = Helper.boundValue((1/Math.sqrt(area)) * kDist + posValue);
-
-            Robot.drivetrain.setSpeed(left, right);
-        }
-    }
-
-    /**
-     * Tracks in a general fashion.
-     */
-    public void track() {
-        if (this.getMode() == RobotMap.Camera.SHOOTER_PIPELINE) {
-            this.trackTarget();
-        } else if (this.getMode() == RobotMap.Camera.BALL_PIPELINE) {
-            this.trackBall();
-        }
     }
 
     /**
