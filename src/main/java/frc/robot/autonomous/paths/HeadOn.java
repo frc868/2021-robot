@@ -34,6 +34,7 @@ public class HeadOn {
             Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
         }
         Robot.hopper.stop();
+        Robot.shooter.setSpeed(0);
     }
 
     /**

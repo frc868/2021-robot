@@ -30,7 +30,6 @@ public class TurnToAngleGyro {
     public TurnToAngleGyro(int angle) {
         // initialize sources
         pid = new PIDController(kP, kI, kD);
-
         this.angle = angle;
     }
    
@@ -79,5 +78,7 @@ public class TurnToAngleGyro {
                 Robot.drivetrain.setSpeed(-speed, speed);
             }
         }
+
+        Robot.drivetrain.setSpeed(0, 0);
     }
 }

@@ -8,22 +8,64 @@
 package frc.robot.autonomous.paths;
 
 /**
- * Add your docs here.
+ * Goes off the starting line, picks up two balls, turns, goes towards the goal,
+ * and shoots all five (hopefully into the inner).
+ * @author hrl
  */
-
 import frc.robot.Robot;
+import frc.robot.autonomous.AutonMap;
+import frc.robot.autonomous.TurnToAngleGyro;
 
 public class TrenchRun {
-    private double distance;
-     
-    private TrenchRun(double distance) {
-        this.distance = distance;
+    /**
+     * Runs the autonomous path.
+     */
+    public void run() {
+        // drive to the balls
+        while (Robot.drivetrain.getAveragePosition() < AutonMap.TrenchRun.DISTANCE_TO_BALLS) {
+            Robot.drivetrain.driveStraight(AutonMap.TrenchRun.DISTANCE_TO_BALLS, 
+                                           AutonMap.TrenchRun.START_POWER,
+                                           AutonMap.TrenchRun.END_POWER);
+        }
+        Robot.drivetrain.setSpeed(0, 0);
+
+        // grab the balls
+        while (Robot.hopper.getBallCount() < 5) {
+            Robot.intake.setSpeed(AutonMap.TrenchRun.INTAKE_POWER);
+        }
+        Robot.intake.setSpeed(0);
+
+        // turn
+        new TurnToAngleGyro(AutonMap.TrenchRun.TURN_ANGLE).run();
+
+        // drive to the target
+        while (Robot.drivetrain.getAveragePosition() < AutonMap.TrenchRun.DISTANCE_TO_TARGET) {
+            Robot.drivetrain.driveStraight(AutonMap.TrenchRun.DISTANCE_TO_TARGET,
+                                           AutonMap.TrenchRun.START_POWER,
+                                           AutonMap.TrenchRun.END_POWER);
+        }
+        Robot.drivetrain.setSpeed(0, 0);
+
+        /* TODO: check if turret is really on target. should be running constantly in
+           autonPeriodic() unless we're doing baseline auto. */
+
+        // shoot 'em up
+        while (Robot.hopper.getBallCount() > 0) {
+            Robot.hopper.shoot();
+            // TODO: this should be PID-controlled, waiting on shooter group...
+            Robot.shooter.setSpeed(AutonMap.TrenchRun.SHOOTER_POWER);
+        }
+        Robot.hopper.stop();
+        Robot.shooter.setSpeed(0);
     }
 
-    private final double startPwr = 1; //TODO: untested
-    private final double endPwr = 2; //TODO: untested
-
-    public void execute(){
-        Robot.drivetrain.driveStraight(distance, startPwr, endPwr);
+    /**
+     * Stops the autonomous path.
+     */
+    public void stop() {
+        Robot.drivetrain.setSpeed(0, 0);
+        Robot.intake.setSpeed(0);
+        Robot.hopper.stop();
+        Robot.shooter.stop();
     }
 }

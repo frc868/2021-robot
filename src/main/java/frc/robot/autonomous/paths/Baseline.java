@@ -1,28 +1,26 @@
 package frc.robot.autonomous.paths;
 
+import frc.robot.Robot;
+import frc.robot.autonomous.AutonMap;
+
 /** 
  * Gets the robot to the baseline.
  * @author jk
  */
-
-import frc.robot.Robot;
-import frc.robot.autonomous.AutonMap;
-
 public class Baseline {
-    private final double startPwr = 1; // TODO: untested
-    private final double endPwr = 0; // TODO: untested
-
     /**
-     * Drives straight until the given distance (in inches) specified in the constructor.
+     * Runs the autonomous path.
      */
     public void run() {
         while (Robot.drivetrain.getAveragePosition() < AutonMap.Baseline.DISTANCE) {
-            Robot.drivetrain.driveStraight(AutonMap.Baseline.DISTANCE, startPwr, endPwr);
+            Robot.drivetrain.driveStraight(AutonMap.Baseline.DISTANCE, 
+                                           AutonMap.Baseline.START_POWER,
+                                           AutonMap.Baseline.END_POWER);
         }
     }
 
     /**
-     * Stops the autonomous routine.
+     * Stops the autonomous path.
      */
     public void stop() {
         Robot.drivetrain.setSpeed(0, 0);
