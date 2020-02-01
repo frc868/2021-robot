@@ -12,7 +12,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.RobotMap;
-import frc.robot.helpers.Helper;
 
 /**
  * Controls the Limelight camera connected to the robot over NetworkTables.
@@ -23,12 +22,7 @@ public class Camera {
     private static Camera instance = null;
 
     private NetworkTable table;
-    private NetworkTableEntry tEnabled, tArea, tXpos, tAngle, tPipeline;
-
-    // for tracking ball, TODO: tune
-    private final double kDist = 0;
-    private final double kPos = 0;
-    private final double kArea = 0;
+    private NetworkTableEntry tEnabled, tArea, tXpos, tAngle;
 
     private Camera() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -59,7 +53,6 @@ public class Camera {
         tArea = table.getEntry("ta"); // target area
         tXpos = table.getEntry("tx"); // target x-position (y unused)
         tAngle = table.getEntry("ts"); // target angle/"skew"
-        tPipeline = table.getEntry("pipeline"); // current pipeline, for mode switching
     }
 
     /**
