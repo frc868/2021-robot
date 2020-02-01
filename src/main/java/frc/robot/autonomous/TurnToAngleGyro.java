@@ -17,33 +17,27 @@ import frc.robot.Robot;
  * @author jw
  */
 public class TurnToAngleGyro {
-    private static TurnToAngleGyro instance = null;
-
     private static final double kP = 0, kI = 0, kD = 0; // TODO: untested
     private final double tolerance = 1; // TODO: untested
     private PIDController pid;
 
-    private TurnToAngleGyro() {
+    private int angle; // setpoint
+
+    /**
+     * Creates a new TurnToAngleGyro object, to be run with TurnToAngleGyro.run().
+     * @param angle the angle to turn to, from -180 to +180
+     */
+    public TurnToAngleGyro(int angle) {
         // initialize sources
         pid = new PIDController(kP, kI, kD);
+
+        this.angle = angle;
     }
    
     /**
-     * Checks to see if the instance of this class has already been created.
-     * If so, return it. If not, create it and return it.
-     */
-    public static TurnToAngleGyro getInstance() {
-        if (instance == null) {
-            instance = new TurnToAngleGyro();
-        }
-        return instance;
-    } 
-
-    /**
      * Turns the robot to the specified angle (in degrees).
-     * @param angle the angle to turn to
      */
-    public void run(int angle) {
+    public void run() {
         double currentAngle = Robot.gyro.getAngle(); // relative, without gyro reset
 
         // TODO: check + vs - turn direction
