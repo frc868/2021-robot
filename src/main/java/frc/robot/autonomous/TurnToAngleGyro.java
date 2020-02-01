@@ -46,40 +46,40 @@ public class TurnToAngleGyro {
     public void run(int angle) {
         double currentAngle = Robot.gyro.getAngle(); // relative, without gyro reset
 
-        //TODO: check + vs - turn direction
-        //if we want to turn "positive" AKA "left"
+        // TODO: check + vs - turn direction
+        // if we want to turn "positive" AKA "left"
         if (angle > 0) {
             //set angle to desired angle
             angle += currentAngle;
 
-            //NAVX reads from -180* to 180* 
-            //if desired angle exceeds gyro readings
+            // navX reads from -180* to 180* 
+            // if desired angle exceeds gyro readings
             if (angle > 180) {
                 angle -= 360;
             }
 
-            //run until reaches excetable distance
+            // run until reaches setpoint
             while (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                //calculate speed based on distance from current angle and desired angle
+                // calculate speed based on distance from current angle and desired angle
                 double speed = pid.calculate(currentAngle, angle);
 
-                //set motor
+                // set motor
                 Robot.drivetrain.setSpeed(speed, -speed);
             }
         }
-        else { //else we want to turn "negitivly" AKA "right"
-            //set angle to desired angle
+        else { // else we want to turn "negative" (aka right)
+            // set angle to desired angle
             angle -= currentAngle;
 
-            //NAVX reads from -180* to 180* 
-            //if desired angle exceeds gyro readings
+            // navX reads from -180* to 180* 
+            // if desired angle exceeds gyro readings
             if (angle < -180) {
                 angle += 360;
             }
 
-            //run until reaches excetable distance           
+            // run until reaches setpoint
             while (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                //calculate speed based on distance from current angle and desired angle
+                // calculate speed based on distance from current angle and desired angle
                 double speed = pid.calculate(currentAngle, angle);
 
                 Robot.drivetrain.setSpeed(-speed, speed);
