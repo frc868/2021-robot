@@ -5,26 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.autonomous;
-
-import frc.robot.Robot;
+package frc.robot.autonomous.paths;
 
 /**
- * Literally does nothing. I'm serious.
- * @author jk
+ * Add your docs here.
+ * 
+ * 
  */
-public class DoNothing {
-    /**
-     * Fails, successfully.
-     */
-    public void run() {
-        Robot.drivetrain.setSpeed(0, 0);
+
+import frc.robot.Robot;
+import frc.robot.subsystems.Drivetrain;
+
+public class TrenchRun {
+    private double distance;
+     
+    private TrenchRun(double distance) {
+        this.distance = distance;
     }
 
-    /**
-     * Pointless.
-     */
-    public void stop() {
-        // useless here
+    private final double startPwr = 1; //TODO: untested
+    private final double endPwr = 2; //TODO: untested
+
+    public void execute(){
+        Robot.drivetrain.driveStraight(distance, startPwr, endPwr);
     }
 }

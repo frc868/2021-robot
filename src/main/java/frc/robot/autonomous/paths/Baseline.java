@@ -1,11 +1,12 @@
-package frc.robot.autonomous
-;
+package frc.robot.autonomous.paths;
+
 /** 
  * Gets the robot to the baseline.
  * @author jk
  */
 
 import frc.robot.Robot;
+import frc.robot.autonomous.AutonMap;
 
 public class Baseline {
     private double distance;
@@ -26,7 +27,7 @@ public class Baseline {
      */
     public void run() {
         while (Robot.drivetrain.getAveragePosition() < distance) {
-            Robot.drivetrain.driveStraight(distance, startPwr, endPwr);
+            Robot.drivetrain.driveStraight(AutonMap.Baseline.DISTANCE, startPwr, endPwr);
         }
     }
 
