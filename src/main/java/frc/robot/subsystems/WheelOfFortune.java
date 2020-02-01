@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -18,7 +15,7 @@ import frc.robot.RobotMap;
  * This is the code for the Wheel of Fortune manipulator. It initializes motor
  * controllers and has methods for its various functions.
  * 
- * @author dri, ai, gjs
+ * @author dri, ai, gjs, hrl
  */
 public class WheelOfFortune {
     private static WheelOfFortune instance;
@@ -32,8 +29,6 @@ public class WheelOfFortune {
     private ColorSensorV3 colorSensor;
     private ColorMatch colorMatch;
     private Color detectedColor;
-    private List<String> colorOrder = new ArrayList<String>();
-    
   
     private final Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
     private final Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
@@ -63,13 +58,6 @@ public class WheelOfFortune {
             return new WheelOfFortune();
         }
         return instance;
-    }
-    private void setColorOrder(){
-        colorOrder.add("B");
-        colorOrder.add("G");
-        colorOrder.add("R");
-        colorOrder.add("Y");
-
     }
 
     /**
@@ -137,70 +125,54 @@ public class WheelOfFortune {
 
         return ret;
     } 
-    public int calculateDesiredRotationsBlue(WOFColor startColor){
-        int ret = 0;
-        if(startColor == WOFColor.GREEN){
-            ret = 3;
+
+    /**
+     * Returns the desired amount of rotations for a given start and end color.
+     * Here be dragons?
+     * @param startColor a WOFColor representing the color we are currently on
+     * @param goalColor a WOFColor representing the color we want to go to
+     * @return a number between 0 and 3 as to how far we should be turning
+     */
+    public int calculateDesiredRotations(WOFColor startColor, WOFColor goalColor) {
+        switch (startColor) {
+            case BLUE:
+            switch (goalColor) {
+                case BLUE:          return 0;
+                case YELLOW:        return 1;
+                case RED:           return 2;
+                case GREEN:         return 3;
+                case NONE: default: return 0;
+            }
+            case GREEN:
+            switch (goalColor) {
+                case GREEN:         return 0;
+                case BLUE:          return 1;
+                case YELLOW:        return 2;
+                case RED:           return 3;
+                case NONE: default: return 0;
+            }
+            case RED:
+            switch (goalColor) {
+                case RED:           return 0;
+                case GREEN:         return 1;
+                case BLUE:          return 2;
+                case YELLOW:        return 3;
+                case NONE: default: return 0;
+            }
+            case YELLOW:
+            switch (goalColor) {
+                case YELLOW:        return 0;
+                case RED:           return 1;
+                case GREEN:         return 2;
+                case BLUE:          return 3;
+                case NONE: default: return 0;
+            }
+            case NONE:
+            default:
+            return 0;
         }
-        else if(startColor == WOFColor.RED){
-            ret = 2;
-        }
-        else if(startColor == WOFColor.YELLOW){
-            ret = 1;
-        }
-        else if (startColor == WOFColor.BLUE){
-            ret = 0;
-        }
-        return ret;
     }
-    public int calculateDesiredRotationsGreen(WOFColor startColor){
-        int ret = 0;
-        if(startColor == WOFColor.GREEN){
-            ret = 0;
-        }
-        else if(startColor == WOFColor.RED){
-            ret = 3;
-        }
-        else if(startColor == WOFColor.YELLOW){
-            ret = 2;
-        }
-        else if (startColor == WOFColor.BLUE){
-            ret = 1;
-        }
-        return ret;
-    }
-    public int calculateDesiredRotationsRed(WOFColor startColor){
-        int ret = 0;
-        if(startColor == WOFColor.GREEN){
-            ret = 1;
-        }
-        else if(startColor == WOFColor.RED){
-            ret = 0;
-        }
-        else if(startColor == WOFColor.YELLOW){
-            ret = 3;
-        }
-        else if (startColor == WOFColor.BLUE){
-            ret = 2;
-        }
-        return ret;
-    }
-    public int calculateDesiredRotationsYellow(WOFColor startColor){
-        int ret = 0;
-        if(startColor == WOFColor.GREEN){
-            ret = 2;
-        }
-        else if(startColor == WOFColor.RED){
-            ret = 1;
-        }
-        else if(startColor == WOFColor.YELLOW){
-            ret = 0;
-        }
-        else if (startColor == WOFColor.BLUE){
-            ret = 3;
-        }
-        return ret;
-    }
+
     /**
      * sets the initial color read by the sensor for position control
      * @return the initial Color
@@ -208,7 +180,6 @@ public class WheelOfFortune {
     public WOFColor setInitialColor() {
         return colorDetect();
     }
-
 
     /**
      * makes the wheel spin 4 times for rotation control of the color wheel
@@ -245,32 +216,29 @@ public class WheelOfFortune {
         try {
             switch (aimColor) {
                 case RED:
-                        detectedColor = colorDetect();
-                        rotationControl(detectedColor, calculateDesiredRotationsRed(detectedColor));
-                         
-                    stop();
-                    break;
+                detectedColor = colorDetect();
+                rotationControl(detectedColor, calculateDesiredRotations(detectedColor, WOFColor.RED));                         
+                stop();
+                break;
                 case BLUE:
-                        detectedColor = colorDetect();
-                        rotationControl(detectedColor, calculateDesiredRotationsBlue(detectedColor));
-                    stop();
-                    break;
+                detectedColor = colorDetect();
+                rotationControl(detectedColor, calculateDesiredRotations(detectedColor, WOFColor.BLUE));
+                stop();
+                break;
                 case GREEN:
-                        detectedColor = colorDetect();
-                        rotationControl(detectedColor, calculateDesiredRotationsGreen(detectedColor));
-                    stop();
-                    break;
+                detectedColor = colorDetect();
+                rotationControl(detectedColor, calculateDesiredRotations(detectedColor, WOFColor.GREEN));
+                stop();
+                break;
                 case YELLOW:
-                        detectedColor = colorDetect();
-                        rotationControl(detectedColor, calculateDesiredRotationsYellow(detectedColor));
-                    stop();
-                    break;
+                detectedColor = colorDetect();
+                rotationControl(detectedColor, calculateDesiredRotations(detectedColor, WOFColor.YELLOW));
+                stop();
+                break;
                 case NONE:
-                    System.out.println("NONE");
-                    break;
                 default:
-                    System.out.println("DEFAULT");
-                    break;
+                System.out.println("NONE");
+                break;
             }
         } catch (NullPointerException e) {
             System.out.println("NPE caught in WOF!");
