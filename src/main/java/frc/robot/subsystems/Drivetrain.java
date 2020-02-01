@@ -109,15 +109,10 @@ public class Drivetrain {
      * @param leftInches the number of inches to move the left side of the drivetrain
      * @param rightPower the power to set the right side of the drivetrain to
      * @param leftPower the power to set the left side of the drivetrain to
-<<<<<<< HEAD
      * @author hrl
      */
     public void driveArc(double rightInitial, double leftInitial, double rightInches,
                          double leftInches, double rightPower, double leftPower) {
-=======
-     */
-    public void driveArc(double rightInitial, double leftInitial, double rightInches, double leftInches, double rightPower, double leftPower) {
->>>>>>> c22ca42bc5cdc44d7841d7d2626a9c6265030e87
         double setRight = rightPower;
         double setLeft = leftPower;
 

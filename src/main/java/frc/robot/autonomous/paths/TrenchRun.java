@@ -9,12 +9,9 @@ package frc.robot.autonomous.paths;
 
 /**
  * Add your docs here.
- * 
- * 
  */
 
 import frc.robot.Robot;
-import frc.robot.subsystems.Drivetrain;
 
 public class TrenchRun {
     private double distance;

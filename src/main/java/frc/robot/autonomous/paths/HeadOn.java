@@ -7,7 +7,6 @@
 
 package frc.robot.autonomous.paths;
 
-<<<<<<< HEAD
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
 
@@ -40,15 +39,5 @@ public class HeadOn {
      */
     public void stop() {
         // big TODO energy
-=======
-/**
- * Add your docs here.
- */
-public class HeadOn {
-    private double distance;
-
-    private HeadOn(double distance) {
-        this.distance = distance;
->>>>>>> c22ca42bc5cdc44d7841d7d2626a9c6265030e87
     }
 }
