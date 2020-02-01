@@ -18,9 +18,9 @@ public class OI {
     }
 
     public static void update() {
-        driver.bA.whileHeld(() -> Robot.wheel.positionControl()); // TODO: fix controller mappings
-        driver.bB.whileHeld(() -> Robot.wheel.rotationControl(Robot.wheel.setInitialColor()));
-
+        driver.bA.whenPressed(() -> Robot.hopper.shoot());
+        driver.bA.whenReleased(() -> Robot.hopper.resetOverride());
+      
         Robot.turret.setSpeed(driver.getLX());
         updateSD();
     }

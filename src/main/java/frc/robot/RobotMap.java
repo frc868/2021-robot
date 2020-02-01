@@ -30,8 +30,31 @@ public class RobotMap {
         public static final boolean RIGHT_IS_INVERTED = false; // TODO: untested
     }
 
-    public static class Intake {
+    public static class Hopper {
+        public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
+        public static final double BELT_SPEED = 0.1; // TODO: untested
+        public static final double INDEXER_SPEED = 0.1; // TODO: untested
 
+        public static class Limit {
+            public static final int BOTTOM_LEFT = 0; // TODO: untested
+            public static final int BOTTOM_RIGHT = 1; // TODO: untested
+            public static final int MIDDLE_LEFT = 2; // TODO: untested
+            public static final int MIDDLE_RIGHT = 3; // TODO: untested
+            public static final int TOP_LEFT = 4; // TODO: untested
+            public static final int TOP_RIGHT = 5; // TODO: untested
+        }
+
+        public static class Motor {
+            public static final int BELT = 2; // TODO: untested
+            public static final int INDEXER = 21; // TODO: untested
+            public static final boolean BELT_IS_INVERTED = true; // TODO: untested
+            public static final boolean INDEXER_IS_INVERTED = true; // TODO: untested
+        }
+    }
+
+    public static class Intake {
+        public static final int PRIMARY = 0; // TODO: untested
+        public static final int SECONDARY = 1; // TODO: untested
     }
 
     public static class Shooter {
