@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.Robot;
+import frc.robot.RobotMap;
 
 /**
  * This is the code for the Wheel of Fortune manipulator. It initializes motor

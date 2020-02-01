@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
+import frc.robot.Robot;
 
 /**
  * The class in which we map our driver/operator input to specific tasks on the robot
@@ -18,8 +19,7 @@ public class OI {
     }
 
     public static void update() {
-        driver.bA.whileHeld(() -> Robot.wheel.positionControl()); // TODO: fix controller mappings
-        driver.bB.whileHeld(() -> Robot.wheel.rotationControl(Robot.wheel.setInitialColor()));
+        
         updateSD();
 
     }
