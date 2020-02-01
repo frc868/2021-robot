@@ -5,28 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.autonomous;
+package frc.robot.autonomous.paths;
 
 /**
  * Add your docs here.
- * 
- * 
  */
-
-import frc.robot.Robot;
-import frc.robot.subsystems.Drivetrain;
-
-public class TrenchRun {
+public class HeadOn {
     private double distance;
-     
-    private TrenchRun(double distance) {
+
+    private HeadOn(double distance) {
         this.distance = distance;
-    }
-
-    private final double startPwr = 1; //TODO: untested
-    private final double endPwr = 2; //TODO: untested
-
-    public void execute(){
-        Robot.drivetrain.driveStraight(distance, startPwr, endPwr);
     }
 }
