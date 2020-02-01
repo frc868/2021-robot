@@ -15,11 +15,15 @@ package frc.robot.autonomous;
  */
 public class AutonMap {
     public static class Baseline {
-        public static final double DISTANCE = 10.0; // TOOD: should be two times the robot length
+        public static final double DISTANCE = 10.0; // TODO: should be two times the robot length
     }
 
     public static class HeadOn {
+        public static final double DISTANCE = -10.0; // TODO: untested, should be negative
+        public static final double START_POWER = -0.8; // TODO: untested
+        public static final double END_POWER = 0; // TODO: untested
 
+        public static final double SHOOTER_POWER = 0.2; // TODO: untested, need to merge master changes
     }
 
     public static class TrenchRun {
