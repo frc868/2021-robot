@@ -25,19 +25,23 @@ public class HeadOn {
                                            AutonMap.HeadOn.START_POWER,
                                            AutonMap.HeadOn.END_POWER);
         }
-        // set the drivetrain powers to zero
         Robot.drivetrain.setSpeed(0, 0);
 
         // run the shooter
-        // while (Robot.hopper.getCount() > 0) {
+        while (Robot.hopper.getBallCount() > 0) {
+            Robot.hopper.shoot();
+            // TODO: this should be PID-controlled, waiting on shooter group...
             Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-        // }
+        }
+        Robot.hopper.stop();
     }
 
     /**
      * Stops the autonomous path.
      */
     public void stop() {
-        // big TODO energy
+        Robot.hopper.stop();
+        Robot.shooter.stop();
+        Robot.drivetrain.setSpeed(0, 0);
     }
 }

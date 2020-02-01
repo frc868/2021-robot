@@ -69,7 +69,9 @@ public class Hopper {
     /**
      * Stops the belt and indexer motors. Untested.
      */
-    private void stop() {
+    public void stop() {
+        driverOverride = false;
+
         belt.set(0);
         indexer.set(0);
     }
@@ -78,17 +80,17 @@ public class Hopper {
      * Updates the current state of the turret. To be called in robotPeriodic().
      */
     public void update() {
-        if (driverOverride) {
-            if (getBotLimitToggled()) {
-                count++;
+        if (getBotLimitToggled()) {
+            count++;
+            if (!driverOverride) {
                 cycleIntake();
             }
-            else if (getTopLimitToggled()) {
-                count--;
-            }
-            else if (getTopLimitToggled() && count >= 5) {
-               stop();
-            }
+        }
+        else if (getTopLimitToggled()) {
+            count--;
+        }
+        else if (getTopLimitToggled() && count >= 5 && !driverOverride) {
+            stop();
         }
     }
 
@@ -161,14 +163,6 @@ public class Hopper {
         driverOverride = true;
         belt.set(RobotMap.Hopper.BELT_SPEED);
         indexer.set(RobotMap.Hopper.INDEXER_SPEED);
-    }
-
-    /**
-     * resets the driver override trigger
-     * @author hrl
-     */
-    public void resetOverride() {
-        driverOverride = false;
     }
 
     /**
