@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.OI;
 import frc.robot.RobotMap;
 
 /**
@@ -19,16 +18,16 @@ public class Hopper {
     private DigitalInput botLeftLim;
     private DigitalInput botRightLim;
 
-    // private DigitalInput midLeftLim;
-    // private DigitalInput midRightLim;
-
     private DigitalInput topLeftLim;
     private DigitalInput topRightLim;
 
     private WPI_TalonSRX belt;
     private WPI_TalonSRX indexer;
 
+    // a state variable to control the number of balls currently in the hopper
     private int count = 3;
+    // a state variable to control whether the driver has overriden the autonomous functions
+    private boolean driverOverride = false;
 
     private double initialBeltPosition;
     private double initialIndexerPosition;
@@ -38,6 +37,8 @@ public class Hopper {
     private boolean lastTopState;
 
     private Hopper() {
+        driverOverride = false;
+
         botLeftLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_LEFT);
         botRightLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_RIGHT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_LEFT);
@@ -77,18 +78,17 @@ public class Hopper {
      * Updates the current state of the turret. To be called in robotPeriodic().
      */
     public void update() {
-        if (OI.operator.bA.get()) {
-            readyToShoot();
-        }
-        else if (getBotLimitToggled()) {
-            count++;
-            cycleIntake();
-        }
-        else if (getTopLimitToggled()) {
-            count--;
-        }
-        else if (getTopLimitToggled() && count >= 5) {
-            stop();
+        if (driverOverride) {
+            if (getBotLimitToggled()) {
+                count++;
+                cycleIntake();
+            }
+            else if (getTopLimitToggled()) {
+                count--;
+            }
+            else if (getTopLimitToggled() && count >= 5) {
+               stop();
+            }
         }
     }
 
@@ -99,10 +99,16 @@ public class Hopper {
         return getTopLimit();
     }
 
+    /**
+     * Returns the state of the top limits.
+     */
     private boolean getTopLimit() {
         return topLeftLim.get() || topRightLim.get();
     }
 
+    /**
+     * Returns the state of the bottom limits.
+     */
     private boolean getBotLimit() {
         return botLeftLim.get() || botRightLim.get();
     }
@@ -152,13 +158,21 @@ public class Hopper {
      * sets the belt speed to the tested value necessary to feed 
      */
     public void shoot() {
+        driverOverride = true;
         belt.set(RobotMap.Hopper.BELT_SPEED);
         indexer.set(RobotMap.Hopper.INDEXER_SPEED);
     }
 
     /**
+     * resets the driver override trigger
+     * @author hrl
+     */
+    public void resetOverride() {
+        driverOverride = false;
+    }
+
+    /**
      * returns count of how many balls are currently held in the hopper
-     * @author dri
      * @return count
      */
     public int getBallCount() {

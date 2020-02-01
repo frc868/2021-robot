@@ -25,7 +25,6 @@ public class RobotMap {
     }
 
     public static class Hopper {
-
         public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
         public static final double BELT_SPEED = 0.1; // TODO: untested
         public static final double INDEXER_SPEED = 0.1; // TODO: untested
