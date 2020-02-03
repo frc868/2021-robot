@@ -18,4 +18,18 @@ public class Climber {
         }
         return instance;
     }
+    @Override
+    public void robotInit() {
+        initialPosition = primary.getEncoder().getPosition();
+        primary.getEncoder().setPosition(0);
+        primary.setInverted(false);
+    }
+    public void toSetpoint(double targetDist, double power) {
+        double pGain = .1;
+        double distanceToTarget = Math.abs(targetDist) - Math.abs(primary.getEncoder().getPosition() - initialPosition);
+        double targetSpeed = pGain * (power * distanceToTarget);
+        if (distanceToTarget > 0) {
+            primary.set(targetSpeed); // TODO: code sanity check
+        }
+    }
 }
