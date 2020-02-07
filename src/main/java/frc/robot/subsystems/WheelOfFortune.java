@@ -272,11 +272,4 @@ public class WheelOfFortune {
     public void updateSD() {
         SmartDashboard.putString("Detected color", Robot.wheel.getDetectedColor().toString());
     }
-
-    /**
-     * sets the speed of the motor to a specific value
-     */
-    public void manualSpin() {
-        primary.set(0.1);
-    }
 }
