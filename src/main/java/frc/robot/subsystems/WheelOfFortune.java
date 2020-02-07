@@ -191,7 +191,7 @@ public class WheelOfFortune {
 
         while (colorChangeCount < numColorChange) {
             WOFColor currentColor = colorDetect();
-            if (!(previousColor == currentColor) && !(currentColor == WOFColor.NONE)) {
+            if ((previousColor != currentColor) && (currentColor != WOFColor.NONE)) {
                 colorChangeCount++;
                 previousColor = currentColor;
                 
