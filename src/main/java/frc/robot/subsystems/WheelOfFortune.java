@@ -125,7 +125,6 @@ public class WheelOfFortune {
 
     /**
      * Returns the desired amount of rotations for a given start and end color.
-     * Here be dragons?
      * @param startColor a WOFColor representing the color we are currently on
      * @param goalColor a WOFColor representing the color we want to go to
      * @return a number between 0 and 3 as to how far we should be turning
