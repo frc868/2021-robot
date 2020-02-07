@@ -5,18 +5,16 @@ import frc.robot.autonomous.AutonMap;
 
 /** 
  * Gets the robot to the baseline.
- * @author jk
+ * @author jk, hrl
  */
 public class Baseline {
     /**
      * Runs the autonomous path.
      */
     public void run() {
-        while (Robot.drivetrain.getAveragePosition() < AutonMap.Baseline.DISTANCE) {
-            Robot.drivetrain.driveStraight(AutonMap.Baseline.DISTANCE, 
-                                           AutonMap.Baseline.START_POWER,
-                                           AutonMap.Baseline.END_POWER);
-        }
+        Robot.drivetrain.driveStraight(AutonMap.Baseline.DISTANCE,
+                                       AutonMap.Baseline.START_POWER,
+                                       AutonMap.Baseline.END_POWER);
     }
 
     /**
@@ -26,4 +24,3 @@ public class Baseline {
         Robot.drivetrain.setSpeed(0, 0);
     }
  }
- 

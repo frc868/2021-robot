@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 
@@ -31,6 +32,11 @@ public class Drivetrain {
 
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
+
+        l_primary.getEncoder()
+            .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
+        r_primary.getEncoder()
+            .setPositionConversionFactor(INCHES_PER_TICK);
     }
 
     /**
@@ -87,17 +93,23 @@ public class Drivetrain {
      * @param targetDist the distance you want the robot to travel
      * @param startPower the starting power 
      * @param endPower the ending power
+     * @author hrl
      */
     public void driveStraight(double targetDist, double startPower, double endPower) {
-        double pGain = 0.5; // TODO: check this constant
-        double initialDist = getAveragePosition();
-        double distanceToTarget = Math.abs(targetDist) - Math.abs(getAveragePosition() - initialDist);
+        this.resetEncoderPositions();
 
-        double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
+        double pGain = 0.5; // TODO: untested
+        double initialDist = Math.abs(getLeftPosition());
+        double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
 
-        if (distanceToTarget > 0) {
-            setSpeed(targetSpeed, targetSpeed); // TODO: code sanity check
+        while (Math.abs(getLeftPosition()) < distanceToTarget) {
+            double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
+            setSpeed(targetSpeed, targetSpeed);
+
+            distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
         }
+
+        setSpeed(0, 0);
     }
 
     /**
@@ -135,7 +147,7 @@ public class Drivetrain {
      * @author dri
      */
     public double getRightPosition() {
-        return r_primary.getEncoder().getPosition() * INCHES_PER_TICK;
+        return r_primary.getEncoder().getPosition();
     }
 
     /**
@@ -144,7 +156,7 @@ public class Drivetrain {
      * @author dri
      */
     public double getLeftPosition() {
-        return l_primary.getEncoder().getPosition() * INCHES_PER_TICK;
+        return l_primary.getEncoder().getPosition();
     }
     
     /**
@@ -154,5 +166,25 @@ public class Drivetrain {
      */
     public double getAveragePosition() {
         return (l_primary.getEncoder().getPosition() + r_primary.getEncoder().getPosition())/2;
+    }
+
+    /**
+     * resets both of the encoder positions
+     * @author hrl
+     */
+    public void resetEncoderPositions() {
+        // this has a time delay. this is a hack. i hate it. but this is how it's
+        // going to go down.
+        l_primary.getEncoder().setPosition(0);
+        r_primary.getEncoder().setPosition(0);
+
+        Timer timer = new Timer();
+        timer.reset();
+        timer.start();
+
+        while (timer.get() < 0.2) {
+            // do nothing
+        }
+        timer.stop();
     }
 }

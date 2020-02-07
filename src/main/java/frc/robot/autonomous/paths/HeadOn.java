@@ -20,12 +20,9 @@ public class HeadOn {
      */
     public void run() {
         // we're going backwards.
-        while (Robot.drivetrain.getAveragePosition() > AutonMap.HeadOn.DISTANCE) {
-            Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE,
-                                           AutonMap.HeadOn.START_POWER,
-                                           AutonMap.HeadOn.END_POWER);
-        }
-        Robot.drivetrain.setSpeed(0, 0);
+        Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE,
+                                       AutonMap.HeadOn.START_POWER,
+                                       AutonMap.HeadOn.END_POWER);
 
         // run the shooter
         while (Robot.hopper.getBallCount() > 0) {

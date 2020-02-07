@@ -23,7 +23,7 @@ public class AutonMap {
     }
 
     public static class HeadOn {
-        public static final double DISTANCE = -10.0; // the distance to drive (backwards) from the baseline
+        public static final double DISTANCE = 10.0; // the distance to drive (backwards) from the baseline
         public static final double START_POWER = -0.8; // the power to start straight driving with
         public static final double END_POWER = 0; // the power to end straight driving at
 
@@ -38,8 +38,8 @@ public class AutonMap {
         public static final double SHOOTER_POWER = 0.2; // the power to run the shooter at
                                                         // TODO: again, should be PID
 
-        public static final double DISTANCE_TO_BALLS = 10.0; // from starting position to the two balls
-        public static final double DISTANCE_TO_TARGET = 10.0; // from ball position to the target
+        public static final double DISTANCE_TO_BALLS = 50.0; // from starting position to the two balls
+        public static final double DISTANCE_TO_TARGET = 50.0; // from ball position to the target
 
         public static final int TURN_ANGLE = 120; // the angle to turn from the ball intake position
     }

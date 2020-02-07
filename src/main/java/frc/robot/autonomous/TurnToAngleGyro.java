@@ -14,7 +14,7 @@ import frc.robot.Robot;
  * This class rotates the robot to the specified angle (in degrees) using a Gyro sensor.
  * It uses a PID controller to accomplish this behavior.
  * 
- * @author jw
+ * @author jw, gjs
  */
 public class TurnToAngleGyro {
     private static final double kP = 0, kI = 0, kD = 0; // TODO: untested
@@ -37,46 +37,25 @@ public class TurnToAngleGyro {
      * Turns the robot to the specified angle (in degrees).
      */
     public void run() {
-        double currentAngle = Robot.gyro.getAngle(); // relative, without gyro reset
+        // TODO: we shouldn't depend on gyro reset here.
+        Robot.gyro.reset();
 
-        // TODO: check + vs - turn direction
-        // if we want to turn "positive" AKA "left"
-        if (angle > 0) {
-            //set angle to desired angle
-            angle += currentAngle;
+        double currentAngle = Robot.gyro.getAngle();
 
-            // navX reads from -180* to 180* 
-            // if desired angle exceeds gyro readings
-            if (angle > 180) {
-                angle -= 360;
-            }
-
-            // run until reaches setpoint
+        if (angle > 0 && angle <= 180) {
             while (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                // calculate speed based on distance from current angle and desired angle
+                currentAngle = Robot.gyro.getAngle();
                 double speed = pid.calculate(currentAngle, angle);
-
-                // set motor
                 Robot.drivetrain.setSpeed(speed, -speed);
             }
-        }
-        else { // else we want to turn "negative" (aka right)
-            // set angle to desired angle
-            angle -= currentAngle;
-
-            // navX reads from -180* to 180* 
-            // if desired angle exceeds gyro readings
-            if (angle < -180) {
-                angle += 360;
-            }
-
-            // run until reaches setpoint
+        } else if (angle < 0 && angle >= -180) { // turn backwards
             while (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                // calculate speed based on distance from current angle and desired angle
+                currentAngle = Robot.gyro.getAngle();
                 double speed = pid.calculate(currentAngle, angle);
-
-                Robot.drivetrain.setSpeed(-speed, speed);
+                Robot.drivetrain.setSpeed(speed, -speed);
             }
+        } else {
+            System.out.println("out of range");
         }
 
         Robot.drivetrain.setSpeed(0, 0);

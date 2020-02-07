@@ -7,27 +7,24 @@
 
 package frc.robot.autonomous.paths;
 
+import frc.robot.Robot;
+import frc.robot.autonomous.AutonMap;
+import frc.robot.autonomous.TurnToAngleGyro;
+
 /**
  * Goes off the starting line, picks up two balls, turns, goes towards the goal,
  * and shoots all five (hopefully into the inner).
  * @author hrl
  */
-import frc.robot.Robot;
-import frc.robot.autonomous.AutonMap;
-import frc.robot.autonomous.TurnToAngleGyro;
-
 public class TrenchRun {
     /**
      * Runs the autonomous path.
      */
     public void run() {
         // drive to the balls
-        while (Robot.drivetrain.getAveragePosition() < AutonMap.TrenchRun.DISTANCE_TO_BALLS) {
-            Robot.drivetrain.driveStraight(AutonMap.TrenchRun.DISTANCE_TO_BALLS, 
-                                           AutonMap.TrenchRun.START_POWER,
-                                           AutonMap.TrenchRun.END_POWER);
-        }
-        Robot.drivetrain.setSpeed(0, 0);
+        Robot.drivetrain.driveStraight(AutonMap.TrenchRun.DISTANCE_TO_BALLS,
+                                       AutonMap.TrenchRun.START_POWER,
+                                       AutonMap.TrenchRun.END_POWER);
 
         // grab the balls
         while (Robot.hopper.getBallCount() < 5) {
@@ -39,12 +36,9 @@ public class TrenchRun {
         new TurnToAngleGyro(AutonMap.TrenchRun.TURN_ANGLE).run();
 
         // drive to the target
-        while (Robot.drivetrain.getAveragePosition() < AutonMap.TrenchRun.DISTANCE_TO_TARGET) {
-            Robot.drivetrain.driveStraight(AutonMap.TrenchRun.DISTANCE_TO_TARGET,
-                                           AutonMap.TrenchRun.START_POWER,
-                                           AutonMap.TrenchRun.END_POWER);
-        }
-        Robot.drivetrain.setSpeed(0, 0);
+        Robot.drivetrain.driveStraight(AutonMap.TrenchRun.DISTANCE_TO_TARGET,
+                                       AutonMap.TrenchRun.START_POWER,
+                                       AutonMap.TrenchRun.END_POWER);
 
         /* TODO: check if turret is really on target. should be running constantly in
            autonPeriodic() unless we're doing baseline auto. */
