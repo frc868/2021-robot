@@ -9,7 +9,7 @@ public class Climber {
     private static Climber instance;
 
     private Climber() {
-
+        primary = new CANSparkMax(RobotMap.Climber.PRIMARY, MotorType.kBrushless);  //TODO: untested
     }
 
     public static Climber getInstance() {
