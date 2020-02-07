@@ -8,35 +8,68 @@ import edu.wpi.first.wpilibj.SPI.Port;
  * This is the RobotMap class, which stores constants for use throughout the
  * project. These constants include motor controller constants, controller
  * mappings, etc.
- * @author
+ * @author common
  */
 
 public class RobotMap {
+    public static class Camera {
+        public static final double PIPELINE = 0.0;
+    }
+
     public static class Climber {
 
     }
 
     public static class Drivetrain {
+        public static final int LEFT_PRIMARY = 0; // TODO: untested
+        public static final int LEFT_SECONDARY = 1; // TODO: untested
+        public static final int RIGHT_PRIMARY = 2; // TODO: untested
+        public static final int RIGHT_SECONDARY = 3; // TODO: untested
 
+        public static final boolean LEFT_IS_INVERTED = false; // TODO: untested
+        public static final boolean RIGHT_IS_INVERTED = false; // TODO: untested
+    }
+
+    public static class Hopper {
+        public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
+        public static final double BELT_SPEED = 0.1; // TODO: untested
+        public static final double INDEXER_SPEED = 0.1; // TODO: untested
+
+        public static class Limit {
+            public static final int BOTTOM_LEFT = 0; // TODO: untested
+            public static final int BOTTOM_RIGHT = 1; // TODO: untested
+            public static final int MIDDLE_LEFT = 2; // TODO: untested
+            public static final int MIDDLE_RIGHT = 3; // TODO: untested
+            public static final int TOP_LEFT = 4; // TODO: untested
+            public static final int TOP_RIGHT = 5; // TODO: untested
+        }
+
+        public static class Motor {
+            public static final int BELT = 2; // TODO: untested
+            public static final int INDEXER = 21; // TODO: untested
+            public static final boolean BELT_IS_INVERTED = true; // TODO: untested
+            public static final boolean INDEXER_IS_INVERTED = true; // TODO: untested
+        }
     }
 
     public static class Intake {
-
+        public static final int PRIMARY = 0; // TODO: untested
+        public static final int SECONDARY = 1; // TODO: untested
     }
 
     public static class Shooter {
-        public static final int MOTOR = 0; //TODO: untested
+        public static final int MOTOR = 0; // TODO: untested
+        public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
+    }
 
+    public static class Turret {
+        public static final int MOTOR = 5; // TODO: untested
+        public static final boolean MOTOR_IS_INVERTED = false; // TODO: untested
     }
 
     public static class WheelOfFortune {
-        public static final int MOTOR = 21; //TODO: untested
-        public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; //TODO: untested
-        // public static final double RED_VALUE = 0;
-        // public static final double BLUE_VALUE = 0;
-        // public static final double GREEN_VALUE = 0;
-        // public static final double YELLOW_VALUE_G = 0;
-        // public static final double YELLOW_VALUE_R = 0;
+        public static final int MOTOR = 21; // TODO: untested
+        public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; // TODO: untested
         public static final double[] RED_VALUES = {0.36,0.415,0.216};
         public static final double[] GREEN_VALUES = {0.22,0.501,0.275};
         public static final double[] BLUE_VALUES = {0.191,0.451,0.349};
@@ -46,7 +79,7 @@ public class RobotMap {
     }
 
     public static class Sensors {
-        public static final Port GYRO = SPI.Port.kMXP; //TODO: untested
+        public static final Port GYRO = SPI.Port.kMXP;
     }
 
     public static class Controllers {

@@ -19,9 +19,7 @@ public class OI {
     }
 
     public static void update() {
-        
         updateSD();
-
     }
 
     public static void updateSD() {
