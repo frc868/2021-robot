@@ -25,13 +25,7 @@ public class HeadOn {
                                        AutonMap.HeadOn.END_POWER);
 
         // run the shooter
-        while (Robot.hopper.getBallCount() > 0) {
-            Robot.hopper.shoot();
-            // TODO: this should be PID-controlled, waiting on shooter group...
-            Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-        }
-        Robot.hopper.stop();
-        Robot.shooter.setSpeed(0);
+        Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_POWER);
     }
 
     /**

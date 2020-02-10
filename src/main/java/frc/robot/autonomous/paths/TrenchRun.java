@@ -27,6 +27,7 @@ public class TrenchRun {
                                        AutonMap.TrenchRun.END_POWER);
 
         // grab the balls
+        // TODO: this should be abstracted and placed on a timer
         while (Robot.hopper.getBallCount() < 5) {
             Robot.intake.setSpeed(AutonMap.TrenchRun.INTAKE_POWER);
         }
@@ -44,13 +45,7 @@ public class TrenchRun {
            autonPeriodic() unless we're doing baseline auto. */
 
         // shoot 'em up
-        while (Robot.hopper.getBallCount() > 0) {
-            Robot.hopper.shoot();
-            // TODO: this should be PID-controlled, waiting on shooter group...
-            Robot.shooter.setSpeed(AutonMap.TrenchRun.SHOOTER_POWER);
-        }
-        Robot.hopper.stop();
-        Robot.shooter.setSpeed(0);
+        Robot.shooter.shootUntilClear(AutonMap.TrenchRun.SHOOTER_POWER);
     }
 
     /**

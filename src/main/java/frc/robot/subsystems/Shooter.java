@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
@@ -32,13 +33,6 @@ import frc.robot.helpers.Helper;
     // private final double LOWER = 0.85, MIDDLE = 0.831, UPPER = 0.726;
     private static final double kP = 0, kI = 0, kD = 0; // TODO: untested
 
-    public static Shooter getInstance() {
-        if (instance == null) {
-            instance = new Shooter();
-        }
-        return instance;
-    }
-
     private Shooter() {
         motor = new CANSparkMax(RobotMap.Shooter.MOTOR, MotorType.kBrushless);
         CANError err =  motor.restoreFactoryDefaults(); // Reset the Spark Max to factory defaults to avoid sticky values from previous deploys
@@ -51,11 +45,44 @@ import frc.robot.helpers.Helper;
         pid = new PIDController(kP, kI, kD);
     }
 
+    /**
+     * returns a singleton instance of the Shooter subsystem
+     */
+    public static Shooter getInstance() {
+        if (instance == null) {
+            instance = new Shooter();
+        }
+        return instance;
+    }
+
+    /**
+     * sets the speed of the shooter manually
+     * @param speed the speed to set from -1 to 1
+     */
     public void setSpeed(double speed) {
         motor.set(pid.calculate(Helper.boundValue(motor.getEncoder().getVelocity(), -1, 1)));
     }
 
+    /**
+     * stops the shooter.
+     */
     public void stop() {
         motor.stopMotor();
+    }
+
+    /**
+     * shoots until all balls are cleared from the hopper.
+     * useful in autonomous.
+     * TODO: this will be PID controlled!
+     * @param pwr the power to run the shooter at; will be obsoleted by PID
+     * @author hrl
+     */
+    public void shootUntilClear(double pwr) {
+        while (Robot.hopper.getBallCount() > 0) {
+            Robot.hopper.shoot();
+            this.setSpeed(pwr);
+        }
+        Robot.hopper.stop();
+        this.setSpeed(0);
     }
 }
