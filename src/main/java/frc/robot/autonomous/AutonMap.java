@@ -37,6 +37,7 @@ public class AutonMap {
         public static final double INTAKE_POWER = 1; // the power to run the intake at
         public static final double SHOOTER_POWER = 0.2; // the power to run the shooter at
                                                         // TODO: again, should be PID
+        public static final double INTAKE_DELAY = 1.5; // the max time we want to run the intake
 
         public static final double DISTANCE_TO_BALLS = 50.0; // from starting position to the two balls
         public static final double DISTANCE_TO_TARGET = 50.0; // from ball position to the target

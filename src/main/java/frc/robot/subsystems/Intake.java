@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
@@ -44,5 +47,24 @@ public class Intake {
      */
     public double getIntakeSpeed() {
         return primary.get();
+    }
+
+    /**
+     * intakes balls until either the hopper is full or a time delay is exceeded.
+     * this sanity checking is to ensure we don't waste time intaking <i>forever</i>
+     * in autonomous.
+     * @param delay the threshold for how long the intake can run, in seconds
+     * @param power the power to run the intake at from -1 to 1
+     */
+    public void intakeUntilFull(double delay, double power) {
+        Timer timer = new Timer();
+        timer.reset();
+        timer.start();
+
+        // while we're either not full or we're behind the delay...
+        while ((Robot.hopper.getBallCount() < 5) || (timer.get() < delay)) {
+            this.setSpeed(power);
+        }
+        this.setSpeed(0);
     }
 }

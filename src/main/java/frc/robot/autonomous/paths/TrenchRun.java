@@ -27,11 +27,8 @@ public class TrenchRun {
                                        AutonMap.TrenchRun.END_POWER);
 
         // grab the balls
-        // TODO: this should be abstracted and placed on a timer
-        while (Robot.hopper.getBallCount() < 5) {
-            Robot.intake.setSpeed(AutonMap.TrenchRun.INTAKE_POWER);
-        }
-        Robot.intake.setSpeed(0);
+        Robot.intake.intakeUntilFull(AutonMap.TrenchRun.INTAKE_DELAY,
+                                     AutonMap.TrenchRun.INTAKE_POWER);
 
         // turn
         new TurnToAngleGyro(AutonMap.TrenchRun.TURN_ANGLE).run();
