@@ -57,6 +57,11 @@ public class RobotMap {
         public static final int SECONDARY = 1; // TODO: untested
     }
 
+    public static class LED {
+        public static final int PORT = 4; // TODO: untested
+        public static final int LENGTH = 27; // TODO: untested
+    }
+
     public static class Shooter {
         public static final int MOTOR = 0; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
