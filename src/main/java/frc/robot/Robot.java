@@ -13,6 +13,7 @@ import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
     public static Gyro gyro = Gyro.getInstance();
     public static Intake intake = Intake.getInstance();
     public static LED leds = LED.getInstance();
+    public static Hopper hopper = Hopper.getInstance();
     public static Shooter shooter = Shooter.getInstance();
     public static Turret turret = Turret.getInstance();
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
@@ -54,8 +56,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        turret.track();
         Scheduler.getInstance().run();
-        camera.track();
     }
 
     @Override
