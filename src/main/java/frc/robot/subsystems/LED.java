@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 /**
@@ -24,7 +25,6 @@ public class LED {
 
     /**
      * Makes new instance of Leds.
-     * @param ama
      */
     private LED() {
         leds = new AddressableLED(RobotMap.LED.PORT);
@@ -35,7 +35,6 @@ public class LED {
 
     /**
      * Returns a singleton instance of the LED class.
-     * @param ama
      */
     public static LED getInstance() {
         if (instance == null) {
@@ -45,12 +44,14 @@ public class LED {
     }
 
     /**
-     * Updates the current state of the LED strip to a solid blue.
-     * @param ama
+     * Updates the current state of the LED strip to a solid color.
+     * @param r the red value from 0-255
+     * @param g the green value from 0-255
+     * @param b the blue value from 0-255
      */
-    public void solidColor() {
+    public void solidColor(int r, int g, int b) {
         for (int i = 0; i < data.getLength(); i++) {
-            data.setRGB(i, 0, 0, 255);
+            data.setRGB(i, r, g, b);
         }
         leds.setData(data);
         leds.start();
@@ -59,51 +60,31 @@ public class LED {
     /**
      * Updates the current state of the LED strip to a certain color.
      * It does this based on the number of balls the robot currently has.
-     * @param gra
+     * @author gra, hrl
      */
     public void colorInventory() {
-        int cellCount = 5;
-        if(cellCount == 0){
-            for (var i = 0; i < data.getLength(); i++) {
-                // Turn off the leds.
-                data.setRGB(i, 255, 255, 255);
-            }
-            leds.setData(data);
-        }
-        else if(cellCount == 1){
-            for (var i = 0; i < data.getLength(); i++) {
-                // Sets the specified LED to the RGB values for red.
-                data.setRGB(i, 255, 0, 0);
-            }
-            leds.setData(data);
-        }
-        else if(cellCount == 2){
-            for (var i = 0; i < data.getLength(); i++) {
-                // Sets the specified LED to the RGB values for orange.
-                data.setRGB(i, 255, 40, 0);
-            }
-            leds.setData(data);
-        }
-        else if(cellCount == 3){
-            for (var i = 0; i < data.getLength(); i++) {
-                // Turns color to yellow.
-                data.setRGB(i, 255, 255, 0);
-            }
-            leds.setData(data);
-        }
-        else if(cellCount == 4){
-            for (var i = 0; i < data.getLength(); i++) {
-                // Sets the specified LED to the RGB values for blue
-                data.setRGB(i, 0, 0, 255);
-            }
-            leds.setData(data);
-        }
-        else if(cellCount == 5){
-            for (var i = 0; i < data.getLength(); i++) {
-                // Sets the specified LED to the RGB values for purple
-                data.setRGB(i, 255, 0, 255);
-            }
-            leds.setData(data);
+        switch (Robot.hopper.getBallCount()) {
+            case 0:
+                solidColor(255, 255, 255);
+                break;
+            case 1:
+                solidColor(255, 0, 0);
+                break;
+            case 2:
+                solidColor(255, 40, 0);
+                break;
+            case 3:
+                solidColor(255, 255, 0);
+                break;
+            case 4:
+                solidColor(0, 0, 255);
+                break;
+            case 5:
+                solidColor(255, 0, 255);
+                break;
+            default:
+                solidColor(0, 0, 0);
+                break;
         }
     }
 }
