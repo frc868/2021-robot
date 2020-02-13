@@ -6,6 +6,7 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Robot;
@@ -14,7 +15,7 @@ import frc.robot.RobotMap;
 /**
  * This is the code for the Wheel of Fortune manipulator. It initializes motor
  * controllers and has methods for its various functions.
- * 
+ *
  * @author dri, ai, gjs, hrl
  */
 public class WheelOfFortune {
@@ -25,17 +26,30 @@ public class WheelOfFortune {
     }
 
     private WPI_TalonSRX primary;
+    private Solenoid actuator;
+
     private ColorSensorV3 colorSensor;
     private ColorMatch colorMatch;
     private Color detectedColor;
-  
-    private final Color blueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-    private final Color greenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-    private final Color redTarget = ColorMatch.makeColor(0.487, 0.360, 0.152);
-    private final Color yellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+    // hbd
+    private final Color redTarget = ColorMatch.makeColor(RobotMap.WheelOfFortune.RED_VALUES[0],
+                                                         RobotMap.WheelOfFortune.RED_VALUES[1],
+                                                         RobotMap.WheelOfFortune.RED_VALUES[2]);
+    private final Color greenTarget = ColorMatch.makeColor(RobotMap.WheelOfFortune.GREEN_VALUES[0],
+                                                           RobotMap.WheelOfFortune.GREEN_VALUES[1],
+                                                           RobotMap.WheelOfFortune.GREEN_VALUES[2]);
+    private final Color blueTarget = ColorMatch.makeColor(RobotMap.WheelOfFortune.BLUE_VALUES[0],
+                                                          RobotMap.WheelOfFortune.BLUE_VALUES[1],
+                                                          RobotMap.WheelOfFortune.BLUE_VALUES[2]);
+    private final Color yellowTarget = ColorMatch.makeColor(RobotMap.WheelOfFortune.YELLOW_VALUES[0],
+                                                            RobotMap.WheelOfFortune.YELLOW_VALUES[1],
+                                                            RobotMap.WheelOfFortune.YELLOW_VALUES[2]);
 
     private WheelOfFortune() {
         primary = new WPI_TalonSRX(RobotMap.WheelOfFortune.MOTOR);
+        actuator = new Solenoid(RobotMap.WheelOfFortune.ACTUATOR);
+
         colorSensor = new ColorSensorV3(RobotMap.WheelOfFortune.COLOR_SENSOR);
         colorMatch = new ColorMatch();
 
@@ -121,7 +135,7 @@ public class WheelOfFortune {
         }
 
         return ret;
-    } 
+    }
 
     /**
      * Returns the desired amount of rotations for a given start and end color.
@@ -171,6 +185,7 @@ public class WheelOfFortune {
 
     /**
      * sets the initial color read by the sensor for position control
+     * can be adjusted in testing
      * @return the initial Color
      */
     public WOFColor setInitialColor() {
@@ -194,12 +209,12 @@ public class WheelOfFortune {
             if ((previousColor != currentColor) && (currentColor != WOFColor.NONE)) {
                 colorChangeCount++;
                 previousColor = currentColor;
-                
+
                 // set the motor output power, scaled
                 primary.set(this.getOutputPower(numColorChange - colorChangeCount));
             }
         }
-        
+
         primary.set(0);
     }
 
@@ -238,7 +253,7 @@ public class WheelOfFortune {
     }
 
     /**
-     * gets rgb values for smart dashboard 
+     * gets rgb values for smart dashboard
      * @return rgb values from detected color
      */
     public Color getDetectedColor() {
@@ -259,10 +274,34 @@ public class WheelOfFortune {
     /**
      * takes a string from the SmartDashboard and sets the target.
      */
-    public static String setTargetColor(){
+    public static String getTargetColor(){
         String targetColor =  SmartDashboard.getString("Color", "B");
         SmartDashboard.putString("Color", targetColor);
         return targetColor;
+    }
+
+    /**
+     * sets the actuator to the "on" position
+     * @author hrl
+     */
+    public void enable() {
+        actuator.set(RobotMap.WheelOfFortune.ACTUATOR_ENABLED_STATE);
+    }
+
+    /**
+     * sets the actuator to the "off" position
+     * @author hrl
+     */
+    public void disable() {
+        actuator.set(!RobotMap.WheelOfFortune.ACTUATOR_ENABLED_STATE);
+    }
+
+    /**
+     * sets the actuator to the position it is not currently in
+     * @author hrl
+     */
+    public void toggle() {
+        actuator.set(!actuator.get());
     }
 
     /**
