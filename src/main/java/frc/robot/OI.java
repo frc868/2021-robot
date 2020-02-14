@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
+import frc.robot.Robot;
 
 /**
  * The class in which we map our driver/operator input to specific tasks on the robot
@@ -18,14 +19,10 @@ public class OI {
     }
 
     public static void update() {
-        driver.bA.whenPressed(() -> Robot.hopper.shoot());
-        driver.bA.whenReleased(() -> Robot.hopper.resetOverride());
-      
-        Robot.turret.setSpeed(driver.getLX());
         updateSD();
     }
 
     public static void updateSD() {
-        SmartDashboard.putString("Vision Data", Robot.camera.toString());
+        SmartDashboard.putString("WoF Color", Robot.wheel.toString());
     }
 }
