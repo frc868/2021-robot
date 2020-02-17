@@ -43,13 +43,13 @@ public class TurnToAngleGyro {
         double currentAngle = Robot.gyro.getAngle();
 
         if (angle > 0 && angle <= 180) {
-            while (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
+            if (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
                 currentAngle = Robot.gyro.getAngle();
                 double speed = pid.calculate(currentAngle, angle);
                 Robot.drivetrain.setSpeed(speed, -speed);
             }
         } else if (angle < 0 && angle >= -180) { // turn backwards
-            while (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
+            if (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
                 currentAngle = Robot.gyro.getAngle();
                 double speed = pid.calculate(currentAngle, angle);
                 Robot.drivetrain.setSpeed(speed, -speed);
@@ -57,7 +57,5 @@ public class TurnToAngleGyro {
         } else {
             System.out.println("out of range");
         }
-
-        Robot.drivetrain.setSpeed(0, 0);
     }
 }

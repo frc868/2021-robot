@@ -96,20 +96,14 @@ public class Drivetrain {
      * @author hrl
      */
     public void driveStraight(double targetDist, double startPower, double endPower) {
-        this.resetEncoderPositions();
-
         double pGain = 0.5; // TODO: untested
         double initialDist = Math.abs(getLeftPosition());
         double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
 
-        while (Math.abs(getLeftPosition()) < distanceToTarget) {
-            double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
-            setSpeed(targetSpeed, targetSpeed);
+        double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
+        setSpeed(targetSpeed, targetSpeed);
 
-            distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
-        }
-
-        setSpeed(0, 0);
+        distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
     }
 
     /**

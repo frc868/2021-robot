@@ -18,9 +18,14 @@ public class Intake {
     private WPI_TalonSRX primary;
     private WPI_TalonSRX secondary;
 
+    private Timer timer;
+    private boolean timerStarted = false;
+
     private Intake() {
         primary = new WPI_TalonSRX(RobotMap.Intake.PRIMARY);
         secondary = new WPI_TalonSRX(RobotMap.Intake.SECONDARY);
+
+        timer = new Timer();
 
         secondary.follow(primary);
     }
@@ -55,16 +60,24 @@ public class Intake {
      * in autonomous.
      * @param delay the threshold for how long the intake can run, in seconds
      * @param power the power to run the intake at from -1 to 1
+     * @return false if not finished, true if finished
+     * @author hrl
      */
-    public void intakeUntilFull(double delay, double power) {
-        Timer timer = new Timer();
-        timer.reset();
-        timer.start();
+    public boolean intakeUntilFull(double delay, double power) {
+        if (!timerStarted) {
+            timer.reset();
+            timer.start();
+            this.timerStarted = true;
+        }
 
         // while we're either not full or we're behind the delay...
-        while ((Robot.hopper.getBallCount() < 5) || (timer.get() < delay)) {
+        if ((Robot.hopper.getBallCount() < 5) || (timer.get() < delay)) {
             this.setSpeed(power);
+            return false;
+        } else { // either delay elapsed or we're full
+            timer.stop();
+            this.timerStarted = false;
+            return true;
         }
-        this.setSpeed(0);
     }
 }

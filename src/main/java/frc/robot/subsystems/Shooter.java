@@ -78,11 +78,9 @@ import frc.robot.helpers.Helper;
      * @author hrl
      */
     public void shootUntilClear(double pwr) {
-        while (Robot.hopper.getBallCount() > 0) {
+        if (Robot.hopper.getBallCount() > 0) {
             Robot.hopper.shoot();
             this.setSpeed(pwr);
         }
-        Robot.hopper.stop();
-        this.setSpeed(0);
     }
 }

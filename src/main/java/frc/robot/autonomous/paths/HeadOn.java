@@ -15,17 +15,69 @@ import frc.robot.autonomous.AutonMap;
  * @author hrl
  */
 public class HeadOn {
+    private static double currentDistance = 0;
+    private static int currentBallCount = 0;
+    private HeadOnState currentState = HeadOnState.ToShootPosition;
+
+    private enum HeadOnState {
+        ToShootPosition {
+            @Override
+            public HeadOnState nextState() {
+                if (currentDistance < AutonMap.HeadOn.DISTANCE) {
+                    return this;
+                }
+                return Shooting;
+            }
+
+            @Override
+            public void run() {
+                Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE, AutonMap.HeadOn.START_POWER,
+                        AutonMap.HeadOn.END_POWER);
+            }
+        },
+        Shooting {
+            @Override
+            public HeadOnState nextState() {
+                if (currentBallCount > 0) {
+                    return this;
+                }
+                return Done;
+            }
+
+            @Override
+            public void run() {
+                Robot.drivetrain.setSpeed(0, 0);
+                Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_POWER);
+            }
+        },
+        Done {
+            @Override
+            public HeadOnState nextState() {
+                return this;
+            }
+
+            @Override
+            public void run() {
+                Robot.hopper.stop();
+                Robot.shooter.setSpeed(0);
+                Robot.drivetrain.setSpeed(0, 0);
+            }
+        };
+
+        public abstract HeadOnState nextState();
+        public abstract void run();
+    }
+
     /**
      * Runs the autonomous path.
      */
     public void run() {
-        // we're going backwards.
-        Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE,
-                                       AutonMap.HeadOn.START_POWER,
-                                       AutonMap.HeadOn.END_POWER);
+        // update state variables
+        currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
+        currentBallCount = Robot.hopper.getBallCount();
 
-        // run the shooter
-        Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_POWER);
+        this.currentState = this.currentState.nextState();
+        this.currentState.run();
     }
 
     /**
