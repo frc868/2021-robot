@@ -19,6 +19,8 @@ public class Drivetrain {
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
 
+    private double initialDistance = 0; // used for driveStraight()
+
     private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
 
     private Drivetrain() {
@@ -96,14 +98,24 @@ public class Drivetrain {
      * @author hrl
      */
     public void driveStraight(double targetDist, double startPower, double endPower) {
+        if (this.initialDistance == 0) {
+            this.initialDistance = Math.abs(getLeftPosition());
+        }
+
         double pGain = 0.5; // TODO: untested
-        double initialDist = Math.abs(getLeftPosition());
-        double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
+        double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
 
         double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
         setSpeed(targetSpeed, targetSpeed);
 
-        distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - initialDist);
+        distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+    }
+
+    /**
+     * resets the initial distance used by driveStraight()
+     */
+    public void resetInitialDistance() {
+        this.initialDistance = 0;
     }
 
     /**

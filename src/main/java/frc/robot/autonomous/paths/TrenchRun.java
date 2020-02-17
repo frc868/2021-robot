@@ -64,7 +64,7 @@ public class TrenchRun {
                 if (Robot.gyro.getAngle() < AutonMap.TrenchRun.TURN_ANGLE) {
                     return this;
                 }
-                return ToShootPosition;
+                return ReadyToShootPosition;
             }
 
             @Override
@@ -72,6 +72,19 @@ public class TrenchRun {
                 Robot.intake.setSpeed(0); // TODO: could be part of an intake transitional stage?
                 ttag.run();
             }
+        },
+        ReadyToShootPosition {
+            @Override
+            public TrenchRunState nextState() {
+                // NOTE: this only needs to run once
+                return ToShootPosition;
+            }
+
+            @Override
+            public void run() {
+                Robot.drivetrain.resetInitialDistance();
+            }
+            
         },
         ToShootPosition {
             @Override
@@ -136,8 +149,8 @@ public class TrenchRun {
             this.encodersReset = true;
         }
 
-        this.currentState = this.currentState.nextState();
         this.currentState.run();
+        this.currentState = this.currentState.nextState();
     }
 
     /**
