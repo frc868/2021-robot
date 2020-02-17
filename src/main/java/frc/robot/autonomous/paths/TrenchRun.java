@@ -9,6 +9,7 @@ package frc.robot.autonomous.paths;
 
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
+import frc.robot.autonomous.AutonPath;
 import frc.robot.autonomous.TurnToAngleGyro;
 
 /**
@@ -16,14 +17,12 @@ import frc.robot.autonomous.TurnToAngleGyro;
  * and shoots all five (hopefully into the inner).
  * @author hrl
  */
-public class TrenchRun {
+public class TrenchRun extends AutonPath {
     private static double currentDistance = 0;
     private static int currentBallCount = 0;
     private TrenchRunState currentState = TrenchRunState.ToBallIntake;
 
-    private static TurnToAngleGyro ttag = new TurnToAngleGyro(AutonMap.TrenchRun.TURN_ANGLE);
-
-    private boolean encodersReset = false; // TODO: this is a HUGE hack.
+    private static TurnToAngleGyro ttag = new TurnToAngleGyro();
 
     private enum TrenchRunState {
         ToBallIntake {
@@ -45,6 +44,8 @@ public class TrenchRun {
         Intaking {
             @Override
             public TrenchRunState nextState() {
+                // intakeUntilFull() returns true if the hopper is full or the time delay has
+                // been crossed.
                 if (Robot.intake.intakeUntilFull(AutonMap.TrenchRun.INTAKE_DELAY,
                                                  AutonMap.TrenchRun.INTAKE_POWER)) {
                     return Turning;
@@ -71,7 +72,7 @@ public class TrenchRun {
             @Override
             public void run() {
                 Robot.intake.setSpeed(0); // TODO: could be part of an intake transitional stage?
-                ttag.run();
+                ttag.run(AutonMap.TrenchRun.TURN_ANGLE);
             }
         },
         ReadyToShootPosition {
@@ -85,7 +86,7 @@ public class TrenchRun {
             public void run() {
                 Robot.drivetrain.resetInitialDistance();
             }
-            
+
         },
         ToShootPosition {
             @Override
@@ -126,9 +127,10 @@ public class TrenchRun {
 
             @Override
             public void run() {
-                Robot.hopper.stop();
-                Robot.shooter.setSpeed(0);
                 Robot.drivetrain.setSpeed(0, 0);
+                Robot.intake.setSpeed(0);
+                Robot.hopper.stop();
+                Robot.shooter.stop();
             }
         };
 
@@ -139,28 +141,13 @@ public class TrenchRun {
     /**
      * Runs the autonomous path.
      */
+    @Override
     public void run() {
         // update state variables
         currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
         currentBallCount = Robot.hopper.getBallCount();
 
-        // TODO: HUGE hack. shouldn't be depending on resetting encoders at all.
-        if (this.currentState.equals(TrenchRunState.ToShootPosition) && !this.encodersReset) {
-            Robot.drivetrain.resetEncoderPositions();
-            this.encodersReset = true;
-        }
-
         this.currentState.run();
         this.currentState = this.currentState.nextState();
-    }
-
-    /**
-     * Stops the autonomous path.
-     */
-    public void stop() {
-        Robot.drivetrain.setSpeed(0, 0);
-        Robot.intake.setSpeed(0);
-        Robot.hopper.stop();
-        Robot.shooter.stop();
     }
 }

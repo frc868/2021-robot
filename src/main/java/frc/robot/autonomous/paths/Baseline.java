@@ -2,12 +2,13 @@ package frc.robot.autonomous.paths;
 
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
+import frc.robot.autonomous.AutonPath;
 
 /** 
  * Gets the robot to the baseline.
  * @author jk, hrl
  */
-public class Baseline {
+public class Baseline extends AutonPath {
     private static double currentDistance = 0;
     private BaselineState currentState = BaselineState.ToBaseline;
 
@@ -46,17 +47,11 @@ public class Baseline {
     /**
      * Runs the autonomous path.
      */
+    @Override
     public void run() {
         currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
 
         this.currentState.run();
         this.currentState = this.currentState.nextState();
-    }
-
-    /**
-     * Stops the autonomous path.
-     */
-    public void stop() {
-        Robot.drivetrain.setSpeed(0, 0);
     }
  }

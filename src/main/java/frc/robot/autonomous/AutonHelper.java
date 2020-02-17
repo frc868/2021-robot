@@ -17,14 +17,14 @@ import frc.robot.autonomous.paths.TrenchRun;
 public class AutonHelper {
     private static AutonHelper instance;
 
-    private HashMap<String, Runnable> paths = new HashMap<String, Runnable>();
+    private HashMap<String, AutonPath> paths = new HashMap<String, AutonPath>();
     private SendableChooser<String> chooser = new SendableChooser<>();
 
     private AutonHelper() {
-        this.addPath("Nothing", () -> new DoNothing().run());
-        this.addPath("Baseline", () -> new Baseline().run());
-        this.addPath("Head-On", () -> new HeadOn().run());
-        this.addPath("Trench Run", () -> new TrenchRun().run());
+        this.addPath("Nothing", new DoNothing());
+        this.addPath("Baseline", new Baseline());
+        this.addPath("Head-On", new HeadOn());
+        this.addPath("Trench Run", new TrenchRun());
     }
 
     /**
@@ -43,7 +43,7 @@ public class AutonHelper {
      * @param name the name to assign the autonomous path
      * @param func the autonomous path itself
      */
-    public void addPath(String name, Runnable func) {
+    public void addPath(String name, AutonPath func) {
         paths.put(name, func);
         chooser.addOption(name, name);
     }
@@ -60,7 +60,7 @@ public class AutonHelper {
      * Runs whatever path is selected on the sendable chooser.
      */
     public void runSelectedPath() {
-        (paths.get(chooser.getSelected())).run();
+        paths.get(chooser.getSelected()).run();
     }
 
     /**

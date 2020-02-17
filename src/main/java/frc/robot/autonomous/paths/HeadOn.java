@@ -9,12 +9,13 @@ package frc.robot.autonomous.paths;
 
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
+import frc.robot.autonomous.AutonPath;
 
 /**
  * Backs up from the starting position and shoots three balls head-on.
  * @author hrl
  */
-public class HeadOn {
+public class HeadOn extends AutonPath {
     private static double currentDistance = 0;
     private static int currentBallCount = 0;
     private HeadOnState currentState = HeadOnState.ToShootPosition;
@@ -59,7 +60,7 @@ public class HeadOn {
             @Override
             public void run() {
                 Robot.hopper.stop();
-                Robot.shooter.setSpeed(0);
+                Robot.shooter.stop();
                 Robot.drivetrain.setSpeed(0, 0);
             }
         };
@@ -71,6 +72,7 @@ public class HeadOn {
     /**
      * Runs the autonomous path.
      */
+    @Override
     public void run() {
         // update state variables
         currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
@@ -78,14 +80,5 @@ public class HeadOn {
 
         this.currentState.run();
         this.currentState = this.currentState.nextState();
-    }
-
-    /**
-     * Stops the autonomous path.
-     */
-    public void stop() {
-        Robot.hopper.stop();
-        Robot.shooter.stop();
-        Robot.drivetrain.setSpeed(0, 0);
     }
 }

@@ -23,16 +23,13 @@ public class TurnToAngleGyro {
 
     private double initialAngle;
 
-    private int angle; // setpoint
-
     /**
      * Creates a new TurnToAngleGyro object, to be run with TurnToAngleGyro.run().
      * @param angle the angle to turn to, from -180 to +180
      */
-    public TurnToAngleGyro(int angle) {
+    public TurnToAngleGyro() {
         // initialize sources
         pid = new PIDController(kP, kI, kD);
-        this.angle = angle;
 
         this.initialAngle = Robot.gyro.getAngle();
     }
@@ -47,7 +44,7 @@ public class TurnToAngleGyro {
     /**
      * Turns the robot to the specified angle (in degrees).
      */
-    public void run() {
+    public void run(int angle) {
         double currentAngle = Robot.gyro.getAngle() - initialAngle;
 
         if (angle > 0 && angle <= 180) {
@@ -61,7 +58,7 @@ public class TurnToAngleGyro {
                 Robot.drivetrain.setSpeed(speed, -speed);
             }
         } else {
-            System.out.println("out of range");
+            System.out.println("TTAG: out of range");
         }
     }
 }
