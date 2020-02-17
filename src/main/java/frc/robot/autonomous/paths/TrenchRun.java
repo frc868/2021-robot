@@ -55,6 +55,7 @@ public class TrenchRun {
             @Override
             public void run() {
                 // NOTE: purposefully a stub. nextState actually runs the intake code.
+                ttag.reset(); // NOTE: needed for TTAG to work without a ReadyToTurn state.
                 Robot.drivetrain.setSpeed(0, 0);
             }
         },

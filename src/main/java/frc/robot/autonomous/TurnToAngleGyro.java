@@ -21,6 +21,8 @@ public class TurnToAngleGyro {
     private final double tolerance = 1; // TODO: untested
     private PIDController pid;
 
+    private double initialAngle;
+
     private int angle; // setpoint
 
     /**
@@ -31,26 +33,30 @@ public class TurnToAngleGyro {
         // initialize sources
         pid = new PIDController(kP, kI, kD);
         this.angle = angle;
+
+        this.initialAngle = Robot.gyro.getAngle();
     }
-   
+
+    /**
+     * Resets the initial angle to wherever the robot currently is.
+     */
+    public void reset() {
+        this.initialAngle = Robot.gyro.getAngle();
+    }
+
     /**
      * Turns the robot to the specified angle (in degrees).
      */
     public void run() {
-        // TODO: we shouldn't depend on gyro reset here.
-        Robot.gyro.reset();
-
-        double currentAngle = Robot.gyro.getAngle();
+        double currentAngle = Robot.gyro.getAngle() - initialAngle;
 
         if (angle > 0 && angle <= 180) {
             if (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                currentAngle = Robot.gyro.getAngle();
                 double speed = pid.calculate(currentAngle, angle);
                 Robot.drivetrain.setSpeed(speed, -speed);
             }
         } else if (angle < 0 && angle >= -180) { // turn backwards
             if (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                currentAngle = Robot.gyro.getAngle();
                 double speed = pid.calculate(currentAngle, angle);
                 Robot.drivetrain.setSpeed(speed, -speed);
             }
