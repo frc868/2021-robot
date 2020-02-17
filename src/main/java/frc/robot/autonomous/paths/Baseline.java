@@ -49,8 +49,8 @@ public class Baseline {
     public void run() {
         currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
 
-        this.currentState = this.currentState.nextState();
         this.currentState.run();
+        this.currentState = this.currentState.nextState();
     }
 
     /**

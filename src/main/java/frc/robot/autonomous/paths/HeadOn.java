@@ -76,8 +76,8 @@ public class HeadOn {
         currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
         currentBallCount = Robot.hopper.getBallCount();
 
-        this.currentState = this.currentState.nextState();
         this.currentState.run();
+        this.currentState = this.currentState.nextState();
     }
 
     /**
