@@ -63,8 +63,10 @@ public class RobotMap {
     }
 
     public static class Shooter {
-        public static final int MOTOR = 0; // TODO: untested
-        public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
+        public static final int PRIMARY = 0; // TODO: untested
+        public static final int SECONDARY = 0; // TODO: untested
+        public static final boolean PRIMARY_IS_INVERTED = true; // TODO: untested
+        public static final boolean SECONDARY_IS_INVERTED = false; // TODO: untested
     }
 
     public static class Turret {
