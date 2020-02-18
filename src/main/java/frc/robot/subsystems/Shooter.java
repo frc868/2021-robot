@@ -31,7 +31,7 @@ public class Shooter {
     private CANPIDController pid;
 
     private double kP = 0, kI = 0, kD = 0;
-    private double kIz = 0, kFF = 0;
+    private double kIa = 0, kIz = 0, kFF = 0;
     private double kMaxOutput = 1;
     private double kMinOutput = -1;
 
@@ -76,6 +76,7 @@ public class Shooter {
         pid.setP(kP);
         pid.setI(kI);
         pid.setD(kD);
+        pid.setIAccum(kIa);
         pid.setIZone(kIz);
         pid.setFF(kFF);
         pid.setOutputRange(kMaxOutput, kMinOutput);
@@ -88,6 +89,7 @@ public class Shooter {
         pid.setP(0);
         pid.setI(0);
         pid.setD(0);
+        pid.setIAccum(0);
         pid.setIZone(0);
         pid.setFF(0);
         pid.setOutputRange(0, 0);
@@ -125,6 +127,7 @@ public class Shooter {
         SmartDashboard.putNumber("P Gain", kP);
         SmartDashboard.putNumber("I Gain", kI);
         SmartDashboard.putNumber("D Gain", kD);
+        SmartDashboard.putNumber("I Accum", kIa);
         SmartDashboard.putNumber("I Zone", kIz);
         SmartDashboard.putNumber("Feed Forward", kFF);
         SmartDashboard.putNumber("Max Output", kMaxOutput);
@@ -140,6 +143,7 @@ public class Shooter {
         double p = SmartDashboard.getNumber("P Gain", 0);
         double i = SmartDashboard.getNumber("I Gain", 0);
         double d = SmartDashboard.getNumber("D Gain", 0);
+        double ia = SmartDashboard.getNumber("I Accum", 0);
         double iz = SmartDashboard.getNumber("I Zone", 0);
         double ff = SmartDashboard.getNumber("Feed Forward", 0);
         double max = SmartDashboard.getNumber("Max Output", 0);
@@ -152,6 +156,7 @@ public class Shooter {
         kP = p;
         kI = i;
         kD = d;
+        kIa = ia;
         kIz = iz;
         kFF = ff;
         if ((max != kMaxOutput) || (min != kMinOutput)) {
