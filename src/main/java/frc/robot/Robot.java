@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.sensors.Camera;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.WheelOfFortune;
 public class Robot extends TimedRobot {
     public static Camera camera = Camera.getInstance();
     public static Climber climber = Climber.getInstance();
+    public static Compressor compressor = new Compressor();
     public static Drivetrain drivetrain = Drivetrain.getInstance();
     public static Gyro gyro = Gyro.getInstance();
     public static Intake intake = Intake.getInstance();
