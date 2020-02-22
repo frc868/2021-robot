@@ -5,8 +5,10 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Robot;
@@ -26,7 +28,7 @@ public class WheelOfFortune {
     }
 
     private WPI_TalonSRX primary;
-    private Solenoid actuator;
+    private DoubleSolenoid actuator;
 
     private ColorSensorV3 colorSensor;
     private ColorMatch colorMatch;
@@ -48,7 +50,8 @@ public class WheelOfFortune {
 
     private WheelOfFortune() {
         primary = new WPI_TalonSRX(RobotMap.WheelOfFortune.MOTOR);
-        actuator = new Solenoid(RobotMap.WheelOfFortune.ACTUATOR);
+        actuator = new DoubleSolenoid(RobotMap.WheelOfFortune.ACTUATOR1,
+                                      RobotMap.WheelOfFortune.ACTUATOR2);
 
         colorSensor = new ColorSensorV3(RobotMap.WheelOfFortune.COLOR_SENSOR);
         colorMatch = new ColorMatch();
@@ -281,27 +284,31 @@ public class WheelOfFortune {
     }
 
     /**
-     * sets the actuator to the "on" position
-     * @author hrl
-     */
-    public void enable() {
-        actuator.set(RobotMap.WheelOfFortune.ACTUATOR_ENABLED_STATE);
-    }
-
-    /**
-     * sets the actuator to the "off" position
-     * @author hrl
-     */
-    public void disable() {
-        actuator.set(!RobotMap.WheelOfFortune.ACTUATOR_ENABLED_STATE);
-    }
-
-    /**
      * sets the actuator to the position it is not currently in
-     * @author hrl
+     * @author hrl, acr
      */
     public void toggle() {
-        actuator.set(!actuator.get());
+        if (actuator.get() == Value.kForward) {
+            actuator.set(Value.kReverse);
+        } else if (actuator.get() == Value.kReverse) {
+            actuator.set(Value.kForward);
+        }
+    }
+
+    /**
+     * Raise the arm.
+     * @author acr
+     */
+    public void actuatorUp() {
+        actuator.set(Value.kReverse);
+    }
+
+    /**
+     * Lower the arm.
+     * @author acr
+     */
+    public void actuatorDown() {
+        actuator.set(Value.kForward);
     }
 
     /**

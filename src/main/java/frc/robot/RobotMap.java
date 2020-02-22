@@ -32,9 +32,9 @@ public class RobotMap {
 
     public static class Hopper {
         public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
-        public static final double BELT_SPEED = 0.4; // TODO: untested
-        public static final double FEEDER_SPEED = 0.7; // TODO: untested
-        public static final double BLUE_SPEED = 0.2;
+        public static final double BELT_SPEED = 1; // TODO: untested
+        public static final double FEEDER_SPEED = 1; // TODO: untested
+        public static final double BLUE_SPEED = 1;
 
         public static class Limit {
             public static final int BOTTOM_LEFT = 0; // TODO: untested
@@ -50,13 +50,15 @@ public class RobotMap {
             public static final int BLUE_WHEELS = 11; // TODO: untested
             public static final int FEEDER = 2; // TODO: untested
             public static final boolean BELT_IS_INVERTED = true; // TODO: untested
-            public static final boolean FEEDER_IS_INVERTED = true; // TODO: untested
+            public static final boolean FEEDER_IS_INVERTED = false; // TODO: untested
         }
     }
 
     public static class Intake {
         public static final int MOTOR = 13; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
+        public static final int ACTUATOR1 = 0; // TODO: untested
+        public static final int ACTUATOR2 = 3; // TODO: untested
     }
 
     public static class LED {
@@ -78,7 +80,8 @@ public class RobotMap {
 
     public static class WheelOfFortune {
         public static final int MOTOR = 4; // TODO: untested
-        public static final int ACTUATOR = 0; // TODO: untested
+        public static final int ACTUATOR1 = 2;
+        public static final int ACTUATOR2 = 5;
         public static final boolean ACTUATOR_ENABLED_STATE = false; // TODO: untested
 
         public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; // TODO: untested
