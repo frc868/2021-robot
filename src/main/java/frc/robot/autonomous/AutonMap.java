@@ -44,7 +44,32 @@ public class AutonMap {
         public static final double DISTANCE_TO_BALLS = 50.0;
         // from turned ball position to the target, regardless of angle
         public static final double DISTANCE_TO_TARGET = 50.0;
-        // the angle to turn after the hopper is full
+        // the angle to turn after
+        public static final int TURN_ANGLE = 120;
+
+        // the power to start driving with
+        public static final double START_POWER = 0.8;
+        // the power to end driving with
+        public static final double END_POWER = 0;
+
+        // the power to run the intake at
+        public static final double INTAKE_POWER = 1;
+        // the maximum amount of time (in seconds) we want to run the intake
+        public static final double INTAKE_DELAY = 1.5;
+
+        // the power to run the shooter at
+        // NOTE: this will be PID controlled and obsoleted in future code!
+        public static final double SHOOTER_POWER = 0.8;
+    }
+
+    public static class SixBall {
+        // from starting position to the balls we want to intake
+        public static final double DISTANCE_TO_BALLS = 50.0;
+        // from ball position to the end of all three trench balls
+        public static final double DISTANCE_WHILE_BALLS = 50.0;
+        // from turned ball position to the target, regardless of angle
+        public static final double DISTANCE_TO_TARGET = 50.0;
+        // the angle to turn after
         public static final int TURN_ANGLE = 120;
 
         // the power to start driving with

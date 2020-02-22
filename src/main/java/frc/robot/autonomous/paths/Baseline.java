@@ -49,7 +49,7 @@ public class Baseline extends AutonPath {
      */
     @Override
     public void run() {
-        currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
+        currentDistance = Robot.drivetrain.getCurrentDistance();
 
         this.currentState.run();
         this.currentState = this.currentState.nextState();

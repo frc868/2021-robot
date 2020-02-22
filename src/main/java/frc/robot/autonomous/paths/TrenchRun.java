@@ -141,10 +141,9 @@ public class TrenchRun extends AutonPath {
     /**
      * Runs the autonomous path.
      */
-    @Override
     public void run() {
         // update state variables
-        currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
+        currentDistance = Robot.drivetrain.getCurrentDistance();
         currentBallCount = Robot.hopper.getBallCount();
 
         this.currentState.run();

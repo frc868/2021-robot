@@ -113,9 +113,23 @@ public class Drivetrain {
 
     /**
      * resets the initial distance used by driveStraight()
+     * @author hrl
      */
     public void resetInitialDistance() {
         this.initialDistance = 0;
+    }
+
+    /**
+     * returns the current distance traversed relative to the initial distance
+     * @author hrl
+     */
+    public double getCurrentDistance() {
+        // ensure no races
+        if (this.initialDistance == 0) {
+            this.initialDistance = Math.abs(getLeftPosition());
+        }
+
+        return Math.abs(this.getLeftPosition() - this.initialDistance);
     }
 
     /**

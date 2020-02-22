@@ -75,7 +75,7 @@ public class HeadOn extends AutonPath {
     @Override
     public void run() {
         // update state variables
-        currentDistance = Math.abs(Robot.drivetrain.getLeftPosition());
+        currentDistance = Robot.drivetrain.getCurrentDistance();
         currentBallCount = Robot.hopper.getBallCount();
 
         this.currentState.run();
