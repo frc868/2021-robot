@@ -22,7 +22,7 @@ public class Hopper {
     private DigitalInput topRightLim;
 
     private WPI_TalonSRX belt;
-    private WPI_TalonSRX indexer;
+    private WPI_TalonSRX feeder;
 
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
@@ -30,7 +30,7 @@ public class Hopper {
     private boolean driverOverride = false;
 
     private double initialBeltPosition;
-    private double initialIndexerPosition;
+    private double initialFeederPosition;
 
     // store the last value of the limit switches to see if they have been triggered after
     private boolean lastBotState;
@@ -45,15 +45,15 @@ public class Hopper {
         topRightLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_RIGHT);
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.BELT);
-        indexer = new WPI_TalonSRX(RobotMap.Hopper.Motor.INDEXER);
+        feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
         belt.setInverted(RobotMap.Hopper.Motor.BELT_IS_INVERTED);
-        indexer.setInverted(RobotMap.Hopper.Motor.INDEXER_IS_INVERTED);
+        feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
 
         lastBotState = getBotLimit();
         lastTopState = getTopLimit();
 
         initialBeltPosition = belt.getSensorCollection().getQuadraturePosition();
-        initialIndexerPosition = indexer.getSensorCollection().getQuadraturePosition();
+        initialFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
     }
 
     /**
@@ -67,13 +67,13 @@ public class Hopper {
     }
 
     /**
-     * Stops the belt and indexer motors. Untested.
+     * Stops the belt and feeder motors. Untested.
      */
     public void stop() {
         driverOverride = false;
 
         belt.set(0);
-        indexer.set(0);
+        feeder.set(0);
     }
 
     /**
@@ -139,7 +139,7 @@ public class Hopper {
      */
     private void cycleIntake() {
         double currentBeltPosition = belt.getSensorCollection().getQuadraturePosition();
-        double currentIndexerPosition = indexer.getSensorCollection().getQuadraturePosition();
+        double currentFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
         if (currentBeltPosition - initialBeltPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
             belt.set(RobotMap.Hopper.BELT_SPEED); // TODO: check motor speed with balls
         }
@@ -147,11 +147,11 @@ public class Hopper {
             belt.set(0);
         }
 
-        if (currentIndexerPosition - initialIndexerPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
-            indexer.set(RobotMap.Hopper.INDEXER_SPEED); // TODO: check motor speed with balls
+        if (currentFeederPosition - initialFeederPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
+            feeder.set(RobotMap.Hopper.FEEDER_SPEED); // TODO: check motor speed with balls
         }
         else {
-            indexer.set(0);
+            feeder.set(0);
         }
     }
 
@@ -162,7 +162,7 @@ public class Hopper {
     public void shoot() {
         driverOverride = true;
         belt.set(RobotMap.Hopper.BELT_SPEED);
-        indexer.set(RobotMap.Hopper.INDEXER_SPEED);
+        feeder.set(RobotMap.Hopper.FEEDER_SPEED);
     }
 
     /**

@@ -1,35 +1,39 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Timer;
+
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
 /**
- * This is the code for the power cell intake. It initiallizes two
- * Talon motors and makes the primary follow the secondary motor. 
- * 
+ * Intakes power cells with a singular NEO 550.
  * @author ai
  */ 
 public class Intake {
     private static Intake instance;
-    private WPI_TalonSRX primary;
-    private WPI_TalonSRX secondary;
+    private CANSparkMax motor;
+    private DoubleSolenoid actuator;
 
     private Timer timer;
     private boolean timerStarted = false;
 
     private Intake() {
-        primary = new WPI_TalonSRX(RobotMap.Intake.PRIMARY);
-        secondary = new WPI_TalonSRX(RobotMap.Intake.SECONDARY);
-
+        motor = new CANSparkMax(RobotMap.Intake.MOTOR, MotorType.kBrushless);
+        actuator = new DoubleSolenoid(RobotMap.Intake.ACTUATOR1, RobotMap.Intake.ACTUATOR2);
         timer = new Timer();
 
-        secondary.follow(primary);
+        motor.setInverted(RobotMap.Intake.MOTOR_IS_INVERTED);
     }
 
+    /**
+     * Returns a singleton instance of the intake subsystem.
+     */
     public static Intake getInstance() {
         if (instance == null) {
             return new Intake();
@@ -39,19 +43,47 @@ public class Intake {
     }
     
     /**
-     * Sets the speed for the primary motor (secondary motor follows) 
+     * Sets the speed for the motor motor (secondary motor follows)
      * @param speed the speed to set from -1 to 1
      */
     public void setSpeed(double speed) {
-        primary.set(Helper.boundValue(speed, -1, 1));
+        motor.set(Helper.boundValue(speed, -1, 1));
     }
 
     /** 
-     * Retrieves the speed for the primary motor (and consequently secondary)
+     * Retrieves the speed for the motor motor (and consequently secondary)
      * @return the speed, from -1 to 1
      */
     public double getIntakeSpeed() {
-        return primary.get();
+        return motor.get();
+    }
+
+    /**
+     * sets the actuator to the position it is not currently in
+     * @author acr
+     */
+    public void toggle() {
+        if (actuator.get() == Value.kForward) {
+            actuator.set(Value.kReverse);
+        } else if (actuator.get() == Value.kReverse) {
+            actuator.set(Value.kForward);
+        }
+    }
+
+    /**
+     * Raise the intake.
+     * @author acr
+     */
+    public void actuatorUp() {
+        actuator.set(Value.kReverse);
+    }
+
+    /**
+     * Lower the intake.
+     * @author acr
+     */
+    public void actuatorDown() {
+        actuator.set(Value.kForward);
     }
 
     /**
