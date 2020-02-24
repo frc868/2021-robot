@@ -23,6 +23,7 @@ public class Hopper {
 
     private WPI_TalonSRX belt;
     private WPI_TalonSRX feeder;
+    private WPI_TalonSRX blueWheels;
 
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
@@ -46,6 +47,7 @@ public class Hopper {
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.BELT);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
+        blueWheels = new WPI_TalonSRX(RobotMap.Hopper.Motor.BLUE_WHEELS);
         belt.setInverted(RobotMap.Hopper.Motor.BELT_IS_INVERTED);
         feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
 
@@ -69,26 +71,21 @@ public class Hopper {
     /**
      * Stops the belt and feeder motors. Untested.
      */
-    private void stop() {
+    public void stop() {
         belt.set(0);
         feeder.set(0);
+        blueWheels.set(0);
     }
 
     /**
      * Updates the current state of the turret. To be called in robotPeriodic().
      */
     public void update() {
-        if (driverOverride) {
-            if (getBotLimitToggled()) {
-                count++;
-                cycleIntake();
-            }
-            else if (getTopLimitToggled()) {
-                count--;
-            }
-            else if (getTopLimitToggled() && count >= 5) {
-               stop();
-            }
+        if (!getBotLimitToggled()) {
+            count++;
+        }
+        if (getTopLimit()) {
+            stop();
         }
     }
 
@@ -103,18 +100,18 @@ public class Hopper {
      * Returns the state of the top limits.
      */
     private boolean getTopLimit() {
-        return topLeftLim.get() || topRightLim.get();
+        return !topLeftLim.get() || !topRightLim.get();
     }
 
     /**
      * Returns the state of the bottom limits.
      */
     private boolean getBotLimit() {
-        return botLeftLim.get() || botRightLim.get();
+        return !botLeftLim.get() || !botRightLim.get();
     }
 
     /**
-     * returns true if bottom limit switch is toggled from true to false
+     * returns true if bottom limit switches are toggled from true to false
      * (unsimplified expression:
      * current left state is false and last state is true, or current right state is false
      * and last state is true)
@@ -122,14 +119,23 @@ public class Hopper {
      * @return toggled
      */
     private boolean getBotLimitToggled() {
-        return !(botLeftLim.get() && botRightLim.get()) && lastBotState;
+        boolean result = !getBotLimit() && lastBotState;
+        lastBotState = !lastBotState;
+        return result;
     }
 
     /**
-     * Gets the current state of the top limit switches.
+     * returns true if top limit switches are toggled from true to false
+     * (unsimplified expression:
+     * current left state is false and last state is true, or current right state is false
+     * and last state is true)
+     * 
+     * @return toggled
      */
     private boolean getTopLimitToggled() {
-        return !(topLeftLim.get() && topRightLim.get()) && lastTopState;
+        boolean result = !getTopLimit() && lastTopState;
+        lastTopState = !lastTopState;
+        return result;
     }
 
     /**
@@ -177,5 +183,16 @@ public class Hopper {
      */
     public int getBallCount() {
         return count;
+    }
+
+    public void test() {
+        blueWheels.set(0.5);
+        belt.set(0.5);
+        update();
+    }
+
+    @Override
+    public String toString() {
+        return "Count: " + count + " , top: " + !topLeftLim.get();
     }
 }

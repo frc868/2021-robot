@@ -21,19 +21,18 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        Robot.drivetrain.arcadeDrive(0.5);
+        // Robot.drivetrain.arcadeDrive(0.5);
 
         // DRIVER CONTROLS
-        driver.bA.whenPressed(() -> Robot.shooter.setSpeed(0.8));
-        driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
 
-        driver.bB.whenPressed(() -> Robot.intake.setSpeed(0.8));
-        driver.bB.whenReleased(() -> Robot.intake.setSpeed(0));
+        driver.bB.whileHeld(() -> Robot.hopper.test());
+        driver.bB.whenReleased(() -> Robot.hopper.stop());
 
         updateSD();
     }
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
+        SmartDashboard.putString("IR LImit", Robot.hopper.toString());
     }
 }
