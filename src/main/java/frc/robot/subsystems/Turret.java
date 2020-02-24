@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -30,16 +32,28 @@ public class Turret {
 
     private PIDController pid;
 
+    private DigitalInput leftLimit;
+    private DigitalInput rightLimit;
+
     // for tracking target, TODO; tune
     private final double kP = 0.01, kI = 0, kD = 0;
     private final double MAX_POS = 30; // maximum angle for x-position
+    
+    private double zeroPos;
+    private double zeroAngle;
     
     private Turret() {
         motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);        
         motor.setInverted(RobotMap.Turret.MOTOR_IS_INVERTED);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); // TODO: untested
 
+        leftLimit = new DigitalInput(RobotMap.Turret.LEFT_LIMIT_PORT);
+        rightLimit = new DigitalInput(RobotMap.Turret.RIGHT_LIMIT_PORT);
+
         pid = new PIDController(kP, kI, kD);
+
+        zeroPos = motor.getSensorCollection().getQuadraturePosition();
+        zeroAngle = Robot.gyro.getAngle();
     }
 
     /**
@@ -57,6 +71,9 @@ public class Turret {
      * @param speed the speed to be set between -1 and 1
      */
     public void setSpeed(double speed) {
+        if (!leftLimit.get() || !rightLimit.get()) {
+            stop();
+        }
         motor.set(Helper.boundValue(speed));
     }
 
@@ -69,6 +86,14 @@ public class Turret {
     }
 
     /**
+     * Gets the current turret position
+     * @return the current quadrature encoder position
+     */
+    public double getPosition() {
+        return motor.getSensorCollection().getQuadraturePosition();
+    }
+
+    /**
      * Stops the turret.
      */
     public void stop() {
@@ -78,7 +103,7 @@ public class Turret {
     /**
      * Tracks the current shooting target.
      */
-    public void track() {
+    public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
             this.setSpeed(pid.calculate(Robot.camera.getPosition(), 0));
         } else {
@@ -86,5 +111,31 @@ public class Turret {
         }
 
         SmartDashboard.putData(this.pid);
+    }
+
+    /**
+     * Moves turret to safe position to avoid hitting wheel of fortune or climber arms 
+     * when they go up
+     */
+    public void safeZone() {
+        if (getPosition() < RobotMap.Turret.SAFE_POSITION && getPosition() > RobotMap.Turret.DEADZONE_LEFT) {
+            setSpeed(0.2);
+        }
+        else if (getPosition() > RobotMap.Turret.SAFE_POSITION && getPosition() < RobotMap.Turret.DEADZONE_RIGHT) {
+            setSpeed(-0.2);
+        }
+        else {
+            stop();
+        }
+    }
+
+    /**
+     * Lowest level of turret control; uses gyroscope angle to point turret towards the goal
+     */
+    public void trackGoal() {
+        double currentAngle = Robot.gyro.getAngle();
+        double angleError = currentAngle - zeroAngle;
+
+        
     }
 }

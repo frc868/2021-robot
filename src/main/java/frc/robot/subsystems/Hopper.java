@@ -103,14 +103,14 @@ public class Hopper {
      * Returns the state of the top limits.
      */
     private boolean getTopLimit() {
-        return topLeftLim.get() || topRightLim.get();
+        return (topLeftLim.get() || topRightLim.get());
     }
 
     /**
      * Returns the state of the bottom limits.
      */
     private boolean getBotLimit() {
-        return botLeftLim.get() || botRightLim.get();
+        return (botLeftLim.get() || botRightLim.get());
     }
 
     /**
