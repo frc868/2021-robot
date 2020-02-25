@@ -22,6 +22,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.WheelOfFortune;
 
+import frc.robot.autonomous.paths.Baseline;
+
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
  * @author dri
@@ -39,7 +41,8 @@ public class Robot extends TimedRobot {
     public static Turret turret = Turret.getInstance();
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
 
-    public static AutonHelper auton = AutonHelper.getInstance();
+    //public static AutonHelper auton = AutonHelper.getInstance();
+    public static Baseline baseline = new Baseline();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -47,7 +50,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        auton.initSD();
+        //auton.initSD();
     }
 
     @Override
@@ -63,7 +66,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        auton.runSelectedPath();
+        //auton.runSelectedPath();
+        baseline.run();
         turret.track();
         Scheduler.getInstance().run();
     }
