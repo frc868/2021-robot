@@ -22,7 +22,6 @@ public class ButtonWrapper extends Trigger {
     private final int angle; // only used if there's a POV button
     private final boolean isPOV; // determines if the button's a POV button
 
-    private boolean toggleState = false; // whether the button state has changed
     private boolean lastState = false; // previous state of the button
 
     public ButtonWrapper(XboxController controller, int id) {
@@ -61,18 +60,11 @@ public class ButtonWrapper extends Trigger {
      */
     public void whenPressed(Runnable func) {
         if (this.get() && !lastState) { // button is true, lastState is false
-            // toggle the state if the state is toggled
-            toggleState = !toggleState;
+            func.run();
         }
 
         // store the previous button state
         lastState = this.get();
-
-        // if the rising edge of the button is hit, run the Runnable
-        if (toggleState) {
-            func.run();
-            toggleState = !toggleState;
-        }
     }
 
     /**
@@ -81,17 +73,11 @@ public class ButtonWrapper extends Trigger {
      */
     public void whenReleased(Runnable func) {
         if (!this.get() && lastState) { // button is false, lastState is true
-            // the first rule of tautology club is the fundamental law of tautology club
-            toggleState = !toggleState;
+            func.run();
         }
 
         // store the previous button state
         lastState = this.get();
-
-        if (toggleState) {
-            func.run();
-            toggleState = !toggleState;
-        }
     }
 
     /**
@@ -104,21 +90,7 @@ public class ButtonWrapper extends Trigger {
         if (this.get()) {
             func.run();
         }
-    }
 
-    public void setToggleState(boolean toggleState) {
-        this.toggleState = toggleState;
-    }
-
-    public void setLastState(boolean lastState) {
-        this.lastState = lastState;
-    }
-
-    public boolean getToggleState() {
-        return this.toggleState;
-    }
-
-    public boolean getLastState() {
-        return this.lastState;
+        lastState = this.get();
     }
 }
