@@ -76,6 +76,17 @@ public class RobotMap {
     public static class Turret {
         public static final int MOTOR = 1; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = false; // TODO: untested
+
+        public static class Limits {
+            public static final int LEFT_PORT = 0; // TODO: untested
+            public static final int RIGHT_PORT = 0; // TODO: untested
+        }
+
+        public static class Setpoints {
+            public static final double SAFE_POSITION = 0; // TODO: untested
+            public static final double DEADZONE_LEFT = 0; // TODO: untested
+            public static final double DEADZONE_RIGHT = 0; // TODO: untested
+        }
     }
 
     public static class WheelOfFortune {

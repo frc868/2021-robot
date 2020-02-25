@@ -23,7 +23,7 @@ import frc.robot.helpers.Helper;
  * than a prototype as it currently stands, and may need major refactoring or 
  * complete deletion for the final robot.
  * 
- * @author hrl
+ * @author hrl, dri
  */
 public class Turret {
     private static Turret instance;
@@ -47,8 +47,8 @@ public class Turret {
         motor.setInverted(RobotMap.Turret.MOTOR_IS_INVERTED);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); // TODO: untested
 
-        leftLimit = new DigitalInput(RobotMap.Turret.LEFT_LIMIT_PORT);
-        rightLimit = new DigitalInput(RobotMap.Turret.RIGHT_LIMIT_PORT);
+        leftLimit = new DigitalInput(RobotMap.Turret.Limits.LEFT_PORT);
+        rightLimit = new DigitalInput(RobotMap.Turret.Limits.RIGHT_PORT);
 
         pid = new PIDController(kP, kI, kD);
 
@@ -71,7 +71,7 @@ public class Turret {
      * @param speed the speed to be set between -1 and 1
      */
     public void setSpeed(double speed) {
-        if (!leftLimit.get() || !rightLimit.get()) {
+        if (leftLimit.get() || rightLimit.get()) { // TODO: untested limit switch states
             stop();
         }
         motor.set(Helper.boundValue(speed));
@@ -118,10 +118,10 @@ public class Turret {
      * when they go up
      */
     public void safeZone() {
-        if (getPosition() < RobotMap.Turret.SAFE_POSITION && getPosition() > RobotMap.Turret.DEADZONE_LEFT) {
+        if (getPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION && getPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
             setSpeed(0.2);
         }
-        else if (getPosition() > RobotMap.Turret.SAFE_POSITION && getPosition() < RobotMap.Turret.DEADZONE_RIGHT) {
+        else if (getPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION && getPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
             setSpeed(-0.2);
         }
         else {
