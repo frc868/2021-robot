@@ -59,12 +59,11 @@ public class ButtonWrapper extends Trigger {
      * @param func a lambda representing the action
      */
     public void whenPressed(Runnable func) {
-        if (this.get() && !lastState) { // button is true, lastState is false
+        // button is true, and we ran a whenReleased
+        if (this.get() && !lastState) {
             func.run();
+            lastState = true;
         }
-
-        // store the previous button state
-        lastState = this.get();
     }
 
     /**
@@ -72,12 +71,11 @@ public class ButtonWrapper extends Trigger {
      * @param func a lambda representing the action
      */
     public void whenReleased(Runnable func) {
-        if (!this.get() && lastState) { // button is false, lastState is true
+        // button is false, and a whenPressed or whileHeld happened
+        if (!this.get() && lastState) {
             func.run();
+            lastState = false;
         }
-
-        // store the previous button state
-        lastState = this.get();
     }
 
     /**
@@ -89,8 +87,7 @@ public class ButtonWrapper extends Trigger {
     public void whileHeld(Runnable func) {
         if (this.get()) {
             func.run();
+            lastState = true;
         }
-
-        lastState = this.get();
     }
 }
