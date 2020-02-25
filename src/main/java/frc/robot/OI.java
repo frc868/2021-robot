@@ -27,6 +27,12 @@ public class OI {
 
         driver.bB.whileHeld(() -> Robot.hopper.test());
         driver.bB.whenReleased(() -> Robot.hopper.stop());
+        driver.bA.whileHeld(() -> Robot.hopper.shoot());
+        driver.bA.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.hopper.resetOverride();
+
+        });
 
         updateSD();
     }

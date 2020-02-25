@@ -18,6 +18,9 @@ public class Hopper {
     private DigitalInput botLeftLim;
     private DigitalInput botRightLim;
 
+    private DigitalInput midLeftLim;
+    private DigitalInput midRightLim;
+
     private DigitalInput topLeftLim;
     private DigitalInput topRightLim;
 
@@ -28,13 +31,14 @@ public class Hopper {
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
     // a state variable to control whether the driver has overriden the autonomous functions
-    private boolean driverOverride = false;
+    private boolean driverOverride;
 
     private double initialBeltPosition;
     private double initialFeederPosition;
 
     // store the last value of the limit switches to see if they have been triggered after
     private boolean lastBotState;
+    private boolean lastMidState;
     private boolean lastTopState;
 
     private Hopper() {
@@ -42,6 +46,8 @@ public class Hopper {
 
         botLeftLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_LEFT);
         botRightLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_RIGHT);
+        midLeftLim = new DigitalInput(RobotMap.Hopper.Limit.MID_LEFT);
+        midRightLim = new DigitalInput(RobotMap.Hopper.Limit.MID_RIGHT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_LEFT);
         topRightLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_RIGHT);
 
@@ -52,6 +58,7 @@ public class Hopper {
         feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
 
         lastBotState = getBotLimit();
+        lastMidState = getMidLimit();
         lastTopState = getTopLimit();
 
         initialBeltPosition = belt.getSensorCollection().getQuadraturePosition();
@@ -81,11 +88,12 @@ public class Hopper {
      * Updates the current state of the turret. To be called in robotPeriodic().
      */
     public void update() {
-        if (!getBotLimitToggled()) {
-            count++;
-        }
-        if (getTopLimit()) {
+        if (getMidLimit()) {
             stop();
+        } else {
+            blueWheels.set(1);
+            belt.set(1);
+            feeder.set(1);
         }
     }
 
@@ -100,8 +108,17 @@ public class Hopper {
      * Returns the state of the top limits.
      */
     private boolean getTopLimit() {
+       
         return !topLeftLim.get() || !topRightLim.get();
     }
+
+    /**
+     * Returns the state of the top limits.
+     */
+    private boolean getMidLimit() {
+       
+        return !midLeftLim.get() || !midRightLim.get();
+    }    
 
     /**
      * Returns the state of the bottom limits.
@@ -119,9 +136,35 @@ public class Hopper {
      * @return toggled
      */
     private boolean getBotLimitToggled() {
-        boolean result = !getBotLimit() && lastBotState;
-        lastBotState = !lastBotState;
-        return result;
+        if (getBotLimit() != lastBotState) {
+            lastBotState = getBotLimit();
+            if (lastBotState == RobotMap.Hopper.Limit.BOT_LAST_STATE_VALUE) {
+                count++;
+                return true;
+            }
+        }
+        return false;
+       
+    }
+
+    /**
+     * returns true if bottom limit switches are toggled from true to false
+     * (unsimplified expression:
+     * current left state is false and last state is true, or current right state is false
+     * and last state is true)
+     * 
+     * @return toggled
+     */
+    private boolean getMidLimitToggled() {
+        if (getMidLimit() != lastMidState) {
+            lastMidState = getMidLimit();
+            if (lastMidState == RobotMap.Hopper.Limit.MID_LAST_STATE_VALUE) {
+                count++;
+                return true;
+            }
+        }
+        return false;
+       
     }
 
     /**
@@ -133,9 +176,15 @@ public class Hopper {
      * @return toggled
      */
     private boolean getTopLimitToggled() {
-        boolean result = !getTopLimit() && lastTopState;
-        lastTopState = !lastTopState;
-        return result;
+        if (getTopLimit() != lastBotState) {
+            lastTopState = getTopLimit();
+            if (lastTopState == RobotMap.Hopper.Limit.TOP_LAST_STATE_VALUE) {
+                count--;
+                return true;
+            }
+        }
+        return false;
+       
     }
 
     /**
@@ -186,9 +235,7 @@ public class Hopper {
     }
 
     public void test() {
-        blueWheels.set(0.5);
-        belt.set(0.5);
-        update();
+        update();     
     }
 
     @Override
