@@ -44,7 +44,7 @@ public class Hopper {
         topLeftLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_LEFT);
         topRightLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_RIGHT);
 
-        belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.BELT);
+        belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
         belt.setInverted(RobotMap.Hopper.Motor.BELT_IS_INVERTED);
         feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
