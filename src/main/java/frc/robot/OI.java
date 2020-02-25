@@ -33,7 +33,15 @@ public class OI {
             Robot.hopper.resetOverride();
 
         });
-
+        driver.bRB.whileHeld(() -> {
+            Robot.hopper.update();
+            Robot.intake.setSpeed(1);
+        });
+        driver.bRB.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.intake.setSpeed(0);
+        });        
+ 
         updateSD();
     }
 

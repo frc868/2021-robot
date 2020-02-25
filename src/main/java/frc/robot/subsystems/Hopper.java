@@ -51,10 +51,10 @@ public class Hopper {
         topLeftLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_LEFT);
         topRightLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_RIGHT);
 
-        belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.BELT);
+        belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
         blueWheels = new WPI_TalonSRX(RobotMap.Hopper.Motor.BLUE_WHEELS);
-        belt.setInverted(RobotMap.Hopper.Motor.BELT_IS_INVERTED);
+        belt.setInverted(RobotMap.Hopper.Motor.HOPPER_FLOOR_IS_INVERTED);
         feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
 
         lastBotState = getBotLimit();
@@ -85,15 +85,17 @@ public class Hopper {
     }
 
     /**
-     * Updates the current state of the turret. To be called in robotPeriodic().
+     * Indexes hopper. 
+     * @author igc
      */
     public void update() {
-        if (getMidLimit()) {
-            stop();
-        } else {
-            blueWheels.set(1);
+        count();
+        if (!getTopLimit() && (!getMidLimit() || getBotLimit())) {
             belt.set(1);
             feeder.set(1);
+            blueWheels.set(1);
+        } else {
+            stop();
         }
     }
 
@@ -185,10 +187,10 @@ public class Hopper {
     }
 
     private void count() {
-        if(getTopLimitToggled) {
+        if(getTopLimitToggled()) {
             count--;
         }
-        if(getBotLimitToggled) {
+        if(getMidLimitToggled()) {
             count++;
         }
     }
@@ -200,27 +202,25 @@ public class Hopper {
         double currentBeltPosition = belt.getSensorCollection().getQuadraturePosition();
         double currentFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
         if (currentBeltPosition - initialBeltPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
-            belt.set(RobotMap.Hopper.BELT_SPEED); // TODO: check motor speed with balls
-        }
-        else {        
+            belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED); // TODO: check motor speed with balls
+        } else {
             belt.set(0);
         }
 
         if (currentFeederPosition - initialFeederPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
             feeder.set(RobotMap.Hopper.FEEDER_SPEED); // TODO: check motor speed with balls
-        }
-        else {
+        } else {
             feeder.set(0);
         }
     }
 
     /**
-     * called when the driver is ready to shoot (pushing the button on the controller)
-     * sets the belt speed to the tested value necessary to feed 
+     * called when the driver is ready to shoot (pushing the button on the
+     * controller) sets the belt speed to the tested value necessary to feed
      */
     public void shoot() {
         driverOverride = true;
-        belt.set(RobotMap.Hopper.BELT_SPEED);
+        belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED);
         feeder.set(RobotMap.Hopper.FEEDER_SPEED);
     }
 

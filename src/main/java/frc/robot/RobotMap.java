@@ -21,10 +21,10 @@ public class RobotMap {
     }
 
     public static class Drivetrain {
-        public static final int LEFT_PRIMARY = 9; // TODO: untested
-        public static final int LEFT_SECONDARY = 10; // TODO: untested
-        public static final int RIGHT_PRIMARY = 8; // TODO: untested
-        public static final int RIGHT_SECONDARY = 7; // TODO: untested
+        public static final int LEFT_PRIMARY = 12; // TODO: untested
+        public static final int LEFT_SECONDARY = 13; // TODO: untested
+        public static final int RIGHT_PRIMARY = 14; // TODO: untested
+        public static final int RIGHT_SECONDARY = 15; // TODO: untested
 
         public static final boolean LEFT_IS_INVERTED = false; // TODO: untested
         public static final boolean RIGHT_IS_INVERTED = false; // TODO: untested
@@ -32,7 +32,7 @@ public class RobotMap {
 
     public static class Hopper {
         public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
-        public static final double BELT_SPEED = 1; // TODO: untested
+        public static final double HOPPER_FLOOR_SPEED = 1; // TODO: untested
         public static final double FEEDER_SPEED = 1; // TODO: untested
         public static final double BLUE_SPEED = 1;
 
@@ -50,16 +50,16 @@ public class RobotMap {
         }
 
         public static class Motor {
-            public static final int BELT = 10; // TODO: untested
+            public static final int HOPPER_FLOOR = 10; // TODO: untested
             public static final int BLUE_WHEELS = 11; // TODO: untested
             public static final int FEEDER = 3; // TODO: untested
-            public static final boolean BELT_IS_INVERTED = true; // TODO: untested
+            public static final boolean HOPPER_FLOOR_IS_INVERTED = true; // TODO: untested
             public static final boolean FEEDER_IS_INVERTED = false; // TODO: untested
         }
     }
 
     public static class Intake {
-        public static final int MOTOR = 13; // TODO: untested
+        public static final int MOTOR = 1; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
         public static final int ACTUATOR1 = 0; // TODO: untested
         public static final int ACTUATOR2 = 3; // TODO: untested
@@ -71,14 +71,14 @@ public class RobotMap {
     }
 
     public static class Shooter {
-        public static final int PRIMARY = 14; // TODO: untested
-        public static final int SECONDARY = 15; // TODO: untested
+        public static final int PRIMARY = 7; // TODO: untested
+        public static final int SECONDARY = 8; // TODO: untested
         public static final boolean PRIMARY_IS_INVERTED = true; // TODO: untested
         public static final boolean SECONDARY_IS_INVERTED = true; // TODO: untested
     }
 
     public static class Turret {
-        public static final int MOTOR = 1; // TODO: untested
+        public static final int MOTOR = 2; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = false; // TODO: untested
     }
 
