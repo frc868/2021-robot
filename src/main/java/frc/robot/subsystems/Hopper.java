@@ -139,7 +139,6 @@ public class Hopper {
         if (getBotLimit() != lastBotState) {
             lastBotState = getBotLimit();
             if (lastBotState == RobotMap.Hopper.Limit.BOT_LAST_STATE_VALUE) {
-                count++;
                 return true;
             }
         }
@@ -159,7 +158,6 @@ public class Hopper {
         if (getMidLimit() != lastMidState) {
             lastMidState = getMidLimit();
             if (lastMidState == RobotMap.Hopper.Limit.MID_LAST_STATE_VALUE) {
-                count++;
                 return true;
             }
         }
@@ -179,12 +177,20 @@ public class Hopper {
         if (getTopLimit() != lastBotState) {
             lastTopState = getTopLimit();
             if (lastTopState == RobotMap.Hopper.Limit.TOP_LAST_STATE_VALUE) {
-                count--;
                 return true;
             }
         }
         return false;
        
+    }
+
+    private void count() {
+        if(getTopLimitToggled) {
+            count--;
+        }
+        if(getBotLimitToggled) {
+            count++;
+        }
     }
 
     /**
