@@ -68,7 +68,7 @@ public class Intake {
      * @author acr
      */
     public void actuatorUp() {
-        actuator.set(Value.kReverse);
+        actuator.set(Value.kForward);
     }
 
     /**
@@ -76,6 +76,6 @@ public class Intake {
      * @author acr
      */
     public void actuatorDown() {
-        actuator.set(Value.kForward);
+        actuator.set(Value.kReverse);
     }
 }

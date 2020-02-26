@@ -10,6 +10,7 @@ import frc.robot.Robot;
  * Update should be called either in robotPeriodic() or teleopPeriodic()
  * @author hrl
  */
+
 public class OI {
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
@@ -21,12 +22,9 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        // Robot.drivetrain.arcadeDrive(0.5);
+        //Robot.drivetrain.arcadeDrive(1);
 
         // DRIVER CONTROLS
-
-        driver.bB.whileHeld(() -> Robot.hopper.test());
-        driver.bB.whenReleased(() -> Robot.hopper.stop());
         driver.bA.whileHeld(() -> Robot.hopper.shoot());
         driver.bA.whenReleased(() -> {
             Robot.hopper.stop();
@@ -40,7 +38,22 @@ public class OI {
         driver.bRB.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
-        });        
+        });
+        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
+        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
+
+
+        operator.bA.whileHeld(() -> Robot.hopper.shoot());
+        operator.bRB.whileHeld(() -> {
+            Robot.hopper.update();
+            Robot.intake.setSpeed(1);
+        });
+        operator.bRB.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.intake.setSpeed(0);
+        });
+        operator.dN.whenPressed(() -> Robot.intake.actuatorUp());
+        operator.dS.whenPressed(() -> Robot.intake.actuatorDown());   
  
         updateSD();
     }

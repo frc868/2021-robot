@@ -92,7 +92,7 @@ public class Hopper {
         count();
         if (!getTopLimit() && (!getMidLimit() || getBotLimit())) {
             belt.set(1);
-            feeder.set(1);
+            feeder.set(0.45);
             blueWheels.set(1);
         } else {
             stop();
@@ -190,6 +190,7 @@ public class Hopper {
         if(getTopLimitToggled()) {
             count--;
         }
+
         if(getMidLimitToggled()) {
             count++;
         }
@@ -240,12 +241,8 @@ public class Hopper {
         return count;
     }
 
-    public void test() {
-        update();     
-    }
-
     @Override
     public String toString() {
-        return "Count: " + count + " , top: " + !topLeftLim.get();
+        return "Count: " + count + " , top: " + getBotLimit();
     }
 }
