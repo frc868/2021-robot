@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import frc.robot.RobotMap;
 
 /**
@@ -24,6 +25,8 @@ public class Hopper {
     private DigitalInput topLeftLim;
     private DigitalInput topRightLim;
 
+    private Ultrasonic botSensor;
+
     private WPI_TalonSRX belt;
     private WPI_TalonSRX feeder;
     private WPI_TalonSRX blueWheels;
@@ -44,12 +47,14 @@ public class Hopper {
     private Hopper() {
         driverOverride = false;
 
-        botLeftLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_LEFT);
-        botRightLim = new DigitalInput(RobotMap.Hopper.Limit.BOTTOM_RIGHT);
-        midLeftLim = new DigitalInput(RobotMap.Hopper.Limit.MID_LEFT);
-        midRightLim = new DigitalInput(RobotMap.Hopper.Limit.MID_RIGHT);
-        topLeftLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_LEFT);
-        topRightLim = new DigitalInput(RobotMap.Hopper.Limit.TOP_RIGHT);
+        botLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.BOTTOM_LEFT);
+        botRightLim = new DigitalInput(RobotMap.Hopper.Sensors.BOTTOM_RIGHT);
+        midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
+        midRightLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_RIGHT);
+        topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
+        topRightLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_RIGHT);
+
+        botSensor = new Ultrasonic(RobotMap.Hopper.Sensors.ULTRASONIC_TRIG, RobotMap.Hopper.Sensors.ULTRASONIC_ECHO);
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
@@ -57,7 +62,7 @@ public class Hopper {
         belt.setInverted(RobotMap.Hopper.Motor.HOPPER_FLOOR_IS_INVERTED);
         feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
 
-        lastBotState = getBotLimit();
+        lastBotState = getBotSensor();
         lastMidState = getMidLimit();
         lastTopState = getTopLimit();
 
@@ -90,7 +95,7 @@ public class Hopper {
      */
     public void update() {
         count();
-        if (!getTopLimit() && (!getMidLimit() || getBotLimit())) {
+        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
             belt.set(1);
             feeder.set(0.45);
             blueWheels.set(1);
@@ -129,6 +134,13 @@ public class Hopper {
         return !botLeftLim.get() || !botRightLim.get();
     }
 
+    private boolean getBotSensor() {
+        if (botSensor.getRangeInches() < RobotMap.Hopper.Sensors.ULTRASONIC_THRESHOLD) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * returns true if bottom limit switches are toggled from true to false
      * (unsimplified expression:
@@ -137,10 +149,10 @@ public class Hopper {
      * 
      * @return toggled
      */
-    private boolean getBotLimitToggled() {
-        if (getBotLimit() != lastBotState) {
-            lastBotState = getBotLimit();
-            if (lastBotState == RobotMap.Hopper.Limit.BOT_LAST_STATE_VALUE) {
+    private boolean getBotSensorToggled() {
+        if (getBotSensor() != lastBotState) {
+            lastBotState = getBotSensor();
+            if (lastBotState == RobotMap.Hopper.Sensors.BOT_LAST_STATE_VALUE) {
                 return true;
             }
         }
@@ -159,7 +171,7 @@ public class Hopper {
     private boolean getMidLimitToggled() {
         if (getMidLimit() != lastMidState) {
             lastMidState = getMidLimit();
-            if (lastMidState == RobotMap.Hopper.Limit.MID_LAST_STATE_VALUE) {
+            if (lastMidState == RobotMap.Hopper.Sensors.MID_LAST_STATE_VALUE) {
                 return true;
             }
         }
@@ -178,7 +190,7 @@ public class Hopper {
     private boolean getTopLimitToggled() {
         if (getTopLimit() != lastBotState) {
             lastTopState = getTopLimit();
-            if (lastTopState == RobotMap.Hopper.Limit.TOP_LAST_STATE_VALUE) {
+            if (lastTopState == RobotMap.Hopper.Sensors.TOP_LAST_STATE_VALUE) {
                 return true;
             }
         }
@@ -243,6 +255,6 @@ public class Hopper {
 
     @Override
     public String toString() {
-        return "Count: " + count + " , top: " + getBotLimit();
+        return "Count: " + count + " , top: " + getBotSensor();
     }
 }
