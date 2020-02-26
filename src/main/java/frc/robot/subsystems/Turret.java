@@ -11,9 +11,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
@@ -27,6 +28,8 @@ import frc.robot.helpers.Helper;
  */
 public class Turret {
     private static Turret instance;
+
+    // private Encoder compEncoder;
 
     private WPI_TalonSRX motor;
 
@@ -71,6 +74,8 @@ public class Turret {
      * @param speed the speed to be set between -1 and 1
      */
     public void setSpeed(double speed) {
+        SmartDashboard.putBoolean("Left limit", leftLimit.get()); // TODO: for testing
+        SmartDashboard.putBoolean("Right limit", rightLimit.get()); // TODO: for testing
         if (leftLimit.get() || rightLimit.get()) { // TODO: untested limit switch states
             stop();
         }
@@ -97,7 +102,7 @@ public class Turret {
      * Stops the turret.
      */
     public void stop() {
-        this.setSpeed(0);
+        motor.set(0);
     }
 
     /**
@@ -135,7 +140,25 @@ public class Turret {
     public void trackGoal() {
         double currentAngle = Robot.gyro.getAngle();
         double angleError = currentAngle - zeroAngle;
-
         
+
     }
+
+    public void manualTurret() {
+        setSpeed(0.3*(OI.driver.getRT() - OI.driver.getLT()));
+    }
+
+    public double getAngle() {
+        return motor.getSensorCollection().getQuadraturePosition();
+    }
+
+    @Override
+    public String toString() {
+        return "" + getAngle();
+    }
+
+    // public double getcompEncoder() {
+    //     return get.compEncoder;
+    // }
+
 }
