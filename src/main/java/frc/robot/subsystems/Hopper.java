@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.RobotMap;
 
 /**
@@ -25,7 +25,7 @@ public class Hopper {
     private DigitalInput topLeftLim;
     private DigitalInput topRightLim;
 
-    private Ultrasonic botSensor;
+    private AnalogInput botSensor;
 
     private WPI_TalonSRX belt;
     private WPI_TalonSRX feeder;
@@ -44,6 +44,9 @@ public class Hopper {
     private boolean lastMidState;
     private boolean lastTopState;
 
+    private double botSensorInput;
+    private double botSensorDist;
+
     private Hopper() {
         driverOverride = false;
 
@@ -54,7 +57,7 @@ public class Hopper {
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
         topRightLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_RIGHT);
 
-        botSensor = new Ultrasonic(RobotMap.Hopper.Sensors.ULTRASONIC_TRIG, RobotMap.Hopper.Sensors.ULTRASONIC_ECHO);
+        botSensor = new AnalogInput(RobotMap.Hopper.Sensors.BOT_SENSOR);
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
@@ -120,7 +123,7 @@ public class Hopper {
     }
 
     /**
-     * Returns the state of the top limits.
+     * Returns the state of the mid limits.
      */
     private boolean getMidLimit() {
        
@@ -134,10 +137,19 @@ public class Hopper {
         return !botLeftLim.get() || !botRightLim.get();
     }
 
+    /**
+     * Returns true if bottom sensor sees object within threshold. Untested.
+     * @author igc
+     */
+
     private boolean getBotSensor() {
-        if (botSensor.getRangeInches() < RobotMap.Hopper.Sensors.ULTRASONIC_THRESHOLD) {
-            return true;
-        }
+        //NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
+        // new units - inches
+        botSensorInput = botSensor.getVoltage();
+        botSensorDist = (((botSensorInput - 1.8) * (59.055 - 7.874)) / (2.3 - 1.8)) + 7.874;
+        if(botSensorDist < RobotMap.Hopper.Sensors.BOT_SENSOR_THRESHOLD) {
+        return true;
+        } 
         return false;
     }
 
@@ -209,7 +221,7 @@ public class Hopper {
     }
 
     /**
-     * index balls in the hopper, but not the belts that feedd into the shooter
+     * index balls in the hopper, but not the belts that feed into the shooter
      */
     private void cycleIntake() {
         double currentBeltPosition = belt.getSensorCollection().getQuadraturePosition();

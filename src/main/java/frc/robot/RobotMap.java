@@ -44,10 +44,9 @@ public class RobotMap {
             public static final int TOP_LEFT = 3; // TODO: untested
             public static final int TOP_RIGHT = 8; // TODO: untested
 
-            public static final int ULTRASONIC_TRIG = 0; // TODO: untested
-            public static final int ULTRASONIC_ECHO = 1; // TODO: untested
+            public static final int BOT_SENSOR = 1;
 
-            public static final double ULTRASONIC_THRESHOLD = 2; // distance in inches // TODO: untested
+            public static final double BOT_SENSOR_THRESHOLD = 18; // distance in inches // TODO: untested
 
             public static final boolean TOP_LAST_STATE_VALUE = false; // TODO: untested
             public static final boolean MID_LAST_STATE_VALUE = false; // TODO: untested
