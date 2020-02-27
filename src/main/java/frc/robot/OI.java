@@ -25,9 +25,13 @@ public class OI {
         //Robot.drivetrain.arcadeDrive(1);
 
         // DRIVER CONTROLS
-        driver.bA.whileHeld(() -> Robot.hopper.shoot());
+        driver.bA.whileHeld(() -> {
+            Robot.hopper.shoot();
+            Robot.shooter.setSpeed(-0.8);
+        });
         driver.bA.whenReleased(() -> {
             Robot.hopper.stop();
+            Robot.shooter.stop();
             Robot.hopper.resetOverride();
 
         });
@@ -39,6 +43,10 @@ public class OI {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
         });
+
+        driver.bLB.whileHeld(() -> Robot.hopper.reverse());
+        driver.bLB.whenReleased(() -> Robot.hopper.stop());
+
         driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
         driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
 
@@ -60,6 +68,6 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putString("IR LImit", Robot.hopper.toString());
+        SmartDashboard.putString("Current Limit", Robot.hopper.toString());
     }
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.RobotMap;
 
@@ -16,16 +17,13 @@ import frc.robot.RobotMap;
 public class Hopper {
     private static Hopper instance;
 
-    private DigitalInput botLeftLim;
-    private DigitalInput botRightLim;
+    private DigitalInput botSensor;
 
     private DigitalInput midLeftLim;
     private DigitalInput midRightLim;
 
     private DigitalInput topLeftLim;
     private DigitalInput topRightLim;
-
-    private AnalogInput botSensor;
 
     private WPI_TalonSRX belt;
     private WPI_TalonSRX feeder;
@@ -44,20 +42,14 @@ public class Hopper {
     private boolean lastMidState;
     private boolean lastTopState;
 
-    private double botSensorInput;
-    private double botSensorDist;
-
     private Hopper() {
         driverOverride = false;
 
-        botLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.BOTTOM_LEFT);
-        botRightLim = new DigitalInput(RobotMap.Hopper.Sensors.BOTTOM_RIGHT);
+        botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
         midRightLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_RIGHT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
         topRightLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_RIGHT);
-
-        botSensor = new AnalogInput(RobotMap.Hopper.Sensors.BOT_SENSOR);
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
@@ -99,9 +91,9 @@ public class Hopper {
     public void update() {
         count();
         if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-            belt.set(1);
-            feeder.set(0.45);
-            blueWheels.set(1);
+            belt.set(0.8);
+            feeder.set(0.65 );
+            blueWheels.set(0.8);
         } else {
             stop();
         }
@@ -128,48 +120,15 @@ public class Hopper {
     private boolean getMidLimit() {
        
         return !midLeftLim.get() || !midRightLim.get();
-    }    
-
-    /**
-     * Returns the state of the bottom limits.
-     */
-    private boolean getBotLimit() {
-        return !botLeftLim.get() || !botRightLim.get();
     }
 
     /**
-     * Returns true if bottom sensor sees object within threshold. Untested.
+     * Returns true if beam break senses
      * @author igc
      */
 
     private boolean getBotSensor() {
-        //NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
-        // new units - inches
-        botSensorInput = botSensor.getVoltage();
-        botSensorDist = (((botSensorInput - 1.8) * (59.055 - 7.874)) / (2.3 - 1.8)) + 7.874;
-        if(botSensorDist < RobotMap.Hopper.Sensors.BOT_SENSOR_THRESHOLD) {
-        return true;
-        } 
-        return false;
-    }
-
-    /**
-     * returns true if bottom limit switches are toggled from true to false
-     * (unsimplified expression:
-     * current left state is false and last state is true, or current right state is false
-     * and last state is true)
-     * 
-     * @return toggled
-     */
-    private boolean getBotSensorToggled() {
-        if (getBotSensor() != lastBotState) {
-            lastBotState = getBotSensor();
-            if (lastBotState == RobotMap.Hopper.Sensors.BOT_LAST_STATE_VALUE) {
-                return true;
-            }
-        }
-        return false;
-       
+        return !botSensor.get();
     }
 
     /**
@@ -250,6 +209,17 @@ public class Hopper {
     }
 
     /**
+     * called when the driver is ready to shoot (pushing the button on the
+     * controller) sets the belt speed to the tested value necessary to feed
+     */
+    public void reverse() {
+        driverOverride = true;
+        belt.set(-1);
+        feeder.set(-1);
+        blueWheels.set(-1);
+    }
+
+    /**
      * resets the driver override trigger
      * @author hrl
      */
@@ -267,6 +237,6 @@ public class Hopper {
 
     @Override
     public String toString() {
-        return "Count: " + count + " , top: " + getBotSensor();
+        return "Count: " + count + " , bottom: " + getBotSensor();
     }
 }
