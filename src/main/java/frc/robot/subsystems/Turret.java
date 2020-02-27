@@ -29,7 +29,7 @@ import frc.robot.helpers.Helper;
 public class Turret {
     private static Turret instance;
 
-    // private Encoder compEncoder;
+    private Encoder compEncoder;
 
     private WPI_TalonSRX motor;
 
@@ -39,7 +39,7 @@ public class Turret {
     private DigitalInput rightLimit;
 
     // for tracking target, TODO; tune
-    private final double kP = 0.01, kI = 0, kD = 0;
+    private final double kP = 0.012, kI = 0, kD = 0.0001;
     private final double MAX_POS = 30; // maximum angle for x-position
     
     private double zeroPos;
@@ -52,6 +52,9 @@ public class Turret {
 
         leftLimit = new DigitalInput(RobotMap.Turret.Limits.LEFT_PORT);
         rightLimit = new DigitalInput(RobotMap.Turret.Limits.RIGHT_PORT);
+
+        compEncoder = new Encoder(0, 1);
+        resetEncoders();
 
         pid = new PIDController(kP, kI, kD);
 
@@ -74,10 +77,11 @@ public class Turret {
      * @param speed the speed to be set between -1 and 1
      */
     public void setSpeed(double speed) {
-        SmartDashboard.putBoolean("Left limit", leftLimit.get()); // TODO: for testing
-        SmartDashboard.putBoolean("Right limit", rightLimit.get()); // TODO: for testing
-        if (leftLimit.get() || rightLimit.get()) { // TODO: untested limit switch states
-            stop();
+        if (!leftLimit.get()) { // TODO: untested limit switch states
+            speed = Helper.boundValue(speed, 0, 1);
+        }
+        if (!rightLimit.get()) {
+            speed = Helper.boundValue(speed, -1, 0);
         }
         motor.set(Helper.boundValue(speed));
     }
@@ -94,7 +98,7 @@ public class Turret {
      * Gets the current turret position
      * @return the current quadrature encoder position
      */
-    public double getPosition() {
+    public double getPracticeEncPosition() {
         return motor.getSensorCollection().getQuadraturePosition();
     }
 
@@ -109,12 +113,15 @@ public class Turret {
      * Tracks the current shooting target.
      */
     public void trackVision() {
-        if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
-            this.setSpeed(pid.calculate(Robot.camera.getPosition(), 0));
+        if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < RobotMap.Turret.Setpoints.DEADZONE_RIGHT)) {
+            double pidOutput = pid.calculate(Robot.camera.getPosition(), 0);
+            this.setSpeed(pidOutput);
+            SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
+            SmartDashboard.putNumber("PID output", pidOutput);
+            System.out.println(pidOutput);
         } else {
             this.stop();
         }
-
         SmartDashboard.putData(this.pid);
     }
 
@@ -123,10 +130,10 @@ public class Turret {
      * when they go up
      */
     public void safeZone() {
-        if (getPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION && getPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
+        if (getPracticeEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION && getPracticeEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
             setSpeed(0.2);
         }
-        else if (getPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION && getPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
+        else if (getPracticeEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION && getPracticeEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
             setSpeed(-0.2);
         }
         else {
@@ -145,7 +152,7 @@ public class Turret {
     }
 
     public void manualTurret() {
-        setSpeed(0.3*(OI.driver.getRT() - OI.driver.getLT()));
+        setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
     }
 
     public double getAngle() {
@@ -157,8 +164,21 @@ public class Turret {
         return "" + getAngle();
     }
 
-    // public double getcompEncoder() {
-    //     return get.compEncoder;
-    // }
+    public double getCompEncPosition() {
+        return compEncoder.getDistance();
+    }
+
+    public boolean getLeftLimit() {
+        return leftLimit.get();
+    }
+
+    public boolean getRightLimit() {
+        return rightLimit.get();
+    }
+
+    public void resetEncoders() {
+        motor.getSensorCollection().setQuadraturePosition(0, 0);
+        compEncoder.reset();
+    }
 
 }

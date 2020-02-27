@@ -31,10 +31,16 @@ public class OI {
         driver.bB.whenPressed(() -> Robot.intake.setSpeed(0.8));
         driver.bB.whenReleased(() -> Robot.intake.setSpeed(0));
 
+        driver.bX.whileHeld(() -> Robot.turret.trackVision());
+        driver.bX.whenReleased(() -> Robot.turret.stop());
+
         updateSD();
     }
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
+        SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
+        SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
+        SmartDashboard.putNumber("Turret pos", Robot.turret.getCompEncPosition()); // TODO: for testing
     }
 }

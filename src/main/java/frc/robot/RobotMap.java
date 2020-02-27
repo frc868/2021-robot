@@ -37,8 +37,8 @@ public class RobotMap {
         public static final double BLUE_SPEED = 1;
 
         public static class Limit {
-            public static final int BOTTOM_LEFT = 0; // TODO: untested
-            public static final int BOTTOM_RIGHT = 1; // TODO: untested
+            public static final int BOTTOM_LEFT = 8; // TODO: untested
+            public static final int BOTTOM_RIGHT = 9; // TODO: untested
             public static final int MIDDLE_LEFT = 2; // TODO: untested
             public static final int MIDDLE_RIGHT = 3; // TODO: untested
             public static final int TOP_LEFT = 4; // TODO: untested
@@ -77,6 +77,9 @@ public class RobotMap {
         public static final int MOTOR = 2; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = false; // TODO: untested
 
+        public static final int ENCODER_1 = 0;
+        public static final int ENCODER_2 = 1;
+
         public static class Limits {
             public static final int LEFT_PORT = 6; // TODO: untested
             public static final int RIGHT_PORT = 7; // TODO: untested
@@ -85,7 +88,7 @@ public class RobotMap {
         public static class Setpoints {
             public static final double SAFE_POSITION = 0; // TODO: untested
             public static final double DEADZONE_LEFT = 0; // TODO: untested
-            public static final double DEADZONE_RIGHT = 0; // TODO: untested
+            public static final double DEADZONE_RIGHT = 23000; // TODO: untested
         }
     }
 
