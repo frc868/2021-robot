@@ -139,7 +139,7 @@ public class Turret {
     public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
             double pidOutput = pid.calculate(Robot.camera.getPosition(), 0);
-            this.setSpeed(pidOutput);
+            this.setSpeed(-pidOutput); // TODO: take this out for comp bot
             SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
             SmartDashboard.putNumber("PID output", pidOutput);
             System.out.println(pidOutput);

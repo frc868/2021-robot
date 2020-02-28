@@ -106,7 +106,7 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kP = 0.012; // TODO: untested
+                public static final double kP = 0.015; // TODO: untested
                 public static final double kI = 0; // TODO: untested
                 public static final double kD = 0.0001; // TODO: untested
             }

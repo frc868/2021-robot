@@ -21,7 +21,7 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        // Robot.drivetrain.arcadeDrive(0.5);
+        Robot.drivetrain.arcadeDrive(1);
         Robot.turret.manualTurret();
 
         // DRIVER CONTROLS
