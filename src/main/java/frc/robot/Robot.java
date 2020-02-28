@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     public static LED leds = LED.getInstance();
     public static Hopper hopper = Hopper.getInstance();
     public static Shooter shooter = Shooter.getInstance();
-    public static Turret turret = Turret.getInstance();
+    public static Turret turret = Turret.getInstance(false); // TODO: change according to testing mode
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
     
     /**

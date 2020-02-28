@@ -25,7 +25,7 @@ public class Camera {
     private NetworkTableEntry tEnabled, tArea, tXpos, tAngle;
 
     private Camera() {
-        table = NetworkTableInstance.getDefault().getTable("limelight");
+        table = NetworkTableInstance.getDefault().getTable("limelight-serph");
         this.update(); // initial run
 
         // be extra sure about pipeline
