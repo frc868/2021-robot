@@ -25,7 +25,7 @@ public class OI {
         Robot.drivetrain.arcadeDrive(1);
 
         // DRIVER CONTROLS
-        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.8));
+        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
         operator.bB.whenPressed(() -> Robot.shooter.stop());
         
         operator.bLB.whileHeld(() -> Robot.hopper.forward());
