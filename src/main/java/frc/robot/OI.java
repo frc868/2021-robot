@@ -22,7 +22,8 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        //Robot.drivetrain.arcadeDrive(1);
+        Robot.drivetrain.arcadeDrive(1);
+        Robot.turret.manualTurret();
 
         // DRIVER CONTROLS
         driver.bA.whileHeld(() -> Robot.hopper.shoot());
@@ -60,6 +61,8 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putString("IR LImit", Robot.hopper.toString());
+        SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
+        SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
+        SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
     }
 }
