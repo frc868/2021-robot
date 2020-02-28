@@ -21,13 +21,13 @@ public class RobotMap {
     }
 
     public static class Drivetrain {
-        public static final int LEFT_PRIMARY = 12; // TODO: untested
-        public static final int LEFT_SECONDARY = 13; // TODO: untested
-        public static final int RIGHT_PRIMARY = 14; // TODO: untested
-        public static final int RIGHT_SECONDARY = 15; // TODO: untested
+        public static final int LEFT_PRIMARY = 12;
+        public static final int LEFT_SECONDARY = 13;
+        public static final int RIGHT_PRIMARY = 14;
+        public static final int RIGHT_SECONDARY = 15;
 
-        public static final boolean LEFT_IS_INVERTED = false; // TODO: untested
-        public static final boolean RIGHT_IS_INVERTED = false; // TODO: untested
+        public static final boolean LEFT_IS_INVERTED = false;
+        public static final boolean RIGHT_IS_INVERTED = true;
     }
 
     public static class Hopper {
