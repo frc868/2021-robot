@@ -27,7 +27,7 @@ public class RobotMap {
         public static final int RIGHT_SECONDARY = 15; // TODO: untested
 
         public static final boolean LEFT_IS_INVERTED = false; // TODO: untested
-        public static final boolean RIGHT_IS_INVERTED = false; // TODO: untested
+        public static final boolean RIGHT_IS_INVERTED = true; // TODO: untested
     }
 
     public static class Hopper {

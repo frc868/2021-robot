@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 
-/** 
+/**
  * This is the code for the robot drivetrain. It initializes motor controllers and has methods
  * for various functions of the drivetrain.
  * @author gjs
  */
 public class Drivetrain {
-    private CANSparkMax l_primary, l_secondary, r_primary, r_secondary; 
+    public CANSparkMax l_primary, l_secondary, r_primary, r_secondary;
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
@@ -26,7 +26,7 @@ public class Drivetrain {
     private Drivetrain() {
         l_primary = new CANSparkMax(RobotMap.Drivetrain.LEFT_PRIMARY, MotorType.kBrushless);
         r_primary = new CANSparkMax(RobotMap.Drivetrain.RIGHT_PRIMARY, MotorType.kBrushless);
-        l_secondary = new CANSparkMax(RobotMap.Drivetrain.LEFT_PRIMARY, MotorType.kBrushless);
+        l_secondary = new CANSparkMax(RobotMap.Drivetrain.LEFT_SECONDARY, MotorType.kBrushless);
         r_secondary = new CANSparkMax(RobotMap.Drivetrain.RIGHT_SECONDARY, MotorType.kBrushless);
 
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
@@ -75,9 +75,9 @@ public class Drivetrain {
     public void arcadeDrive(double speed){
         double y = OI.driver.getLY();
         double x = OI.driver.getRX();
-        y = -1 * y * speed;
-        x = 1 * x * speed;
-        setSpeed(x+y, x-y);
+        y = -speed * y;
+        x = -speed * x;
+        setSpeed(y-x, y+x);
     }
 
     /**
@@ -93,7 +93,7 @@ public class Drivetrain {
     /**
      * drives straight using a P controller
      * @param targetDist the distance you want the robot to travel
-     * @param startPower the starting power 
+     * @param startPower the starting power
      * @param endPower the ending power
      * @author hrl
      */
@@ -157,7 +157,7 @@ public class Drivetrain {
         if (Math.abs(this.getLeftPosition() - leftInitial) > Math.abs(leftInches)) {
             setLeft = 0;
         }
-        
+
         this.setSpeed(setLeft, setRight);
     }
 
@@ -178,7 +178,7 @@ public class Drivetrain {
     public double getLeftPosition() {
         return l_primary.getEncoder().getPosition();
     }
-    
+
     /**
      * gets the average encoder position of the drivetrain
      * @return average encoder position
