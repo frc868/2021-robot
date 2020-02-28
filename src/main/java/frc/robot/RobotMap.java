@@ -32,24 +32,33 @@ public class RobotMap {
 
     public static class Hopper {
         public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
-        public static final double BELT_SPEED = 1; // TODO: untested
+        public static final double HOPPER_FLOOR_SPEED = 1; // TODO: untested
         public static final double FEEDER_SPEED = 1; // TODO: untested
         public static final double BLUE_SPEED = 1;
 
-        public static class Limit {
-            public static final int BOTTOM_LEFT = 0; // TODO: untested
+        public static class Sensors {
+            public static final int BOTTOM_LEFT = 7; // TODO: untested
             public static final int BOTTOM_RIGHT = 1; // TODO: untested
-            public static final int MIDDLE_LEFT = 2; // TODO: untested
-            public static final int MIDDLE_RIGHT = 3; // TODO: untested
-            public static final int TOP_LEFT = 4; // TODO: untested
-            public static final int TOP_RIGHT = 5; // TODO: untested
+            public static final int MID_LEFT = 5; // TODO: untested
+            public static final int MID_RIGHT = 4; // TODO: untested
+            public static final int TOP_LEFT = 3; // TODO: untested
+            public static final int TOP_RIGHT = 8; // TODO: untested
+
+            public static final int ULTRASONIC_TRIG = 0; // TODO: untested
+            public static final int ULTRASONIC_ECHO = 1; // TODO: untested
+
+            public static final double ULTRASONIC_THRESHOLD = 2; // distance in inches // TODO: untested
+
+            public static final boolean TOP_LAST_STATE_VALUE = false; // TODO: untested
+            public static final boolean MID_LAST_STATE_VALUE = false; // TODO: untested
+            public static final boolean BOT_LAST_STATE_VALUE = true; // TODO: untested
         }
 
         public static class Motor {
             public static final int HOPPER_FLOOR = 10; // TODO: untested
             public static final int BLUE_WHEELS = 11; // TODO: untested
             public static final int FEEDER = 3; // TODO: untested
-            public static final boolean BELT_IS_INVERTED = true; // TODO: untested
+            public static final boolean HOPPER_FLOOR_IS_INVERTED = true; // TODO: untested
             public static final boolean FEEDER_IS_INVERTED = false; // TODO: untested
         }
     }
