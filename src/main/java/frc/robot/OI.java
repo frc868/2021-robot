@@ -26,25 +26,16 @@ public class OI {
         Robot.turret.manualTurret();
 
         // DRIVER CONTROLS
-        driver.bA.whileHeld(() -> Robot.hopper.shoot());
-        driver.bA.whenReleased(() -> {
+        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
+        operator.bB.whenPressed(() -> Robot.shooter.stop());
+        
+        operator.bLB.whileHeld(() -> Robot.hopper.forward());
+        operator.bLB.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.hopper.resetOverride();
 
         });
-        driver.bRB.whileHeld(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        driver.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });
-        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
-        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
 
-
-        operator.bA.whileHeld(() -> Robot.hopper.shoot());
         operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
@@ -53,6 +44,13 @@ public class OI {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
         });
+
+        operator.bY.whileHeld(() -> Robot.hopper.reverse());
+        operator.bY.whenReleased(() -> Robot.hopper.stop());
+
+        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
+        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
+        
         operator.dN.whenPressed(() -> Robot.intake.actuatorUp());
         operator.dS.whenPressed(() -> Robot.intake.actuatorDown());   
  
@@ -64,5 +62,8 @@ public class OI {
         SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
         SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
         SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
+        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
     }
 }

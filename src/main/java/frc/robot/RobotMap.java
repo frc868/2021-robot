@@ -37,17 +37,11 @@ public class RobotMap {
         public static final double BLUE_SPEED = 1;
 
         public static class Sensors {
-            public static final int BOTTOM_LEFT = 7; // TODO: untested
-            public static final int BOTTOM_RIGHT = 1; // TODO: untested
+            public static final int BOT_SENSOR_PORT = 7; // TODO: untested
             public static final int MID_LEFT = 5; // TODO: untested
             public static final int MID_RIGHT = 4; // TODO: untested
             public static final int TOP_LEFT = 3; // TODO: untested
             public static final int TOP_RIGHT = 8; // TODO: untested
-
-            public static final int ULTRASONIC_TRIG = 0; // TODO: untested
-            public static final int ULTRASONIC_ECHO = 1; // TODO: untested
-
-            public static final double ULTRASONIC_THRESHOLD = 2; // distance in inches // TODO: untested
 
             public static final boolean TOP_LAST_STATE_VALUE = false; // TODO: untested
             public static final boolean MID_LAST_STATE_VALUE = false; // TODO: untested
