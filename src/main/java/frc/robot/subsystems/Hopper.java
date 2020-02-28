@@ -91,9 +91,10 @@ public class Hopper {
     public void update() {
         count();
         if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-            belt.set(0.8);
-            feeder.set(0.65 );
-            blueWheels.set(0.8);
+            belt.set(0.5);
+            feeder.set(0.8);
+            blueWheels.set(0.6);
+
         } else {
             stop();
         }
@@ -109,7 +110,7 @@ public class Hopper {
     /**
      * Returns the state of the top limits.
      */
-    private boolean getTopLimit() {
+    public boolean getTopLimit() {
        
         return !topLeftLim.get() || !topRightLim.get();
     }
@@ -117,7 +118,7 @@ public class Hopper {
     /**
      * Returns the state of the mid limits.
      */
-    private boolean getMidLimit() {
+    public boolean getMidLimit() {
        
         return !midLeftLim.get() || !midRightLim.get();
     }
@@ -127,7 +128,7 @@ public class Hopper {
      * @author igc
      */
 
-    private boolean getBotSensor() {
+    public boolean getBotSensor() {
         return !botSensor.get();
     }
 
@@ -214,10 +215,22 @@ public class Hopper {
      */
     public void reverse() {
         driverOverride = true;
-        belt.set(-1);
-        feeder.set(-1);
-        blueWheels.set(-1);
+        belt.set(-0.6);
+        feeder.set(-0.6);
+        blueWheels.set(-0.6);
     }
+
+    /**
+     * called when the driver is ready to shoot (pushing the button on the
+     * controller) sets the belt speed to the tested value necessary to feed
+     */
+    public void forward() {
+        driverOverride = true;
+        belt.set(.6);
+        feeder.set(1);
+        blueWheels.set(.8);
+    }
+
 
     /**
      * resets the driver override trigger

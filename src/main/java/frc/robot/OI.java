@@ -22,36 +22,19 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        //Robot.drivetrain.arcadeDrive(1);
+        Robot.drivetrain.arcadeDrive(1);
 
         // DRIVER CONTROLS
-        driver.bA.whileHeld(() -> {
-            Robot.hopper.shoot();
-            Robot.shooter.setSpeed(-0.8);
-        });
-        driver.bA.whenReleased(() -> {
+        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.8));
+        operator.bB.whenPressed(() -> Robot.shooter.stop());
+        
+        operator.bLB.whileHeld(() -> Robot.hopper.forward());
+        operator.bLB.whenReleased(() -> {
             Robot.hopper.stop();
-            Robot.shooter.stop();
             Robot.hopper.resetOverride();
 
         });
-        driver.bRB.whileHeld(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        driver.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });
 
-        driver.bLB.whileHeld(() -> Robot.hopper.reverse());
-        driver.bLB.whenReleased(() -> Robot.hopper.stop());
-
-        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
-        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
-
-
-        operator.bA.whileHeld(() -> Robot.hopper.shoot());
         operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
@@ -60,6 +43,13 @@ public class OI {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
         });
+
+        operator.bY.whileHeld(() -> Robot.hopper.reverse());
+        operator.bY.whenReleased(() -> Robot.hopper.stop());
+
+        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
+        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
+        
         operator.dN.whenPressed(() -> Robot.intake.actuatorUp());
         operator.dS.whenPressed(() -> Robot.intake.actuatorDown());   
  
@@ -68,6 +58,8 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putString("Current Limit", Robot.hopper.toString());
+        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
     }
 }
