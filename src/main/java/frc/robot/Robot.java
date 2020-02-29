@@ -55,12 +55,12 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         camera.update();
         leds.colorInventory();
+        System.out.println(camera.toString());
     }
 
     @Override
     public void autonomousInit() {
         drivetrain.resetEncoderPositions();
-        ttag.reset();
     }
 
     @Override

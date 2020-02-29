@@ -7,4 +7,6 @@ package frc.robot.autonomous;
  */
 public abstract class AutonPath {
     public abstract void run();
+    @Override
+    public abstract String toString();
 }

@@ -141,6 +141,7 @@ public class TrenchRun extends AutonPath {
     /**
      * Runs the autonomous path.
      */
+    @Override
     public void run() {
         // update state variables
         currentDistance = Robot.drivetrain.getCurrentDistance();
@@ -148,5 +149,10 @@ public class TrenchRun extends AutonPath {
 
         this.currentState.run();
         this.currentState = this.currentState.nextState();
+    }
+
+    @Override
+    public String toString() {
+        return "Trench Run";
     }
 }

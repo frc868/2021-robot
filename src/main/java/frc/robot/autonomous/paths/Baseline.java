@@ -54,4 +54,9 @@ public class Baseline extends AutonPath {
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }
+
+    @Override
+    public String toString() {
+        return "Baseline";
+    }
 }

@@ -1,7 +1,5 @@
 package frc.robot.autonomous;
 
-import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autonomous.paths.DoNothing;
@@ -17,14 +15,15 @@ import frc.robot.autonomous.paths.TrenchRun;
 public class AutonHelper {
     private static AutonHelper instance;
 
-    private HashMap<String, AutonPath> paths = new HashMap<String, AutonPath>();
-    private SendableChooser<String> chooser = new SendableChooser<>();
+    private SendableChooser<AutonPath> chooser = new SendableChooser<>();
 
     private AutonHelper() {
         this.addPath("Nothing", new DoNothing());
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
         this.addPath("Trench Run", new TrenchRun());
+
+        chooser.setDefaultOption("Nothing", new DoNothing());
     }
 
     /**
@@ -44,15 +43,13 @@ public class AutonHelper {
      * @param func the autonomous path itself
      */
     public void addPath(String name, AutonPath func) {
-        paths.put(name, func);
-        chooser.addOption(name, name);
+        chooser.addOption(name, func);
     }
-
 
     /**
      * Returns the current autonomous path's key.
      */
-    public String getCurrentPath() {
+    public AutonPath getCurrentPath() {
         return chooser.getSelected();
     }
 
@@ -60,7 +57,7 @@ public class AutonHelper {
      * Runs whatever path is selected on the sendable chooser.
      */
     public void runSelectedPath() {
-        paths.get(chooser.getSelected()).run();
+        this.getCurrentPath().run();
     }
 
     /**
@@ -68,5 +65,12 @@ public class AutonHelper {
      */
     public void initSD() {
         SmartDashboard.putData(chooser);
+    }
+
+    /**
+     * Updates the status of the autonomous to the SmartDashboard.
+     */
+    public void updateSD() {
+        SmartDashboard.putString("Selected auto:", this.getCurrentPath().toString());
     }
 }

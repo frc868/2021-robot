@@ -147,4 +147,9 @@ public class SixBall extends AutonPath {
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }
+
+    @Override
+    public String toString() {
+        return "Six Ball";
+    }
 }
