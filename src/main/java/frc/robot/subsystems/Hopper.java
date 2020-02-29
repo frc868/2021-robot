@@ -54,8 +54,6 @@ public class Hopper {
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
         topRightLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_RIGHT);
 
-        botSensor = new Ultrasonic(RobotMap.Hopper.Sensors.ULTRASONIC_TRIG, RobotMap.Hopper.Sensors.ULTRASONIC_ECHO);
-
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
         blueWheels = new WPI_TalonSRX(RobotMap.Hopper.Motor.BLUE_WHEELS);
@@ -135,9 +133,6 @@ public class Hopper {
     }
 
     private boolean getBotSensor() {
-        if (botSensor.getRangeInches() < RobotMap.Hopper.Sensors.ULTRASONIC_THRESHOLD) {
-            return true;
-        }
         return false;
     }
 
