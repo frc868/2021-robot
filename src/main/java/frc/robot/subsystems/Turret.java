@@ -33,12 +33,14 @@ public class Turret {
 
     private WPI_TalonSRX motor;
 
+    private PIDController pidVision;
     private PIDController pid;
 
     private DigitalInput leftLimit;
     private DigitalInput rightLimit;
 
-    // for tracking target, TODO; tune
+    // for tracking target
+    private double kPv, kIv, kDv;
     private double kP, kI, kD;
     private final double MAX_POS = 30; // maximum angle for x-position
     
@@ -58,6 +60,10 @@ public class Turret {
 
             zeroPos = getCompEncPosition();
 
+            kPv = RobotMap.Turret.CompBot.PID.kPv;
+            kIv = RobotMap.Turret.CompBot.PID.kIv;
+            kDv = RobotMap.Turret.CompBot.PID.kDv;
+
             kP = RobotMap.Turret.CompBot.PID.kP;
             kI = RobotMap.Turret.CompBot.PID.kI;
             kD = RobotMap.Turret.CompBot.PID.kD;
@@ -73,14 +79,19 @@ public class Turret {
 
             zeroPos = motor.getSensorCollection().getQuadraturePosition();
 
+            kPv = RobotMap.Turret.PracticeBot.PID.kPv;
+            kIv = RobotMap.Turret.PracticeBot.PID.kIv;
+            kDv = RobotMap.Turret.PracticeBot.PID.kDv;
+
             kP = RobotMap.Turret.PracticeBot.PID.kP;
             kI = RobotMap.Turret.PracticeBot.PID.kI;
             kD = RobotMap.Turret.PracticeBot.PID.kD;
         }
         
 
-        resetEncoders();
+        resetEncoders(compBot);
 
+        pidVision = new PIDController(kPv, kIv, kDv);
         pid = new PIDController(kP, kI, kD);
 
         zeroAngle = Robot.gyro.getAngle();
@@ -138,30 +149,51 @@ public class Turret {
      */
     public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
-            double pidOutput = pid.calculate(Robot.camera.getPosition(), 0);
-            this.setSpeed(-pidOutput); // TODO: take this out for comp bot
+            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), 0);
+            this.setSpeed(pidOutput);
             SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
             SmartDashboard.putNumber("PID output", pidOutput);
             System.out.println(pidOutput);
         } else {
             this.stop();
         }
-        SmartDashboard.putData(this.pid);
+        SmartDashboard.putData(this.pidVision);
     }
 
     /**
      * Moves turret to safe position to avoid hitting wheel of fortune or climber arms 
      * when they go up
      */
-    public void safeZone() {
-        if (getPracticeEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION && getPracticeEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
-            setSpeed(0.2);
-        }
-        else if (getPracticeEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION && getPracticeEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
-            setSpeed(-0.2);
+    public void safeZone(boolean compBot) {
+        if (compBot) {
+            if (getCompEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION &&
+                getCompEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
+
+                setSpeed(0.2);
+            }
+            else if (getCompEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION &&
+                     getCompEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
+                    
+                setSpeed(-0.2);
+            }
+            else {
+                stop();
+            }
         }
         else {
-            stop();
+            if (getPracticeEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION &&
+                getPracticeEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
+
+                setSpeed(0.2);
+            }
+            else if (getPracticeEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION &&
+                     getPracticeEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
+
+                setSpeed(-0.2);
+            }
+            else {
+                stop();
+            }
         }
     }
 
@@ -177,6 +209,17 @@ public class Turret {
 
     public void manualTurret() {
         setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
+    }
+
+    public void setPosition(double position, boolean compBot) {
+        double pidOutput;
+        if (compBot) {
+            pidOutput = pid.calculate(getCompEncPosition(), position);
+        }
+        else {
+            pidOutput = pid.calculate(getPracticeEncPosition(), position);
+        }
+        this.setSpeed(pidOutput);
     }
 
     public double getAngle() {
@@ -201,7 +244,13 @@ public class Turret {
         return rightLimit.get();
     }
 
-    public void resetEncoders() {
+    public void resetEncoders(boolean compBot) {
+        if (compBot) {
+            compEncoder.reset();
+        }
+        else {
+            motor.getSensorCollection().setQuadraturePosition(0, 0);
+        }
         // motor.getSensorCollection().setQuadraturePosition(0, 0);
         // compEncoder.reset();
     }
