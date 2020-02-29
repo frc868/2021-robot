@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
-import frc.robot.Robot;
 
 /**
  * The class in which we map our driver/operator input to specific tasks on the robot
@@ -34,6 +33,7 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
+        SmartDashboard.putString("Gyro angle", Robot.gyro.toString());
         Robot.shooter.updateSD();
     }
 }

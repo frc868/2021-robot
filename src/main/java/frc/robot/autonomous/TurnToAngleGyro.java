@@ -17,7 +17,7 @@ import frc.robot.Robot;
  * @author jw, gjs
  */
 public class TurnToAngleGyro {
-    private static final double kP = 0, kI = 0, kD = 0; // TODO: untested
+    private static final double kP = 0.0039, kI = 0, kD = 0; // TODO: untested
     private final double tolerance = 1; // TODO: untested
     private PIDController pid;
 

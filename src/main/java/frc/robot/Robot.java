@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.autonomous.AutonHelper;
+import frc.robot.autonomous.TurnToAngleGyro;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro;
 import frc.robot.subsystems.Climber;
@@ -21,8 +22,6 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.WheelOfFortune;
-
-import frc.robot.autonomous.paths.Baseline;
 
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
@@ -41,8 +40,7 @@ public class Robot extends TimedRobot {
     public static Turret turret = Turret.getInstance();
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
 
-    //public static AutonHelper auton = AutonHelper.getInstance();
-    public static Baseline baseline = new Baseline();
+    public static AutonHelper auton = AutonHelper.getInstance();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -50,7 +48,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        //auton.initSD();
+        auton.initSD();
     }
 
     @Override
@@ -61,13 +59,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        Robot.drivetrain.resetEncoderPositions();
+        drivetrain.resetEncoderPositions();
+        ttag.reset();
     }
 
     @Override
     public void autonomousPeriodic() {
-        //auton.runSelectedPath();
-        baseline.run();
+        auton.runSelectedPath();
         turret.track();
         Scheduler.getInstance().run();
     }
