@@ -40,7 +40,7 @@ public class Intake {
      * @param speed the speed to set from -1 to 1
      */
     public void setSpeed(double speed) {
-        motor.set(Helper.boundValue(speed, -1, 1));
+        motor.set(speed);
     }
 
     /** 
@@ -68,7 +68,7 @@ public class Intake {
      * @author acr
      */
     public void actuatorUp() {
-        actuator.set(Value.kReverse);
+        actuator.set(Value.kForward);
     }
 
     /**
@@ -76,6 +76,6 @@ public class Intake {
      * @author acr
      */
     public void actuatorDown() {
-        actuator.set(Value.kForward);
+        actuator.set(Value.kReverse);
     }
 }
