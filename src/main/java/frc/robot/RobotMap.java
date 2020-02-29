@@ -37,11 +37,9 @@ public class RobotMap {
         public static final double BLUE_SPEED = 1;
 
         public static class Sensors {
-            public static final int BOT_SENSOR_PORT = 7; // TODO: untested
-            public static final int MID_LEFT = 5; // TODO: untested
-            public static final int MID_RIGHT = 4; // TODO: untested
-            public static final int TOP_LEFT = 3; // TODO: untested
-            public static final int TOP_RIGHT = 8; // TODO: untested
+            public static final int BOT_SENSOR_PORT = 5; // TODO: untested
+            public static final int MID_LEFT = 3; // TODO: untested
+            public static final int TOP_LEFT = 2; // TODO: untested
 
             public static final boolean TOP_LAST_STATE_VALUE = false; // TODO: untested
             public static final boolean MID_LAST_STATE_VALUE = false; // TODO: untested
@@ -53,7 +51,7 @@ public class RobotMap {
             public static final int BLUE_WHEELS = 11; // TODO: untested
             public static final int FEEDER = 3; // TODO: untested
             public static final boolean HOPPER_FLOOR_IS_INVERTED = true; // TODO: untested
-            public static final boolean FEEDER_IS_INVERTED = false; // TODO: untested
+            public static final boolean FEEDER_IS_INVERTED = true; // TODO: untested
         }
     }
 
@@ -61,7 +59,7 @@ public class RobotMap {
         public static final int MOTOR = 1; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
         public static final int ACTUATOR1 = 0; // TODO: untested
-        public static final int ACTUATOR2 = 3; // TODO: untested
+        public static final int ACTUATOR2 = 7; // TODO: untested
     }
 
     public static class LED {

@@ -18,12 +18,8 @@ public class Hopper {
     private static Hopper instance;
 
     private DigitalInput botSensor;
-
     private DigitalInput midLeftLim;
-    private DigitalInput midRightLim;
-
     private DigitalInput topLeftLim;
-    private DigitalInput topRightLim;
 
     private WPI_TalonSRX belt;
     private WPI_TalonSRX feeder;
@@ -47,9 +43,7 @@ public class Hopper {
 
         botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
-        midRightLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_RIGHT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
-        topRightLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_RIGHT);
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
@@ -88,15 +82,17 @@ public class Hopper {
      * Indexes hopper. 
      * @author igc
      */
-    public void update() {
-        count();
-        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-            belt.set(0.5);
-            feeder.set(0.8);
-            blueWheels.set(0.6);
+    public void update(double value) {
+        if(value > 0) {
+            count();
+            if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
+                belt.set(0.5);
+                feeder.set(0.6); //.8
+                blueWheels.set(0.6);
 
-        } else {
-            stop();
+            } else {
+                stop();
+            }
         }
     }
 
@@ -112,7 +108,7 @@ public class Hopper {
      */
     public boolean getTopLimit() {
        
-        return !topLeftLim.get() || !topRightLim.get();
+        return !topLeftLim.get();
     }
 
     /**
@@ -120,7 +116,7 @@ public class Hopper {
      */
     public boolean getMidLimit() {
        
-        return !midLeftLim.get() || !midRightLim.get();
+        return !midLeftLim.get();
     }
 
     /**
@@ -213,11 +209,11 @@ public class Hopper {
      * called when the driver is ready to shoot (pushing the button on the
      * controller) sets the belt speed to the tested value necessary to feed
      */
-    public void reverse() {
+    public void reverse(double speed) {
         driverOverride = true;
-        belt.set(-0.6);
-        feeder.set(-0.6);
-        blueWheels.set(-0.6);
+        belt.set(-speed);
+        feeder.set(-speed);
+        blueWheels.set(-speed);
     }
 
     /**
@@ -226,7 +222,7 @@ public class Hopper {
      */
     public void forward() {
         driverOverride = true;
-        if(getMidLimitToggled() || (!getTopLimit() && getMidLimit())) {
+        if(getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
         belt.set(.6);
         feeder.set(1);
         blueWheels.set(.7);

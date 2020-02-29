@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
+import frc.robot.helpers.Helper;
 import frc.robot.Robot;
 
 /**
@@ -22,19 +23,24 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        Robot.drivetrain.arcadeDrive(1);
 
         // DRIVER CONTROLS
+        Robot.drivetrain.arcadeDrive(1);
+
+
+        //OPERATOR CONTROLS
+
+        //shoot
         operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
         operator.bB.whenPressed(() -> Robot.shooter.stop());
-        
-        operator.bLB.whileHeld(() -> Robot.hopper.forward());
-        operator.bLB.whenReleased(() -> {
+        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
+        operator.bSTART.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.hopper.resetOverride();
-
         });
 
+        //intake
+        /*operator.bLB.whenPressed(() -> Robot.intake.toggle());
         operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
@@ -42,16 +48,27 @@ public class OI {
         operator.bRB.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
-        });
+        });*/
 
-        operator.bY.whileHeld(() -> Robot.hopper.reverse());
-        operator.bY.whenReleased(() -> Robot.hopper.stop());
+        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
+        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
 
-        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
-        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
+        // hopper
+        operator.bX.whileHeld(() -> Robot.hopper.reverse(.6));
+        operator.bX.whenReleased(() -> Robot.hopper.stop());
+
+        //WOF
+        operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
+        operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
+
+
+       
         
-        operator.dN.whenPressed(() -> Robot.intake.actuatorUp());
-        operator.dS.whenPressed(() -> Robot.intake.actuatorDown());   
+       
+        
+    
  
         updateSD();
     }

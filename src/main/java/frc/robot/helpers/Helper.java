@@ -27,6 +27,14 @@ public class Helper {
         }
         return value;
     }
+    public static double analogToDigital(double value, double deadzone, double output) {
+        if(value < deadzone) {
+            return 0;
+        } else {
+            return output;
+        }
+    }
+
     /**
      * Given a value, checks to makes sure it is between -1.0 and 1.0. If not replace with the 
      * value with -1.0 or 1.0. If so return value
