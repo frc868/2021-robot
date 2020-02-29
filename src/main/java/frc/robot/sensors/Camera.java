@@ -29,7 +29,7 @@ public class Camera {
         this.update(); // initial run
 
         // be extra sure about pipeline
-        table.getEntry("pipeline").setDouble(RobotMap.Camera.PIPELINE);
+        // table.getEntry("pipeline").setDouble(RobotMap.Camera.PIPELINE);
     }
 
     /**
