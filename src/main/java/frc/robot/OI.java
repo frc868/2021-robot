@@ -24,10 +24,17 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         // Robot.drivetrain.arcadeDrive(1);
-        //Robot.shooter.update();
+        Robot.shooter.update();
 
         // DRIVER CONTROLS
-        driver.bA.whenPressed(() -> Robot.shooter.setSpeed(0.85));
+        driver.bB.whenPressed(() -> {
+            Robot.hopper.update();
+            Robot.intake.setSpeed(1);
+        });
+        driver.bB.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.intake.setSpeed(0);
+        });
         updateSD();
     }
 
