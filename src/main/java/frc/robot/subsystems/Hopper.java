@@ -92,14 +92,9 @@ public class Hopper {
      * @author igc
      */
     public void update() {
-        count();
-        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
             belt.set(1);
             feeder.set(0.45);
             blueWheels.set(1);
-        } else {
-            stop();
-        }
     }
 
     /**
