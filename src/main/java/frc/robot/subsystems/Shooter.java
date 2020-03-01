@@ -24,12 +24,19 @@ public class Shooter {
 
     private double kP, kI, kD, kFF, kIa, setpoint;
 
+    /**
+     * The shooter subsystem consists of the two-neo shooter mounted on the robot's turret.
+     * It is controlled with REV's PID Controller on the SparkMAXes.
+     * 
+     * @author dri
+     */
     private Shooter() {
         primary = new CANSparkMax(RobotMap.Shooter.PRIMARY, MotorType.kBrushless);
         secondary = new CANSparkMax(RobotMap.Shooter.SECONDARY, MotorType.kBrushless);
 
         primary.setInverted(RobotMap.Shooter.PRIMARY_IS_INVERTED);
-        secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_INVERTED);
+        secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_OPPOSITE);
+        // Secondary motor is always inverted relative to primary
 
         pid = primary.getPIDController();
 
@@ -41,6 +48,10 @@ public class Shooter {
         SmartDashboard.putNumber("Setpoint", 0);
     }
 
+    /**
+     * Returns the instance of the Shooter class
+     * @return instance of shooter
+     */
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -48,6 +59,9 @@ public class Shooter {
         return instance;
     }
 
+    /**
+     * sets the PID gains and setpoint for the PID controller
+     */
     public void init() {
         kP = SmartDashboard.getNumber("kP", 0);
         kI = SmartDashboard.getNumber("kI", 0);
@@ -65,6 +79,9 @@ public class Shooter {
         pid.setOutputRange(0, 1);
     }
 
+    /**
+     * sets the output of the PID loop to the 
+     */
     public void update() {
         pid.setReference(setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());

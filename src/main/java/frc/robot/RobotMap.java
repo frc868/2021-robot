@@ -79,7 +79,7 @@ public class RobotMap {
         public static final int PRIMARY = 7; // TODO: untested
         public static final int SECONDARY = 8; // TODO: untested
         public static final boolean PRIMARY_IS_INVERTED = true; // TODO: untested
-        public static final boolean SECONDARY_IS_INVERTED = true; // TODO: untested
+        public static final boolean SECONDARY_IS_OPPOSITE = true; // TODO: untested
         public static final double SHOOTER_DEFAULT_SPEED = 4824.6;
     }
 
