@@ -74,6 +74,32 @@ public class ControllerWrapper {
     }
 
     /**
+     * Updates all of the button states on the controller. HBD.
+     */
+    public void updateStates() {
+        bA.updateState();
+        bB.updateState();
+        bX.updateState();
+        bY.updateState();
+        bSTART.updateState();
+        bMENU.updateState();
+
+        bRB.updateState();
+        bLB.updateState();
+        bRSTK.updateState();
+        bLSTK.updateState();
+
+        dN.updateState();
+        dNE.updateState();
+        dE.updateState();
+        dSE.updateState();
+        dS.updateState();
+        dSW.updateState();
+        dW.updateState();
+        dNW.updateState();
+    }
+
+    /**
      * Returns the left stick's X-axis value.
      */
     public double getLX() {

@@ -21,6 +21,10 @@ public class OI {
     }
 
     public static void update() {
+        // delete me and the whole project blows up:
+        driver.updateStates();
+        operator.updateStates();
+
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
