@@ -30,11 +30,8 @@ public class Turret {
     private static Turret instance;
 
     private Encoder compEncoder;
-
     private WPI_TalonSRX motor;
-
     private PIDController pid;
-
     private DigitalInput leftLimit;
     private DigitalInput rightLimit;
 
@@ -78,12 +75,7 @@ public class Turret {
             kD = RobotMap.Turret.PracticeBot.PID.kD;
         }
         
-
-        resetEncoders();
-
         pid = new PIDController(kP, kI, kD);
-
-        zeroAngle = Robot.gyro.getAngle();
     }
 
     /**
@@ -166,44 +158,35 @@ public class Turret {
     }
 
     /**
-     * Lowest level of turret control; uses gyroscope angle to point turret towards the goal
+     * Manually controls the turret based on joystick inputs.
      */
-    public void trackGoal() {
-        double currentAngle = Robot.gyro.getAngle();
-        double angleError = currentAngle - zeroAngle;
-        
-        // TODO: implement goal-centric code
-    }
-
     public void manualTurret() {
         setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
     }
 
+    /**
+     * Returns the current angle of the turret.
+     */
     public double getAngle() {
         return motor.getSensorCollection().getQuadraturePosition();
     }
 
-    @Override
-    public String toString() {
-        return "" + getAngle();
-    }
-
-    public double getCompEncPosition() {
-        return 0;
-        // return compEncoder.getDistance();
-    }
-
+    /**
+     * Returns the state of the turret's left limit.
+     */
     public boolean getLeftLimit() {
         return leftLimit.get();
     }
 
+    /**
+     * Returns the state of the turret's right limit.
+     */
     public boolean getRightLimit() {
         return rightLimit.get();
     }
-
-    public void resetEncoders() {
-        // motor.getSensorCollection().setQuadraturePosition(0, 0);
-        // compEncoder.reset();
+    
+    @Override
+    public String toString() {
+        return "" + getAngle();
     }
-
 }
