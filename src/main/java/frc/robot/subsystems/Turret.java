@@ -34,7 +34,6 @@ public class Turret {
 
     private PIDController pidVision;
     private PIDController pid;
-
     private DigitalInput leftLimit;
     private DigitalInput rightLimit;
 
@@ -82,9 +81,6 @@ public class Turret {
             kI = RobotMap.Turret.PracticeBot.PID.kI;
             kD = RobotMap.Turret.PracticeBot.PID.kD;
         }
-        
-
-        resetEncoders();
 
         pidVision = new PIDController(kPv, kIv, kDv);
         pid = new PIDController(kP, kI, kD);

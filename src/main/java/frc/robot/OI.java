@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
+import frc.robot.helpers.Helper;
 import frc.robot.Robot;
 
 /**
@@ -10,6 +11,7 @@ import frc.robot.Robot;
  * Update should be called either in robotPeriodic() or teleopPeriodic()
  * @author hrl
  */
+
 public class OI {
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
@@ -23,16 +25,44 @@ public class OI {
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
         Robot.turret.manualTurret();
+        //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
-        driver.bA.whenPressed(() -> Robot.shooter.setSpeed(0.8));
-        driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
 
-        driver.bB.whenPressed(() -> Robot.intake.setSpeed(0.8));
-        driver.bB.whenReleased(() -> Robot.intake.setSpeed(0));
+        // OPERATOR CONTROLS
 
-        driver.bX.whileHeld(() -> Robot.turret.trackVision());
-        driver.bX.whenReleased(() -> Robot.turret.stop());
+        // shoot
+        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
+        operator.bX.whenPressed(() -> Robot.shooter.stop());
+        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
+        operator.bSTART.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.hopper.resetOverride();
+        });
+
+        // intake
+        operator.bLB.whenPressed(() -> Robot.intake.toggle());
+        /*operator.bRB.whileHeld(() -> {
+            Robot.hopper.update();
+            Robot.intake.setSpeed(1);
+        });
+        operator.bRB.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.intake.setSpeed(0);
+        });*/
+
+        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
+        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+
+        // hopper
+        operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+        operator.bB.whenReleased(() -> Robot.hopper.stop());
+
+        // WOF
+        operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
+        operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
 
         updateSD();
     }
@@ -40,6 +70,8 @@ public class OI {
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
         SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
-        System.out.println(Robot.camera.toString());
+        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
     }
 }
