@@ -124,4 +124,9 @@ public class Drivetrain {
     public double getAveragePosition() {
         return (l_primary.getEncoder().getPosition() + r_primary.getEncoder().getPosition())/2;
     }
+
+    @Override
+    public String toString() {
+        return "" + getAveragePosition();
+    }
 }

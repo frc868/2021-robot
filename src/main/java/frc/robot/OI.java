@@ -60,6 +60,7 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putString("IR LImit", Robot.hopper.toString());
+        SmartDashboard.putString("IR Limit", Robot.hopper.toString());
+        SmartDashboard.putString("DT Position", Robot.drivetrain.toString());
     }
 }
