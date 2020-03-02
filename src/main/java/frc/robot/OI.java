@@ -6,9 +6,10 @@ import frc.robot.helpers.Helper;
 
 
 /**
- * The class in which we map our driver/operator input to specific tasks on the robot
- * Init should be called once in the robotInit() method in the Robot class
+ * The class in which we map our driver/operator input to specific tasks on the
+ * robot Init should be called once in the robotInit() method in the Robot class
  * Update should be called either in robotPeriodic() or teleopPeriodic()
+ * 
  * @author hrl
  */
 
@@ -18,6 +19,7 @@ public class OI {
 
     public static void init() {
         initSD();
+        Robot.shooter.init();
     }
 
     public static void update() {
@@ -43,10 +45,16 @@ public class OI {
         // intake
         operator.bLB.whenPressed(() -> Robot.intake.toggle());
         /*operator.bRB.whileHeld(() -> {
+=======
+        // Robot.drivetrain.arcadeDrive(1);
+        Robot.shooter.update();
+
+        // DRIVER CONTROLS
+        driver.bB.whenPressed(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
         });
-        operator.bRB.whenReleased(() -> {
+        driver.bB.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
         });*/

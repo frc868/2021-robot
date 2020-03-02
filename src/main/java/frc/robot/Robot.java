@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         //auton.runSelectedPath();
         baseline.run();
-        turret.track();
+        //turret.track();
         Scheduler.getInstance().run();
     }
 
