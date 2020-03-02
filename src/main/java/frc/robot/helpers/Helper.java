@@ -27,8 +27,16 @@ public class Helper {
         }
         return value;
     }
+    
+    /**
+     * Makes a stick act as a button.
+     * @param value the value of the stick
+     * @param deadzone the deadzone
+     * @param output the default output value
+     * @author ic, jm
+     */
     public static double analogToDigital(double value, double deadzone, double output) {
-        if(value < deadzone) {
+        if (value < deadzone) {
             return 0;
         } else {
             return output;
