@@ -165,34 +165,10 @@ public class Turret {
      */
     public void safeZone(boolean compBot) {
         if (compBot) {
-            if (getCompEncPosition() < RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION &&
-                getCompEncPosition() > RobotMap.Turret.CompBot.Setpoints.DEADZONE_LEFT) {
-
-                setSpeed(0.2);
-            }
-            else if (getCompEncPosition() > RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION &&
-                     getCompEncPosition() < RobotMap.Turret.CompBot.Setpoints.DEADZONE_RIGHT) {
-                    
-                setSpeed(-0.2);
-            }
-            else {
-                stop();
-            }
+            setPosition(RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION, compBot);
         }
         else {
-            if (getPracticeEncPosition() < RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION &&
-                getPracticeEncPosition() > RobotMap.Turret.PracticeBot.Setpoints.DEADZONE_LEFT) {
-
-                setSpeed(0.2);
-            }
-            else if (getPracticeEncPosition() > RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION &&
-                     getPracticeEncPosition() < RobotMap.Turret.PracticeBot.Setpoints.DEADZONE_RIGHT) {
-
-                setSpeed(-0.2);
-            }
-            else {
-                stop();
-            }
+            setPosition(RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION, compBot);
         }
     }
 
