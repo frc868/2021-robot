@@ -30,7 +30,6 @@ public class Turret {
     private static Turret instance;
 
     private Encoder compEncoder;
-
     private WPI_TalonSRX motor;
 
     private PIDController pidVision;
@@ -44,11 +43,12 @@ public class Turret {
     // for goal-centric gyro-based positioning
     private double kP, kI, kD;
     private final double MAX_POS = 30; // maximum angle for x-position
-    
-    private double zeroPos;
-    private double zeroAngle;
+
+    private boolean isCompBot = true;
     
     private Turret(boolean compBot) {
+        this.isCompBot = compBot;
+        
         motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);
 
         if (compBot) {
@@ -58,8 +58,6 @@ public class Turret {
             motor.setInverted(RobotMap.Turret.CompBot.MOTOR_IS_INVERTED);
 
             compEncoder = new Encoder(RobotMap.Turret.CompBot.ENCODER_1, RobotMap.Turret.CompBot.ENCODER_2);
-
-            zeroPos = getCompEncPosition();
 
             kPv = RobotMap.Turret.CompBot.PID.kPv;
             kIv = RobotMap.Turret.CompBot.PID.kIv;
@@ -76,8 +74,6 @@ public class Turret {
 
             motor.setInverted(RobotMap.Turret.PracticeBot.MOTOR_IS_INVERTED);
 
-            zeroPos = motor.getSensorCollection().getQuadraturePosition();
-
             kPv = RobotMap.Turret.PracticeBot.PID.kPv;
             kIv = RobotMap.Turret.PracticeBot.PID.kIv;
             kDv = RobotMap.Turret.PracticeBot.PID.kDv;
@@ -88,12 +84,10 @@ public class Turret {
         }
         
 
-        resetEncoders(compBot);
+        resetEncoders();
 
         pidVision = new PIDController(kPv, kIv, kDv);
         pid = new PIDController(kP, kI, kD);
-
-        zeroAngle = Robot.gyro.getAngle();
     }
 
     /**
@@ -163,30 +157,13 @@ public class Turret {
      * Moves turret to safe position to avoid hitting wheel of fortune or climber arms 
      * when they go up
      */
-    public void safeZone(boolean compBot) {
-        if (compBot) {
-            setPosition(RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION, compBot);
+    public void safeZone() {
+        if (this.isCompBot) {
+            setPosition(RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION);
         }
         else {
-            setPosition(RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION, compBot);
+            setPosition(RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION);
         }
-    }
-
-    /**
-     * Lowest level of turret control; uses gyroscope angle to point turret towards the goal
-     */
-    public void trackGoal(boolean compBot) {
-        double currentAngle = Robot.gyro.getAngle();
-        double angleError = currentAngle - zeroAngle;
-
-        if (compBot) {
-            double scaledError = angleError * RobotMap.Turret.CompBot.PID.GYRO_TO_ENCODER;
-            setPosition(zeroPos - scaledError, compBot);
-        }
-        else {
-            double scaledError = angleError * RobotMap.Turret.PracticeBot.PID.GYRO_TO_ENCODER;
-            setPosition(zeroPos - scaledError, compBot);
-        }        
     }
 
     /**
@@ -202,9 +179,9 @@ public class Turret {
      * @param position desired position
      * @param compBot whether method is called for comp or practice bot
      */
-    public void setPosition(double position, boolean compBot) {
+    public void setPosition(double position) {
         double pidOutput;
-        if (compBot) {
+        if (this.isCompBot) {
             pidOutput = pid.calculate(getCompEncPosition(), position);
         }
         else {
@@ -222,25 +199,23 @@ public class Turret {
         return "" + getAngle();
     }
 
+    /**
+     * Returns the current position of the encoder.
+     * TODO: this should switch based on the boolean in the constructor
+     */
     public double getCompEncPosition() {
         return compEncoder.getDistance();
     }
 
-    public boolean getLeftLimit(boolean compBot) {
-        return leftLimit.get();
-    }
-
-    public boolean getRightLimit(boolean compBot) {
-        return rightLimit.get();
-    }
-
-    public void resetEncoders(boolean compBot) {
-        if (compBot) {
+    /**
+     * Resets the encoders.
+     */
+    public void resetEncoders() {
+        if (this.isCompBot) {
             compEncoder.reset();
         }
         else {
             motor.getSensorCollection().setQuadraturePosition(0, 0);
         }
     }
-
 }
