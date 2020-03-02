@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 import frc.robot.helpers.Helper;
-import frc.robot.Robot;
 
 /**
  * The class in which we map our driver/operator input to specific tasks on the robot
@@ -21,10 +20,6 @@ public class OI {
     }
 
     public static void update() {
-        // delete me and the whole project blows up:
-        driver.updateStates();
-        operator.updateStates();
-
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
@@ -67,6 +62,10 @@ public class OI {
         // WOF
         operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
         operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
+
+        // if it hasn't already been handled...
+        driver.updateStates();
+        operator.updateStates();
 
         updateSD();
     }

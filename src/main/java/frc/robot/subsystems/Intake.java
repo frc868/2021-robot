@@ -58,7 +58,7 @@ public class Intake {
     public void toggle() {
         if (actuator.get() == Value.kForward) {
             actuator.set(Value.kReverse);
-        } else if (actuator.get() == Value.kReverse) {
+        } else {
             actuator.set(Value.kForward);
         }
     }
