@@ -81,4 +81,9 @@ public class HeadOn extends AutonPath {
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }
+
+    @Override
+    public String toString() {
+        return "Head-on";
+    }
 }
