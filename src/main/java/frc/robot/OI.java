@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
+import frc.robot.helpers.Helper;
 import frc.robot.Robot;
 
 /**
@@ -22,45 +23,57 @@ public class OI {
     public static void update() {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        //Robot.drivetrain.arcadeDrive(1);
+        Robot.drivetrain.arcadeDrive(1);
+        Robot.turret.manualTurret();
+        //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
-        driver.bA.whileHeld(() -> Robot.hopper.shoot());
-        driver.bA.whenReleased(() -> {
+
+        // OPERATOR CONTROLS
+
+        // shoot
+        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
+        operator.bX.whenPressed(() -> Robot.shooter.stop());
+        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
+        operator.bSTART.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.hopper.resetOverride();
-
         });
-        driver.bRB.whileHeld(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        driver.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });
-        driver.dN.whenPressed(() -> Robot.intake.actuatorUp());
-        driver.dS.whenPressed(() -> Robot.intake.actuatorDown());
 
-
-        operator.bA.whileHeld(() -> Robot.hopper.shoot());
-        operator.bRB.whileHeld(() -> {
+        // intake
+        operator.bLB.whenPressed(() -> Robot.intake.toggle());
+        /*operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
         });
         operator.bRB.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
-        });
-        operator.dN.whenPressed(() -> Robot.intake.actuatorUp());
-        operator.dS.whenPressed(() -> Robot.intake.actuatorDown());   
- 
+        });*/
+
+        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
+        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+
+        // hopper
+        operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+        operator.bB.whenReleased(() -> Robot.hopper.stop());
+
+        // WOF
+        operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
+        operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
+
         updateSD();
     }
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putString("IR Limit", Robot.hopper.toString());
-        SmartDashboard.putString("DT Position", Robot.drivetrain.toString());
+        SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
+        SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
+        SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
+        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
     }
 }
