@@ -27,9 +27,6 @@ public class Camera {
     private Camera() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
         this.update(); // initial run
-
-        // be extra sure about pipeline
-        // table.getEntry("pipeline").setDouble(RobotMap.Camera.PIPELINE);
     }
 
     /**
