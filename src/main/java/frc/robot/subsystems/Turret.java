@@ -53,11 +53,11 @@ public class Turret {
 
             compEncoder = new Encoder(RobotMap.Turret.CompBot.ENCODER_1, RobotMap.Turret.CompBot.ENCODER_2);
 
-            zeroPos = getCompEncPosition();
+            // zeroPos = getCompEncPosition();
 
-            kP = RobotMap.Turret.CompBot.PID.kP;
-            kI = RobotMap.Turret.CompBot.PID.kI;
-            kD = RobotMap.Turret.CompBot.PID.kD;
+            // kP = RobotMap.Turret.CompBot.PID.kP;
+            // kI = RobotMap.Turret.CompBot.PID.kI;
+            // kD = RobotMap.Turret.CompBot.PID.kD;
         }
 
         else {
@@ -70,9 +70,9 @@ public class Turret {
 
             zeroPos = motor.getSensorCollection().getQuadraturePosition();
 
-            kP = RobotMap.Turret.PracticeBot.PID.kP;
-            kI = RobotMap.Turret.PracticeBot.PID.kI;
-            kD = RobotMap.Turret.PracticeBot.PID.kD;
+            // kP = RobotMap.Turret.PracticeBot.PID.kP;
+            // kI = RobotMap.Turret.PracticeBot.PID.kI;
+            // kD = RobotMap.Turret.PracticeBot.PID.kD;
         }
         
         pid = new PIDController(kP, kI, kD);

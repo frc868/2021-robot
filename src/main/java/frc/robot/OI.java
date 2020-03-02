@@ -32,8 +32,8 @@ public class OI {
         // OPERATOR CONTROLS
 
         // shoot
-        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
-        operator.bX.whenPressed(() -> Robot.shooter.stop());
+        operator.bA.whileHeld(() -> Robot.shooter.setSpeed(-0.6));
+        operator.bA.whenReleased(() -> Robot.shooter.stop());
         operator.bSTART.whileHeld(() -> Robot.hopper.forward());
         operator.bSTART.whenReleased(() -> {
             Robot.hopper.stop();
@@ -42,6 +42,7 @@ public class OI {
 
         // intake
         operator.bLB.whenPressed(() -> Robot.intake.toggle());
+        operator.bLB.whenReleased(() -> {});
         /*operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
@@ -62,7 +63,9 @@ public class OI {
 
         // WOF
         operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
+        operator.dN.whenReleased(() -> {});
         operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
+        operator.dS.whenReleased(() -> {});
 
         updateSD();
     }
