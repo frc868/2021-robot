@@ -39,8 +39,9 @@ public class Turret {
     private DigitalInput leftLimit;
     private DigitalInput rightLimit;
 
-    // for tracking target
+    // for tracking target with vision
     private double kPv, kIv, kDv;
+    // for goal-centric gyro-based positioning
     private double kP, kI, kD;
     private final double MAX_POS = 30; // maximum angle for x-position
     
@@ -74,8 +75,6 @@ public class Turret {
             rightLimit = new DigitalInput(RobotMap.Turret.PracticeBot.Limits.RIGHT_PORT);
 
             motor.setInverted(RobotMap.Turret.PracticeBot.MOTOR_IS_INVERTED);
-
-            // motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); // TODO: untested
 
             zeroPos = motor.getSensorCollection().getQuadraturePosition();
 
@@ -166,13 +165,13 @@ public class Turret {
      */
     public void safeZone(boolean compBot) {
         if (compBot) {
-            if (getCompEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION &&
-                getCompEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
+            if (getCompEncPosition() < RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION &&
+                getCompEncPosition() > RobotMap.Turret.CompBot.Setpoints.DEADZONE_LEFT) {
 
                 setSpeed(0.2);
             }
-            else if (getCompEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION &&
-                     getCompEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
+            else if (getCompEncPosition() > RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION &&
+                     getCompEncPosition() < RobotMap.Turret.CompBot.Setpoints.DEADZONE_RIGHT) {
                     
                 setSpeed(-0.2);
             }
@@ -181,13 +180,13 @@ public class Turret {
             }
         }
         else {
-            if (getPracticeEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION &&
-                getPracticeEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
+            if (getPracticeEncPosition() < RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION &&
+                getPracticeEncPosition() > RobotMap.Turret.PracticeBot.Setpoints.DEADZONE_LEFT) {
 
                 setSpeed(0.2);
             }
-            else if (getPracticeEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION &&
-                     getPracticeEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
+            else if (getPracticeEncPosition() > RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION &&
+                     getPracticeEncPosition() < RobotMap.Turret.PracticeBot.Setpoints.DEADZONE_RIGHT) {
 
                 setSpeed(-0.2);
             }
@@ -200,17 +199,33 @@ public class Turret {
     /**
      * Lowest level of turret control; uses gyroscope angle to point turret towards the goal
      */
-    public void trackGoal() {
+    public void trackGoal(boolean compBot) {
         double currentAngle = Robot.gyro.getAngle();
         double angleError = currentAngle - zeroAngle;
-        
-        // TODO: implement goal-centric code
+
+        if (compBot) {
+            double scaledError = angleError * RobotMap.Turret.CompBot.PID.GYRO_TO_ENCODER;
+            setPosition(zeroPos - scaledError, compBot);
+        }
+        else {
+            double scaledError = angleError * RobotMap.Turret.PracticeBot.PID.GYRO_TO_ENCODER;
+            setPosition(zeroPos - scaledError, compBot);
+        }        
     }
 
+    /**
+     * Allows manual control of the turret from operator controller triggers.
+     * Limits speed to 0.3 at most.
+     */
     public void manualTurret() {
         setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
     }
 
+    /**
+     * Allows turret to go to setpoints in its rotation, controlled with PID loop and encoder.
+     * @param position desired position
+     * @param compBot whether method is called for comp or practice bot
+     */
     public void setPosition(double position, boolean compBot) {
         double pidOutput;
         if (compBot) {
@@ -232,15 +247,14 @@ public class Turret {
     }
 
     public double getCompEncPosition() {
-        return 0;
-        // return compEncoder.getDistance();
+        return compEncoder.getDistance();
     }
 
-    public boolean getLeftLimit() {
+    public boolean getLeftLimit(boolean compBot) {
         return leftLimit.get();
     }
 
-    public boolean getRightLimit() {
+    public boolean getRightLimit(boolean compBot) {
         return rightLimit.get();
     }
 
@@ -251,8 +265,6 @@ public class Turret {
         else {
             motor.getSensorCollection().setQuadraturePosition(0, 0);
         }
-        // motor.getSensorCollection().setQuadraturePosition(0, 0);
-        // compEncoder.reset();
     }
 
 }

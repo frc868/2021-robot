@@ -39,8 +39,6 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
-        SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
         SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
         System.out.println(Robot.camera.toString());
     }

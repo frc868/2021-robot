@@ -95,7 +95,15 @@ public class RobotMap {
 
                 public static final double kP = 0;
                 public static final double kI = 0;
-                public static final double kD = 0;                
+                public static final double kD = 0;
+                
+                public static final double GYRO_TO_ENCODER = 1; // TODO: untested
+            }
+                        
+            public static class Setpoints {
+                public static final double SAFE_POSITION = 0; // TODO: untested
+                public static final double DEADZONE_LEFT = 0; // TODO: untested
+                public static final double DEADZONE_RIGHT = 23000;
             }
         }
 
@@ -117,16 +125,15 @@ public class RobotMap {
                 public static final double kP = 0; // TODO: untested
                 public static final double kI = 0; // TODO: untested
                 public static final double kD = 0; // TODO: untested
+
+                public static final double GYRO_TO_ENCODER = 1; // TODO: untested
             }
-        }
-
-
-        
-
-        public static class Setpoints {
-            public static final double SAFE_POSITION = 0; // TODO: untested
-            public static final double DEADZONE_LEFT = 0; // TODO: untested
-            public static final double DEADZONE_RIGHT = 23000; // TODO: untested
+            
+            public static class Setpoints {
+                public static final double SAFE_POSITION = 0; // TODO: untested
+                public static final double DEADZONE_LEFT = 0; // TODO: untested
+                public static final double DEADZONE_RIGHT = 23000; // TODO: untested
+            }
         }
     }
 
