@@ -39,7 +39,7 @@ public class Turret {
     private DigitalInput rightLimit;
 
     // for tracking target, TODO; tune
-    private double kP, kI, kD;
+    private final double kP = 0.012, kI = 0, kD = 0.0001;
     private final double MAX_POS = 30; // maximum angle for x-position
     
     private double zeroPos;
