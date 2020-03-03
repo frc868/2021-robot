@@ -24,7 +24,7 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         // Robot.drivetrain.arcadeDrive(1);
-        Robot.shooter.update();
+        Robot.shooter.update(); // TODO: map to control button after testing
 
         // DRIVER CONTROLS
         driver.bB.whenPressed(() -> {
