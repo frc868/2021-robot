@@ -22,7 +22,6 @@ public class ButtonWrapper extends Trigger {
     private final int angle; // only used if there's a POV button
     private final boolean isPOV; // determines if the button's a POV button
 
-    private boolean toggleState = false; // whether the button state has changed
     private boolean lastState = false; // previous state of the button
 
     public ButtonWrapper(XboxController controller, int id) {
@@ -60,18 +59,10 @@ public class ButtonWrapper extends Trigger {
      * @param func a lambda representing the action
      */
     public void whenPressed(Runnable func) {
-        if (this.get() && !lastState) { // button is true, lastState is false
-            // toggle the state if the state is toggled
-            toggleState = !toggleState;
-        }
-
-        // store the previous button state
-        lastState = this.get();
-
-        // if the rising edge of the button is hit, run the Runnable
-        if (toggleState) {
+        // button is true, and we ran a whenReleased
+        if (this.get() && !lastState) {
             func.run();
-            toggleState = !toggleState;
+            lastState = true;
         }
     }
 
@@ -80,17 +71,10 @@ public class ButtonWrapper extends Trigger {
      * @param func a lambda representing the action
      */
     public void whenReleased(Runnable func) {
-        if (!this.get() && lastState) { // button is false, lastState is true
-            // the first rule of tautology club is the fundamental law of tautology club
-            toggleState = !toggleState;
-        }
-
-        // store the previous button state
-        lastState = this.get();
-
-        if (toggleState) {
+        // button is false, and a whenPressed or whileHeld happened
+        if (!this.get() && lastState) {
             func.run();
-            toggleState = !toggleState;
+            lastState = false;
         }
     }
 
@@ -103,22 +87,18 @@ public class ButtonWrapper extends Trigger {
     public void whileHeld(Runnable func) {
         if (this.get()) {
             func.run();
+            lastState = true;
         }
     }
 
-    public void setToggleState(boolean toggleState) {
-        this.toggleState = toggleState;
-    }
-
-    public void setLastState(boolean lastState) {
-        this.lastState = lastState;
-    }
-
-    public boolean getToggleState() {
-        return this.toggleState;
-    }
-
-    public boolean getLastState() {
-        return this.lastState;
+    /**
+     * Manually updates the states of the button.
+     */
+    public void updateState() {
+        if (this.get() && !lastState) { // rising edge
+            lastState = true;
+        } else if (!this.get() && lastState) { // falling edge
+            lastState = false;
+        }
     }
 }
