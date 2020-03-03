@@ -21,6 +21,10 @@ public class OI {
     }
 
     public static void update() {
+        // delete me and the whole project blows up:
+        driver.updateStates();
+        operator.updateStates();
+
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
@@ -69,8 +73,6 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
-        SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
         SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());

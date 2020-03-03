@@ -31,18 +31,23 @@ public class Turret {
 
     private Encoder compEncoder;
     private WPI_TalonSRX motor;
+
+    private PIDController pidVision;
     private PIDController pid;
     private DigitalInput leftLimit;
     private DigitalInput rightLimit;
 
-    // for tracking target, TODO; tune
-    private final double kP = 0.012, kI = 0, kD = 0.0001;
+    // for tracking target with vision
+    private double kPv, kIv, kDv;
+    // for goal-centric gyro-based positioning
+    private double kP, kI, kD;
     private final double MAX_POS = 30; // maximum angle for x-position
-    
-    private double zeroPos;
-    private double zeroAngle;
+
+    private boolean isCompBot = true;
     
     private Turret(boolean compBot) {
+        this.isCompBot = compBot;
+        
         motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);
 
         if (compBot) {
@@ -53,7 +58,9 @@ public class Turret {
 
             compEncoder = new Encoder(RobotMap.Turret.CompBot.ENCODER_1, RobotMap.Turret.CompBot.ENCODER_2);
 
-            zeroPos = getCompEncPosition();
+            kPv = RobotMap.Turret.CompBot.PID.kPv;
+            kIv = RobotMap.Turret.CompBot.PID.kIv;
+            kDv = RobotMap.Turret.CompBot.PID.kDv;
 
             kP = RobotMap.Turret.CompBot.PID.kP;
             kI = RobotMap.Turret.CompBot.PID.kI;
@@ -66,15 +73,16 @@ public class Turret {
 
             motor.setInverted(RobotMap.Turret.PracticeBot.MOTOR_IS_INVERTED);
 
-            // motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative); // TODO: untested
-
-            zeroPos = motor.getSensorCollection().getQuadraturePosition();
+            kPv = RobotMap.Turret.PracticeBot.PID.kPv;
+            kIv = RobotMap.Turret.PracticeBot.PID.kIv;
+            kDv = RobotMap.Turret.PracticeBot.PID.kDv;
 
             kP = RobotMap.Turret.PracticeBot.PID.kP;
             kI = RobotMap.Turret.PracticeBot.PID.kI;
             kD = RobotMap.Turret.PracticeBot.PID.kD;
         }
-        
+
+        pidVision = new PIDController(kPv, kIv, kDv);
         pid = new PIDController(kP, kI, kD);
     }
 
@@ -130,15 +138,15 @@ public class Turret {
      */
     public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
-            double pidOutput = pid.calculate(Robot.camera.getPosition(), 0);
-            this.setSpeed(-pidOutput); // TODO: take this out for comp bot
+            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), 0);
+            this.setSpeed(pidOutput);
             SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
             SmartDashboard.putNumber("PID output", pidOutput);
             System.out.println(pidOutput);
         } else {
             this.stop();
         }
-        SmartDashboard.putData(this.pid);
+        SmartDashboard.putData(this.pidVision);
     }
 
     /**
@@ -146,47 +154,64 @@ public class Turret {
      * when they go up
      */
     public void safeZone() {
-        if (getPracticeEncPosition() < RobotMap.Turret.Setpoints.SAFE_POSITION && getPracticeEncPosition() > RobotMap.Turret.Setpoints.DEADZONE_LEFT) {
-            setSpeed(0.2);
-        }
-        else if (getPracticeEncPosition() > RobotMap.Turret.Setpoints.SAFE_POSITION && getPracticeEncPosition() < RobotMap.Turret.Setpoints.DEADZONE_RIGHT) {
-            setSpeed(-0.2);
+        if (this.isCompBot) {
+            setPosition(RobotMap.Turret.CompBot.Setpoints.SAFE_POSITION);
         }
         else {
-            stop();
+            setPosition(RobotMap.Turret.PracticeBot.Setpoints.SAFE_POSITION);
         }
     }
 
     /**
-     * Manually controls the turret based on joystick inputs.
+     * Allows manual control of the turret from operator controller triggers.
+     * Limits speed to 0.3 at most.
      */
     public void manualTurret() {
         setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
     }
 
     /**
-     * Returns the current angle of the turret.
+     * Allows turret to go to setpoints in its rotation, controlled with PID loop and encoder.
+     * @param position desired position
+     * @param compBot whether method is called for comp or practice bot
      */
+    public void setPosition(double position) {
+        double pidOutput;
+        if (this.isCompBot) {
+            pidOutput = pid.calculate(getCompEncPosition(), position);
+        }
+        else {
+            pidOutput = pid.calculate(getPracticeEncPosition(), position);
+        }
+        this.setSpeed(pidOutput);
+    }
+
     public double getAngle() {
         return motor.getSensorCollection().getQuadraturePosition();
     }
 
-    /**
-     * Returns the state of the turret's left limit.
-     */
-    public boolean getLeftLimit() {
-        return leftLimit.get();
-    }
-
-    /**
-     * Returns the state of the turret's right limit.
-     */
-    public boolean getRightLimit() {
-        return rightLimit.get();
-    }
-    
     @Override
     public String toString() {
         return "" + getAngle();
+    }
+
+    /**
+     * Returns the current position of the encoder.
+     * TODO: this should switch based on the boolean in the constructor
+     */
+    public double getCompEncPosition() {
+        return compEncoder.getDistance();
+    }
+
+    /**
+     * Resets the encoders.
+     */
+    public void resetEncoders() {
+        if (this.isCompBot) {
+            compEncoder.reset();
+        }
+        else {
+            motor.getSensorCollection().setQuadraturePosition(0, 0);
+        }
     }
 }

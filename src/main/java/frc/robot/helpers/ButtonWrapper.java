@@ -90,4 +90,15 @@ public class ButtonWrapper extends Trigger {
             lastState = true;
         }
     }
+
+    /**
+     * Manually updates the states of the button.
+     */
+    public void updateState() {
+        if (this.get() && !lastState) { // rising edge
+            lastState = true;
+        } else if (!this.get() && lastState) { // falling edge
+            lastState = false;
+        }
+    }
 }
