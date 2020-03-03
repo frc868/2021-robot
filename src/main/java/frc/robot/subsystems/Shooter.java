@@ -141,10 +141,10 @@ public class Shooter {
      * @author hrl
      */
     public void shootUntilClear(double rpm) {
-        if (Robot.hopper.getBallCount() > 0) {
+        //if (Robot.hopper.getBallCount() > 0) {
             Robot.hopper.shoot();
             this.setpoint = rpm;
             this.update();
-        }
+        //}
     }
 }

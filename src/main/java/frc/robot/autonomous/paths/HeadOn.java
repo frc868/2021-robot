@@ -7,6 +7,7 @@
 
 package frc.robot.autonomous.paths;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
@@ -19,7 +20,7 @@ import frc.robot.autonomous.AutonPath;
 public class HeadOn extends AutonPath {
     private static double currentDistance = 0;
     private static double currentVelocity = 0;
-    private static int currentBallCount = 0;
+    private static Timer shootDelay = new Timer();
     private HeadOnState currentState = HeadOnState.ToShootPosition;
 
     private enum HeadOnState {
@@ -29,7 +30,7 @@ public class HeadOn extends AutonPath {
                 if (currentDistance < AutonMap.HeadOn.DISTANCE-1) {
                     return this;
                 }
-                return ReadyToShoot;
+                return Readying;
             }
 
             @Override
@@ -43,7 +44,7 @@ public class HeadOn extends AutonPath {
                 return "Moving";
             }
         },
-        ReadyToShoot {
+        Readying {
             @Override
             public HeadOnState nextState() {
                 if (currentVelocity < AutonMap.HeadOn.SHOOTER_RPM) {
@@ -63,14 +64,29 @@ public class HeadOn extends AutonPath {
                 return "Readying";
             }
         },
+        ReadyToShoot {
+            @Override
+            public HeadOnState nextState() {
+                return Shooting;
+            }
+
+            @Override
+            public void run() {
+                shootDelay.start();
+            }
+
+            @Override
+            public String toString() {
+                return "Setting timer";
+            }
+        },
         Shooting {
             @Override
             public HeadOnState nextState() {
-                if (currentBallCount > 0) {
-                    return this;
+                if (shootDelay.get() > 5) {
+                    return Done;
                 }
-
-                return Done;
+                return this;
             }
 
             @Override
@@ -115,7 +131,6 @@ public class HeadOn extends AutonPath {
     public void run() {
         // update state variables
         currentDistance = Robot.drivetrain.getCurrentDistance();
-        currentBallCount = Robot.hopper.getBallCount();
         currentVelocity = Robot.shooter.getRPM();
 
         SmartDashboard.putString("Auton state", this.currentState.toString());
