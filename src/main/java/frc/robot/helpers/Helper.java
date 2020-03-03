@@ -36,7 +36,7 @@ public class Helper {
      * @author ic, jm
      */
     public static double analogToDigital(double value, double deadzone, double output) {
-        if (value < deadzone) {
+        if (Math.abs(value) < deadzone) {
             return 0;
         } else {
             return output;

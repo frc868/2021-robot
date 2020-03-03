@@ -15,6 +15,13 @@ import frc.robot.Robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 
+/**
+ * This is the code for the shooter. It initializes motor controllers and has
+ * methods for various functions of the shooter. It also uses PID control for
+ * maintaining optimal velocity.
+ * 
+ * @author ama, gjs, hrl
+ */
 public class Shooter {
     private static Shooter instance = null;
 
@@ -41,6 +48,9 @@ public class Shooter {
         secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_OPPOSITE);
         // Secondary motor is always inverted relative to primary
 
+        primary.restoreFactoryDefaults();
+        secondary.restoreFactoryDefaults();
+        
         pid = primary.getPIDController();
 
         SmartDashboard.putNumber("kP", 0);
@@ -63,7 +73,7 @@ public class Shooter {
     }
 
     /**
-     * sets the PID gains and setpoint for the PID controller
+     * Sets the PID gains and setpoint for the PID controller.
      */
     public void init() {
         kP = SmartDashboard.getNumber("kP", 0);
@@ -77,8 +87,13 @@ public class Shooter {
         pid.setI(kI);
         pid.setD(kD);
         pid.setFF(kFF);
-        pid.setIMaxAccum(kIa, 0);
 
+        if (this.kI == 0) {
+            pid.setIMaxAccum(0, 0);
+        } else {
+            pid.setIMaxAccum(kIa, 0);
+        }
+        
         pid.setOutputRange(0, 1);
     }
 
@@ -99,8 +114,8 @@ public class Shooter {
     }
 
     /**
-     * sets the speed of the shooter manually
-     * @param speed the speed to set from -1 to 1
+     * Manually sets the speed of the motors.
+     * @param speed the speed from -1 to 1
      */
     public void setSpeed(double speed) {
         primary.set(speed);
@@ -110,6 +125,10 @@ public class Shooter {
         return primary.getEncoder().getVelocity();
     }
 
+
+    /**
+     * Stops the shooter.
+     */
     public void stop() {
         primary.stopMotor();
         secondary.stopMotor();

@@ -188,23 +188,8 @@ public class Drivetrain {
         return (l_primary.getEncoder().getPosition() + r_primary.getEncoder().getPosition())/2;
     }
 
-    /**
-     * resets both of the encoder positions
-     * @author hrl
-     */
-    public void resetEncoderPositions() {
-        // this has a time delay. this is a hack. i hate it. but this is how it's
-        // going to go down.
-        l_primary.getEncoder().setPosition(0);
-        r_primary.getEncoder().setPosition(0);
-
-        Timer timer = new Timer();
-        timer.reset();
-        timer.start();
-
-        while (timer.get() < 0.2) {
-            // do nothing
-        }
-        timer.stop();
+    @Override
+    public String toString() {
+        return "" + getAveragePosition();
     }
 }

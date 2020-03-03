@@ -44,7 +44,6 @@ public class Hopper {
         botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
-        //topRightLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_RIGHT);
 
         belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
@@ -86,16 +85,16 @@ public class Hopper {
      * @author igc
      */
     public void update(double value) {
-        if(value > 0) {
+        if (value > 0) {
             count();
             if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
                 belt.set(0.5);
-                feeder.set(0.6); //.8
+                feeder.set(0.8); //.6 for compbot
                 blueWheels.set(0.6);
-
-            } else {
-                stop();
-            }
+                System.out.println("Inside update");
+            } 
+        } else {
+            stop();
         }
     }
 
@@ -119,7 +118,7 @@ public class Hopper {
      */
     public boolean getMidLimit() {
         return !midLeftLim.get();
-    }   
+    }
 
     /**
      * Returns true if beam break senses
@@ -229,10 +228,10 @@ public class Hopper {
      */
     public void forward() {
         driverOverride = true;
-        if(getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-        belt.set(.6);
-        feeder.set(1);
-        blueWheels.set(.7);
+        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
+            belt.set(.6);
+            feeder.set(1);
+            blueWheels.set(.7);
         } else {
             feeder.set(1);  
         }
