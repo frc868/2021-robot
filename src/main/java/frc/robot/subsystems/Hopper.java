@@ -115,7 +115,7 @@ public class Hopper {
      * Returns the state of the mid limits.
      */
     public boolean getMidLimit() {
-        return !midLeftLim.get() || !midRightLim.get();
+        return !midLeftLim.get();
     }    
 
     /**
