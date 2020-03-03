@@ -45,6 +45,9 @@ public class Shooter {
         secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_OPPOSITE);
         // Secondary motor is always inverted relative to primary
 
+        primary.restoreFactoryDefaults();
+        secondary.restoreFactoryDefaults();
+        
         pid = primary.getPIDController();
 
         SmartDashboard.putNumber("kP", 0);
