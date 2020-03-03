@@ -21,6 +21,7 @@ public class ButtonWrapper extends Trigger {
     private final int id; // either contains the button ID or the POV number
     private final int angle; // only used if there's a POV button
     private final boolean isPOV; // determines if the button's a POV button
+    private final boolean isTrigger; // determines whether trigger mapped to button
 
     private boolean lastState = false; // previous state of the button
 
@@ -29,6 +30,7 @@ public class ButtonWrapper extends Trigger {
         this.id = id;
         this.angle = 0; // not a POV button
         this.isPOV = false; // still not a POV button
+        this.isTrigger = false; // not a trigger
     }
 
     /**
@@ -40,6 +42,15 @@ public class ButtonWrapper extends Trigger {
         this.controller = controller;
         this.id = povNumber;
         this.angle = angle;
+        this.isTrigger = false; // not a trigger
+    }
+
+    public ButtonWrapper(XboxController controller, int id, boolean trigger) {
+        this.isPOV = false;
+        this.controller = controller;
+        this.id = id;
+        this.angle = 0;
+        this.isTrigger = trigger;
     }
 
     /**
@@ -50,6 +61,10 @@ public class ButtonWrapper extends Trigger {
     public boolean get() {
         if (isPOV) {
             return this.controller.getPOV(this.id) == this.angle;
+        }
+        else if (isTrigger) {
+
+            return Math.abs(this.controller.getRawAxis(this.id)) > 0.5;
         }
         return this.controller.getRawButton(this.id);
     }

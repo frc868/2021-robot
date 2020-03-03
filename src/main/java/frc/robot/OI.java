@@ -42,8 +42,8 @@ public class OI {
         });
 
         // intake
-        /*operator.bLB.whenPressed(() -> Robot.intake.toggle());
-        operator.bLB.whenReleased(() -> {});
+        operator.bLB.whenPressed(() -> Robot.intake.toggle());
+        /*operator.bLB.whenReleased(() -> {});
         operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
@@ -54,13 +54,26 @@ public class OI {
         });*/
 
         
-        //Robot.hopper.update(operator.getRT());
-        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
-        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
-        // Robot.intake.setSpeed(operator.getLT());
-        // Robot.intake.setSpeed(operator.getRT());
+        //Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
+        operator.bRT.whenPressed(() -> {
+            Robot.hopper.update(.6);
+            Robot.intake.setSpeed(1);
+        });
+        operator.bLT.whenPressed(() -> {
+            Robot.hopper.reverse(.6);
+            Robot.intake.setSpeed(-1);
+        });
+        operator.bRT.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.intake.setSpeed(0);
+        });
+        operator.bLT.whenReleased(() -> {
+            Robot.hopper.stop();
+            Robot.intake.setSpeed(0);
+        });
+
+
+
 
         // hopper
         operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
