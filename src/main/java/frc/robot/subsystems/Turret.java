@@ -159,7 +159,7 @@ public class Turret {
      * Manually controls the turret based on joystick inputs.
      */
     public void manualTurret() {
-        setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
+        setSpeed(0.5*(OI.operator.getLX()));
     }
 
     /**
