@@ -118,21 +118,7 @@ public class HeadOn extends AutonPath {
         currentBallCount = Robot.hopper.getBallCount();
         currentVelocity = Robot.shooter.getRPM();
 
-        switch(this.currentState) {
-        case ToShootPosition:
-            SmartDashboard.putString("Auton state", "To shoot pos");
-            break;
-        case ReadyToShoot:
-            SmartDashboard.putString("Auton state", "Readying");
-            break;
-        case Shooting:
-            SmartDashboard.putString("Auton state", "Shooting");
-            break;
-        default:
-            SmartDashboard.putString("Auton state", "What");
-            break;
-        }
-
+        SmartDashboard.putString("Auton state", this.currentState.toString());
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }
