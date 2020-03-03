@@ -101,12 +101,23 @@ public class Turret {
      * @param speed the speed to be set between -1 and 1
      */
     public void setSpeed(double speed) {
-        if (leftLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) { // TODO: add modularity
-            speed = Helper.boundValue(speed, 0, 1);
+        if (isCompBot) {
+            if (leftLimit.get() == RobotMap.Turret.CompBot.Limits.LIMIT_TRIGGERED) { // TODO: add modularity
+                speed = Helper.boundValue(speed, 0, 1);
+            }
+            if (rightLimit.get() == RobotMap.Turret.CompBot.Limits.LIMIT_TRIGGERED) {
+                speed = Helper.boundValue(speed, -1, 0);
+            }
         }
-        if (rightLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) {
-            speed = Helper.boundValue(speed, -1, 0);
+        else {
+            if (leftLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) { // TODO: add modularity
+                speed = Helper.boundValue(speed, 0, 1);
+            }
+            if (rightLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) {
+                speed = Helper.boundValue(speed, -1, 0);
+            }
         }
+        
         motor.set(Helper.boundValue(speed));
     }
 
