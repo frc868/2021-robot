@@ -83,7 +83,7 @@ public class Shooter {
      * sets the output of the PID loop to the 
      */
     public void update() {
-        pid.setReference(setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
+        pid.setReference(setpoint, ControlType.kVelocity);
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
     }
 
