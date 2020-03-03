@@ -83,19 +83,18 @@ public class Hopper {
      * @author igc
      */
     public void update(double val) {
-            if (val>0) {
-                count();
-                if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-                    belt.set(0.5);
-                    feeder.set(0.8); //.6 for compbot
-                    blueWheels.set(0.6);
-                    System.out.println("Inside update");
-                } 
-            }s
-            else {
-                stop();
-            }
-            
+        if (val>0) {
+            count();
+            if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
+                belt.set(0.5);
+                feeder.set(0.8); //.6 for compbot
+                blueWheels.set(0.6);
+                System.out.println("Inside update");
+            } 
+        }
+        else {
+            stop();
+        }            
     }
 
     /**
