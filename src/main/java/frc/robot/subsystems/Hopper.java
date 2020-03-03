@@ -221,10 +221,10 @@ public class Hopper {
      */
     public void forward() {
         driverOverride = true;
-        if(getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-        belt.set(.6);
-        feeder.set(1);
-        blueWheels.set(.7);
+        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
+            belt.set(.6);
+            feeder.set(1);
+            blueWheels.set(.7);
         } else {
             feeder.set(1);  
         }
