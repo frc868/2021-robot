@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 import frc.robot.helpers.Helper;
-import frc.robot.Robot;
 
 /**
  * The class in which we map our driver/operator input to specific tasks on the robot
@@ -84,6 +83,10 @@ public class OI {
         operator.dN.whenReleased(() -> {});
         operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
         operator.dS.whenReleased(() -> {});
+
+        // if it hasn't already been handled...
+        driver.updateStates();
+        operator.updateStates();
 
         updateSD();
     }

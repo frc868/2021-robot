@@ -36,7 +36,7 @@ public class Turret {
     private DigitalInput rightLimit;
 
     // for tracking target, TODO; tune
-    private final double kP = 0.012, kI = 0, kD = 0.0001;
+    private double kP = 0.012, kI = 0, kD = 0.0001;
     private final double MAX_POS = 30; // maximum angle for x-position
     
     private double zeroPos;
@@ -53,11 +53,9 @@ public class Turret {
 
             compEncoder = new Encoder(RobotMap.Turret.CompBot.ENCODER_1, RobotMap.Turret.CompBot.ENCODER_2);
 
-            // zeroPos = getCompEncPosition();
-
-            // kP = RobotMap.Turret.CompBot.PID.kP;
-            // kI = RobotMap.Turret.CompBot.PID.kI;
-            // kD = RobotMap.Turret.CompBot.PID.kD;
+            kP = RobotMap.Turret.CompBot.PID.kP;
+            kI = RobotMap.Turret.CompBot.PID.kI;
+            kD = RobotMap.Turret.CompBot.PID.kD;
         }
 
         else {
@@ -70,9 +68,9 @@ public class Turret {
 
             zeroPos = motor.getSensorCollection().getQuadraturePosition();
 
-            // kP = RobotMap.Turret.PracticeBot.PID.kP;
-            // kI = RobotMap.Turret.PracticeBot.PID.kI;
-            // kD = RobotMap.Turret.PracticeBot.PID.kD;
+            kP = RobotMap.Turret.PracticeBot.PID.kP;
+            kI = RobotMap.Turret.PracticeBot.PID.kI;
+            kD = RobotMap.Turret.PracticeBot.PID.kD;
         }
         
         pid = new PIDController(kP, kI, kD);
