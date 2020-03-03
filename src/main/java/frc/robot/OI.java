@@ -26,7 +26,6 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
-        Robot.turret.manualTurret();
         //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
@@ -80,7 +79,6 @@ public class OI {
     }
 
     public static void initSD() {
-        Robot.shooter.initSD();
     }
 
     public static void updateSD() {

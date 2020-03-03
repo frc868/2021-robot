@@ -30,13 +30,12 @@ public class AutonMap {
         // the distance to drive (backwards) from the baseline
         public static final double DISTANCE = 10.0;
         // the power to start driving with
-        public static final double START_POWER = -0.8;
+        public static final double START_POWER = -0.5;
         // the power to end driving with
         public static final double END_POWER = 0;
 
         // the power to run the shooter at
-        // NOTE: this will be PID controlled and obsoleted in future code!
-        public static final double SHOOTER_RPM = 3000;
+        public static final double SHOOTER_RPM = 3400;
     }
 
     public static class TrenchRun {

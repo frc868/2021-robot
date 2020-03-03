@@ -23,7 +23,9 @@ public class Shooter {
 
     private CANPIDController pid;
 
-    private double kP, kI, kD, kFF, kIa, setpoint;
+    private double kP, kI, kD, kFF, kIa;
+
+    private double setpoint = 3400;
 
     /**
      * The shooter subsystem consists of the two-neo shooter mounted on the robot's turret.
@@ -94,6 +96,10 @@ public class Shooter {
      */
     public void setSpeed(double speed) {
         primary.set(speed);
+    }
+
+    public double getRPM() {
+        return primary.getEncoder().getVelocity();
     }
 
     public void stop() {

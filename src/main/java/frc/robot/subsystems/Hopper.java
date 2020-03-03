@@ -85,7 +85,6 @@ public class Hopper {
      * Indexes hopper. 
      * @author igc
      */
-<<<<<<< HEAD
     public void update(double value) {
         if(value > 0) {
             count();
@@ -98,12 +97,6 @@ public class Hopper {
                 stop();
             }
         }
-=======
-    public void update() {
-            belt.set(1);
-            feeder.set(0.45);
-            blueWheels.set(1);
->>>>>>> origin/shooter-idea
     }
 
     /**
@@ -125,30 +118,13 @@ public class Hopper {
      * Returns the state of the mid limits.
      */
     public boolean getMidLimit() {
-       
-<<<<<<< HEAD
         return !midLeftLim.get();
-=======
-        return !midLeftLim.get() || !midRightLim.get();
-    }    
-
-    /**
-     * Returns the state of the bottom limits.
-     */
-    private boolean getBotLimit() {
-        return !botLeftLim.get() || !botRightLim.get();
-    }
-
-    private boolean getBotSensor() {
-        return false;
->>>>>>> origin/shooter-idea
-    }
+    }   
 
     /**
      * Returns true if beam break senses
      * @author igc
      */
-
     public boolean getBotSensor() {
         return !botSensor.get();
     }
@@ -228,6 +204,7 @@ public class Hopper {
         driverOverride = true;
         belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED);
         feeder.set(RobotMap.Hopper.FEEDER_SPEED);
+        blueWheels.set(RobotMap.Hopper.BLUE_SPEED);
     }
 
     /**

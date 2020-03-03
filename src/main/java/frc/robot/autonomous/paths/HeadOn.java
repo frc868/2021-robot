@@ -7,6 +7,7 @@
 
 package frc.robot.autonomous.paths;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
 import frc.robot.autonomous.AutonPath;
@@ -17,6 +18,7 @@ import frc.robot.autonomous.AutonPath;
  */
 public class HeadOn extends AutonPath {
     private static double currentDistance = 0;
+    private static double currentVelocity = 0;
     private static int currentBallCount = 0;
     private HeadOnState currentState = HeadOnState.ToShootPosition;
 
@@ -24,10 +26,10 @@ public class HeadOn extends AutonPath {
         ToShootPosition {
             @Override
             public HeadOnState nextState() {
-                if (currentDistance < AutonMap.HeadOn.DISTANCE) {
+                if (currentDistance < AutonMap.HeadOn.DISTANCE-1) {
                     return this;
                 }
-                return Shooting;
+                return ReadyToShoot;
             }
 
             @Override
@@ -36,19 +38,31 @@ public class HeadOn extends AutonPath {
                         AutonMap.HeadOn.END_POWER);
             }
         },
-        Shooting {
+        ReadyToShoot {
             @Override
             public HeadOnState nextState() {
-                if (currentBallCount > 0) {
+                if (currentVelocity < AutonMap.HeadOn.SHOOTER_RPM) {
                     return this;
                 }
-                return Done;
+                return Shooting;
             }
 
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_POWER);
+                Robot.shooter.update();
+            }
+        },
+        Shooting {
+            @Override
+            public HeadOnState nextState() {
+                return this;
+            }
+
+            @Override
+            public void run() {
+                Robot.drivetrain.setSpeed(0, 0);
+                Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
             }
         },
         Done {
@@ -76,7 +90,23 @@ public class HeadOn extends AutonPath {
     public void run() {
         // update state variables
         currentDistance = Robot.drivetrain.getCurrentDistance();
-        currentBallCount = Robot.hopper.getBallCount();
+        //currentBallCount = Robot.hopper.getBallCount();
+        currentVelocity = Robot.shooter.getRPM();
+
+        switch(this.currentState) {
+        case ToShootPosition:
+            SmartDashboard.putString("Auton state", "To shoot pos");
+            break;
+        case ReadyToShoot:
+            SmartDashboard.putString("Auton state", "Readying");
+            break;
+        case Shooting:
+            SmartDashboard.putString("Auton state", "Shooting");
+            break;
+        default:
+            SmartDashboard.putString("Auton state", "What");
+            break;
+        }
 
         this.currentState.run();
         this.currentState = this.currentState.nextState();
