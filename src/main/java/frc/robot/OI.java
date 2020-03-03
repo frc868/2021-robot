@@ -25,12 +25,16 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
-        Robot.turret.manualTurret();
+        
         //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
 
         // OPERATOR CONTROLS
+
+        // turret
+        /*operator.bLB.whileHeld(() ->*/ Robot.turret.manualTurret();/*);*/
+        operator.bLB.whenReleased(() -> {});
 
         // shoot
         operator.bA.whileHeld(() -> Robot.shooter.setSpeed(-0.6));
@@ -42,7 +46,7 @@ public class OI {
         });
 
         // intake
-        operator.bLB.whenPressed(() -> Robot.intake.toggle());
+        operator.bY.whenPressed(() -> Robot.intake.toggle());
         /*operator.bLB.whenReleased(() -> {});
         operator.bRB.whileHeld(() -> {
             Robot.hopper.update();

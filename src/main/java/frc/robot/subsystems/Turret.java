@@ -178,7 +178,7 @@ public class Turret {
      * Limits speed to 0.3 at most.
      */
     public void manualTurret() {
-        setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
+        setSpeed(0.5*(OI.operator.getLX()));
     }
 
     /**
