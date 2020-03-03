@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
+import frc.robot.helpers.Helper;
 import frc.robot.Robot;
 
 /**
@@ -21,25 +22,52 @@ public class OI {
     }
 
     public static void update() {
+        // delete me and the whole project blows up:
+        driver.updateStates();
+        operator.updateStates();
+
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
-        // Robot.drivetrain.arcadeDrive(1);
-        Robot.shooter.update(); // TODO: map to control button after testing
+        Robot.drivetrain.arcadeDrive(1);
+        Robot.turret.manualTurret();
+        //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
-        driver.bB.whenPressed(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        driver.bB.whenReleased(() -> {
+
+        // OPERATOR CONTROLS
+
+        // shoot
+        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
+        operator.bX.whenPressed(() -> Robot.shooter.stop());
+        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
+        operator.bSTART.whenReleased(() -> {
             Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
+            Robot.hopper.resetOverride();
         });
+
+        // intake
+        operator.bLB.whenPressed(() -> Robot.intake.toggle());
+
+        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
+        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+
+        // hopper
+        operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+        operator.bB.whenReleased(() -> Robot.hopper.stop());
+
+        // WOF
+        operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
+        operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
         updateSD();
     }
 
     public static void updateSD() {
-        // SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        // SmartDashboard.putString("IR LImit", Robot.hopper.toString());
+        SmartDashboard.putString("WoF Color", Robot.wheel.toString());
+        SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
+        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
     }
 }
