@@ -14,6 +14,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 
+/**
+ * This is the code for the shooter. It initializes motor controllers and has
+ * methods for various functions of the shooter. It also uses PID control for
+ * maintaining optimal velocity.
+ * 
+ * @author ama, gjs, hrl
+ */
 public class Shooter {
     private static Shooter instance = null;
 
@@ -87,10 +94,17 @@ public class Shooter {
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
     }
 
+    /**
+     * manually sets the speed of the motor
+     * @param speed the speed from -1 to 1
+     */
     public void setSpeed(double speed) {
         primary.set(speed);
     }
 
+    /**
+     * stops the shooter
+     */
     public void stop() {
         primary.stopMotor();
         secondary.stopMotor();
