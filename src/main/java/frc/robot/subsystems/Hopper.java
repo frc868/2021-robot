@@ -83,7 +83,7 @@ public class Hopper {
      * @author igc
      */
     public void update(double value) {
-        if(value > 0) {
+        if (value > 0) {
             count();
             if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
                 belt.set(0.5);
@@ -115,9 +115,8 @@ public class Hopper {
      * Returns the state of the mid limits.
      */
     public boolean getMidLimit() {
-       
         return !midLeftLim.get();
-    }
+    }    
 
     /**
      * Returns true if beam break senses
