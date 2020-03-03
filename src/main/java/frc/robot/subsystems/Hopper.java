@@ -87,13 +87,14 @@ public class Hopper {
             count();
             if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
                 belt.set(0.5);
-                feeder.set(0.6); //.8
+                feeder.set(0.8); //.6 for compbot
                 blueWheels.set(0.6);
-
-            } else {
-                stop();
-            }
+                System.out.println("Inside update");
+            } 
         }
+        else {
+            stop();
+        }            
     }
 
     /**

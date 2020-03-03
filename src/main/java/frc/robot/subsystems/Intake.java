@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
-import frc.robot.helpers.Helper;
 
 /**
  * Intakes power cells with a singular NEO 550.
@@ -58,7 +57,7 @@ public class Intake {
     public void toggle() {
         if (actuator.get() == Value.kForward) {
             actuator.set(Value.kReverse);
-        } else if (actuator.get() == Value.kReverse) {
+        } else {
             actuator.set(Value.kForward);
         }
     }
@@ -68,7 +67,7 @@ public class Intake {
      * @author acr
      */
     public void actuatorUp() {
-        actuator.set(Value.kForward);
+        actuator.set(Value.kReverse);
     }
 
     /**
@@ -76,6 +75,6 @@ public class Intake {
      * @author acr
      */
     public void actuatorDown() {
-        actuator.set(Value.kReverse);
+        actuator.set(Value.kForward);
     }
 }
