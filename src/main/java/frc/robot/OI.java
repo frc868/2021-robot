@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 import frc.robot.helpers.Helper;
@@ -43,19 +44,23 @@ public class OI {
         // intake
         operator.bLB.whenPressed(() -> Robot.intake.toggle());
         operator.bLB.whenReleased(() -> {});
-        /*operator.bRB.whileHeld(() -> {
+        operator.bRB.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
         });
         operator.bRB.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
-        });*/
+        });
 
-        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
-        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+        
+        //Robot.hopper.update(operator.getRT());
+        //Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
+        //Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
+        //Robot.hopper.reverse(Helper.analogToDigital(operator.getRT(), .1, .6));
+        //Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+        // Robot.intake.setSpeed(operator.getLT());
+        // Robot.intake.setSpeed(operator.getRT());
 
         // hopper
         operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
@@ -78,5 +83,8 @@ public class OI {
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+
+        SmartDashboard.putNumber("Left trigger", operator.getLT());
+        SmartDashboard.putNumber("Right trigger", operator.getRT());
     }
 }

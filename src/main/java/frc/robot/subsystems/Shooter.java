@@ -42,9 +42,8 @@ public class Shooter {
         primary = new CANSparkMax(RobotMap.Shooter.PRIMARY, MotorType.kBrushless);
         secondary = new CANSparkMax(RobotMap.Shooter.SECONDARY, MotorType.kBrushless);
         primary.setInverted(RobotMap.Shooter.PRIMARY_IS_INVERTED);
-        secondary.setInverted(RobotMap.Shooter.SECONDARY_IS_INVERTED);
 
-        secondary.follow(primary);
+        secondary.follow(primary,true);
         pid = primary.getPIDController();
 
         // reset the motor controllers

@@ -51,7 +51,7 @@ public class RobotMap {
             public static final int BLUE_WHEELS = 11; // TODO: untested
             public static final int FEEDER = 3; // TODO: untested
             public static final boolean HOPPER_FLOOR_IS_INVERTED = true; // TODO: untested
-            public static final boolean FEEDER_IS_INVERTED = true; // TODO: untested
+            public static final boolean FEEDER_IS_INVERTED = false; // TODO: untested
         }
     }
 
