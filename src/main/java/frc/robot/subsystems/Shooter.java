@@ -70,7 +70,7 @@ public class Shooter {
     }
 
     /**
-     * sets the PID gains and setpoint for the PID controller
+     * Sets the PID gains and setpoint for the PID controller.
      */
     public void init() {
         kP = SmartDashboard.getNumber("kP", 0);
@@ -95,7 +95,7 @@ public class Shooter {
     }
 
     /**
-     * sets the output of the PID loop to the 
+     * Sets the output of the PID loop to the primary motor. 
      */
     public void update() {
         pid.setReference(setpoint, ControlType.kVelocity);
@@ -103,7 +103,7 @@ public class Shooter {
     }
 
     /**
-     * manually sets the speed of the motor
+     * Manually sets the speed of the motors.
      * @param speed the speed from -1 to 1
      */
     public void setSpeed(double speed) {
@@ -111,7 +111,7 @@ public class Shooter {
     }
 
     /**
-     * stops the shooter
+     * Stops the shooter.
      */
     public void stop() {
         primary.stopMotor();
