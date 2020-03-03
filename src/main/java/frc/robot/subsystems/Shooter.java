@@ -25,7 +25,7 @@ public class Shooter {
 
     private double kP, kI, kD, kFF, kIa;
 
-    private double setpoint = 3400;
+    private double setpoint = 0;
 
     /**
      * The shooter subsystem consists of the two-neo shooter mounted on the robot's turret.
@@ -85,9 +85,17 @@ public class Shooter {
     /**
      * sets the output of the PID loop to the setpoint
      */
-    public void update() {
+    public void update(double rpm) {
+        this.setpoint = rpm;
         pid.setReference(setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
+    }
+
+    /**
+     * runs the shooter at the current RPM
+     */
+    public void update() {
+        this.update(this.setpoint);
     }
 
     /**
@@ -114,10 +122,10 @@ public class Shooter {
      * @author hrl
      */
     public void shootUntilClear(double rpm) {
-        //if (Robot.hopper.getBallCount() > 0) {
+        if (Robot.hopper.getBallCount() > 0) {
             Robot.hopper.shoot();
             this.setpoint = rpm;
             this.update();
-        //}
+        }
     }
 }

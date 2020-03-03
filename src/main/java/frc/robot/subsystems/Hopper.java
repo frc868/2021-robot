@@ -167,12 +167,15 @@ public class Hopper {
        
     }
 
+    /**
+     * Updates the current ball count in the hopper.
+     */
     private void count() {
-        if(getTopLimitToggled()) {
+        if (getTopLimitToggled()) {
             count--;
         }
 
-        if(getMidLimitToggled()) {
+        if (getMidLimitToggled()) {
             count++;
         }
     }
@@ -202,6 +205,8 @@ public class Hopper {
      */
     public void shoot() {
         driverOverride = true;
+
+        this.count();
         belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED);
         feeder.set(RobotMap.Hopper.FEEDER_SPEED);
         blueWheels.set(RobotMap.Hopper.BLUE_SPEED);

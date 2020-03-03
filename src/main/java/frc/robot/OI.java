@@ -43,20 +43,6 @@ public class OI {
 
         // intake
         operator.bLB.whenPressed(() -> Robot.intake.toggle());
-        /*operator.bRB.whileHeld(() -> {
-=======
-        // Robot.drivetrain.arcadeDrive(1);
-        Robot.shooter.update();
-
-        // DRIVER CONTROLS
-        driver.bB.whenPressed(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        driver.bB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });*/
 
         Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
         Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
@@ -89,5 +75,6 @@ public class OI {
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+        SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
     }
 }

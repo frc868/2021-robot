@@ -37,6 +37,11 @@ public class HeadOn extends AutonPath {
                 Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE, AutonMap.HeadOn.START_POWER,
                         AutonMap.HeadOn.END_POWER);
             }
+
+            @Override
+            public String toString() {
+                return "Moving";
+            }
         },
         ReadyToShoot {
             @Override
@@ -50,19 +55,33 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.update();
+                Robot.shooter.update(AutonMap.HeadOn.SHOOTER_RPM);
+            }
+
+            @Override
+            public String toString() {
+                return "Readying";
             }
         },
         Shooting {
             @Override
             public HeadOnState nextState() {
-                return this;
+                if (currentBallCount > 0) {
+                    return this;
+                }
+
+                return Done;
             }
 
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
                 Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
+            }
+
+            @Override
+            public String toString() {
+                return "Shooting";
             }
         },
         Done {
@@ -77,10 +96,16 @@ public class HeadOn extends AutonPath {
                 Robot.shooter.stop();
                 Robot.drivetrain.setSpeed(0, 0);
             }
+
+            @Override
+            public String toString() {
+                return "Done";
+            }
         };
 
         public abstract HeadOnState nextState();
         public abstract void run();
+        public abstract String toString();
     }
 
     /**
@@ -90,7 +115,7 @@ public class HeadOn extends AutonPath {
     public void run() {
         // update state variables
         currentDistance = Robot.drivetrain.getCurrentDistance();
-        //currentBallCount = Robot.hopper.getBallCount();
+        currentBallCount = Robot.hopper.getBallCount();
         currentVelocity = Robot.shooter.getRPM();
 
         switch(this.currentState) {
