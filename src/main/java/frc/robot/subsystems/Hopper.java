@@ -38,7 +38,9 @@ public class Hopper {
     private boolean lastMidState;
     private boolean lastTopState;
 
-    private Hopper() {
+    private boolean isCompBot = true;
+
+    private Hopper(boolean compBot) {
         driverOverride = false;
 
         botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
@@ -57,14 +59,16 @@ public class Hopper {
 
         initialBeltPosition = belt.getSensorCollection().getQuadraturePosition();
         initialFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
+
+        this.isCompBot = compBot;
     }
 
     /**
      * Returns a singular instance of the Intake subsystem.
      */
-    public static Hopper getInstance() {
+    public static Hopper getInstance(boolean compBot) {
         if (instance == null) {
-            instance = new Hopper();
+            instance = new Hopper(compBot);
         }
         return instance;
     }
@@ -86,10 +90,16 @@ public class Hopper {
         if (val>0) {
             count();
             if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-                belt.set(0.5);
-                feeder.set(0.8); //.6 for compbot
-                blueWheels.set(0.6);
-                System.out.println("Inside update");
+                if (isCompBot) {
+                    belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
+                    feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+                    blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
+                }
+                else {
+                    belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
+                    feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
+                    blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
+                }
             } 
         }
         else {
@@ -178,32 +188,19 @@ public class Hopper {
     }
 
     /**
-     * index balls in the hopper, but not the belts that feed into the shooter
-     */
-    private void cycleIntake() {
-        double currentBeltPosition = belt.getSensorCollection().getQuadraturePosition();
-        double currentFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
-        if (currentBeltPosition - initialBeltPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
-            belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED); // TODO: check motor speed with balls
-        } else {
-            belt.set(0);
-        }
-
-        if (currentFeederPosition - initialFeederPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
-            feeder.set(RobotMap.Hopper.FEEDER_SPEED); // TODO: check motor speed with balls
-        } else {
-            feeder.set(0);
-        }
-    }
-
-    /**
      * called when the driver is ready to shoot (pushing the button on the
      * controller) sets the belt speed to the tested value necessary to feed
      */
     public void shoot() {
         driverOverride = true;
-        belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED);
-        feeder.set(RobotMap.Hopper.FEEDER_SPEED);
+        if (isCompBot) {
+            belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
+            feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+        }
+        else {
+            belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
+            feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
+        }
     }
 
     /**
@@ -224,9 +221,9 @@ public class Hopper {
     public void forward() {
         driverOverride = true;
         if(getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-        belt.set(.6);
-        feeder.set(1);
-        blueWheels.set(.7);
+            belt.set(.6);
+            feeder.set(1);
+            blueWheels.set(.7);
         } else {
             feeder.set(1);  
         }
