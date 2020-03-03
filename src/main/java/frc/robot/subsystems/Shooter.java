@@ -84,8 +84,13 @@ public class Shooter {
         pid.setI(kI);
         pid.setD(kD);
         pid.setFF(kFF);
-        pid.setIMaxAccum(kIa, 0);
 
+        if (this.kI == 0) {
+            pid.setIMaxAccum(0, 0);
+        } else {
+            pid.setIMaxAccum(kIa, 0);
+        }
+        
         pid.setOutputRange(0, 1);
     }
 
