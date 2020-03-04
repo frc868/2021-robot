@@ -47,16 +47,16 @@ public class HeadOn extends AutonPath {
         Readying {
             @Override
             public HeadOnState nextState() {
-                if (currentVelocity < AutonMap.HeadOn.SHOOTER_RPM) {
+                if (currentVelocity > AutonMap.HeadOn.SHOOTER_RPM+150) {
                     return this;
                 }
-                return Shooting;
+                return ReadyToShoot;
             }
 
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.update(AutonMap.HeadOn.SHOOTER_RPM);
+                Robot.shooter.update(-AutonMap.HeadOn.SHOOTER_RPM);
             }
 
             @Override
@@ -92,7 +92,7 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
+                Robot.shooter.shootUntilClear(-AutonMap.HeadOn.SHOOTER_RPM);
             }
 
             @Override

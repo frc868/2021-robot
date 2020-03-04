@@ -30,9 +30,10 @@ public class Shooter {
 
     private CANPIDController pid;
 
-    private double kP, kI, kD, kFF, kIa;
+    private double kP, kD, kFF, kIa;
+    private double kI = 0.000001;
 
-    private double setpoint = 0;
+    private double setpoint = 4500;
 
     /**
      * The shooter subsystem consists of the two-neo shooter mounted on the robot's turret.
@@ -54,7 +55,7 @@ public class Shooter {
         pid = primary.getPIDController();
 
         SmartDashboard.putNumber("kP", 0);
-        SmartDashboard.putNumber("kI", 0);
+        //SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
         SmartDashboard.putNumber("kFF", 0);
         SmartDashboard.putNumber("kIa", 0);
@@ -77,7 +78,7 @@ public class Shooter {
      */
     public void init() {
         kP = SmartDashboard.getNumber("kP", 0);
-        kI = SmartDashboard.getNumber("kI", 0);
+        //kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
         kFF = SmartDashboard.getNumber("kFF", 0);
         kIa = SmartDashboard.getNumber("kIa", 0);
@@ -88,13 +89,13 @@ public class Shooter {
         pid.setD(kD);
         pid.setFF(kFF);
 
-        if (this.kI == 0) {
-            pid.setIMaxAccum(0, 0);
-        } else {
+        //if (this.kI == 0) {
+        //    pid.setIMaxAccum(0, 0);
+        //} else {
             pid.setIMaxAccum(kIa, 0);
-        }
+        //}
         
-        pid.setOutputRange(0, 1);
+        pid.setOutputRange(-1, 0);
     }
 
     /**
@@ -102,8 +103,9 @@ public class Shooter {
      */
     public void update(double rpm) {
         this.setpoint = rpm;
-        pid.setReference(setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
+        pid.setReference(-setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Actual output", primary.get());
     }
 
     /**
@@ -142,7 +144,7 @@ public class Shooter {
      */
     public void shootUntilClear(double rpm) {
         //if (Robot.hopper.getBallCount() > 0) {
-            Robot.hopper.shoot();
+            Robot.hopper.forward();
             this.setpoint = rpm;
             this.update();
         //}

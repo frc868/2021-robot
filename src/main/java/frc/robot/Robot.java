@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.autonomous.paths.Baseline;
 import frc.robot.autonomous.paths.HeadOn;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro;
@@ -36,7 +37,7 @@ public class Robot extends TimedRobot {
     public static LED leds = LED.getInstance();
     public static Hopper hopper = Hopper.getInstance();
     public static Shooter shooter = Shooter.getInstance();
-    public static Turret turret = Turret.getInstance(false); // TODO: change according to testing mode
+    public static Turret turret = Turret.getInstance(true); // TODO: change according to testing mode
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
 
     //public static AutonHelper auton = AutonHelper.getInstance();
@@ -61,6 +62,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        drivetrain.resetInitialDistance();
+        drivetrain.resetEncoderPositions();
+        shooter.init();
         //wheel.actuatorDown();
     }
 
@@ -68,7 +72,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         //auton.runSelectedPath();
         headon.run();
-        //turret.track();
+        turret.trackVision();
         Scheduler.getInstance().run();
     }
 

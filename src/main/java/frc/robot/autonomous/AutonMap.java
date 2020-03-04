@@ -35,7 +35,7 @@ public class AutonMap {
         public static final double END_POWER = 0;
 
         // the power to run the shooter at
-        public static final double SHOOTER_RPM = 3400;
+        public static final double SHOOTER_RPM = -3800;
     }
 
     public static class TrenchRun {
