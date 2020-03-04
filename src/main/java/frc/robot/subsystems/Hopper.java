@@ -82,17 +82,17 @@ public class Hopper {
      * Indexes hopper. 
      * @author igc
      */
-    public void update(double value) {
-        if (value > 0) {
-            count();
-            if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-                belt.set(0.5);
-                feeder.set(0.8); //.6 for compbot
-                blueWheels.set(0.6);
-                System.out.println("Inside update");
-            } 
-        }
-        else {
+
+
+     // DIFFERENT FOR COMP AND PRACTICE : !GETBOT
+    public void update() {
+        count();
+        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
+            belt.set(0.5);
+            feeder.set(0.8); 
+            blueWheels.set(0.6);
+            System.out.println("Inside update");
+        } else {
             stop();
         }            
     }
