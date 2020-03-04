@@ -33,6 +33,7 @@ public class RobotMap {
     public static class Hopper {
         public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
         public static final double HOPPER_FLOOR_SPEED = 1; // TODO: untested
+    
         public static final double FEEDER_SPEED = 1; // TODO: untested
         public static final double BLUE_SPEED = 1;
 
@@ -51,7 +52,7 @@ public class RobotMap {
             public static final int BLUE_WHEELS = 11; // TODO: untested
             public static final int FEEDER = 3; // TODO: untested
             public static final boolean HOPPER_FLOOR_IS_INVERTED = true; // TODO: untested
-            public static final boolean FEEDER_IS_INVERTED = false; // TODO: untested
+            public static final boolean FEEDER_IS_INVERTED = true; // TODO: untested
         }
     }
 
