@@ -42,24 +42,24 @@ public class OI {
         });
 
         // intake
-        operator.bLB.whenPressed(() -> Robot.intake.toggle());
-        /*operator.bLB.whenReleased(() -> {});
-        operator.bRB.whileHeld(() -> {
+        operator.bY.whenPressed(() -> Robot.intake.toggle());
+        operator.bY.whenReleased(() -> {});
+        // operator.bRB.whileHeld(() -> {
+        //     Robot.hopper.update();
+        //     Robot.intake.setSpeed(1);
+        // });
+        // operator.bRB.whenReleased(() -> {
+        //     Robot.hopper.stop();
+        //     Robot.intake.setSpeed(0);
+        // });
+
+        
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
+        operator.bRT.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
         });
-        operator.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });*/
-
-        
-        //Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
-        operator.bRT.whenPressed(() -> {
-            Robot.hopper.update(.6);
-            Robot.intake.setSpeed(1);
-        });
-        operator.bLT.whenPressed(() -> {
+        operator.bLT.whileHeld(() -> {
             Robot.hopper.reverse(.6);
             Robot.intake.setSpeed(-1);
         });
