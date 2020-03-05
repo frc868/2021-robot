@@ -25,6 +25,7 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
+        Robot.shooter.update();
         
         //TODO: change manual turret to joystick
 
@@ -34,10 +35,12 @@ public class OI {
 
         // turret
         /*operator.bLB.whileHeld(() ->*/ Robot.turret.manualTurret();/*);*/
-        operator.bLB.whenReleased(() -> {});
+        // operator.bLB.whenReleased(() -> {});
+        operator.bRB.whileHeld(() -> Robot.turret.trackVision());
+        operator.bRB.whenReleased(() -> Robot.turret.stop());
 
         // shoot
-        operator.bA.whileHeld(() -> Robot.shooter.setSpeed(-0.6));
+        operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
         operator.bSTART.whileHeld(() -> Robot.hopper.forward());
         operator.bSTART.whenReleased(() -> {
@@ -89,6 +92,9 @@ public class OI {
         operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
         operator.dS.whenReleased(() -> {});
 
+        driver.bRB.whileHeld(() -> Robot.turret.trackVision());
+        driver.bRB.whenReleased(() -> Robot.turret.stop());
+
         // if it hasn't already been handled...
         driver.updateStates();
         operator.updateStates();
@@ -98,10 +104,12 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+
+        SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
+        SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
 
         SmartDashboard.putNumber("Left trigger", operator.getLT());
         SmartDashboard.putNumber("Right trigger", operator.getRT());
