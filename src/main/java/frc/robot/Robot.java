@@ -10,8 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.robot.autonomous.paths.Baseline;
-import frc.robot.autonomous.paths.HeadOn;
+import frc.robot.autonomous.AutonHelper;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro;
 import frc.robot.subsystems.Climber;
@@ -40,9 +39,12 @@ public class Robot extends TimedRobot {
     public static Turret turret = Turret.getInstance(true); // TODO: change according to testing mode
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
 
-    //public static AutonHelper auton = AutonHelper.getInstance();
-    //public static Baseline baseline = new Baseline();
-    public static HeadOn headon = new HeadOn();
+    public static AutonHelper auton = AutonHelper.getInstance();
+
+    @Override
+    public void disabledInit() {
+        auton.initSD();
+    }
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -50,7 +52,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        //auton.initSD();
     }
 
     @Override
@@ -70,8 +71,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        //auton.runSelectedPath();
-        headon.run();
+        auton.runSelectedPath();
         turret.trackVision();
         Scheduler.getInstance().run();
     }
