@@ -21,6 +21,7 @@ public class HeadOn extends AutonPath {
     private static double currentDistance = 0;
     private static double currentVelocity = 0;
     private static Timer shootDelay = new Timer();
+    private static double setpoint = 0;
     private HeadOnState currentState = HeadOnState.ToShootPosition;
 
     private enum HeadOnState {
@@ -47,7 +48,7 @@ public class HeadOn extends AutonPath {
         Readying {
             @Override
             public HeadOnState nextState() {
-                if (currentVelocity > AutonMap.HeadOn.SHOOTER_RPM+150) {
+                if (currentVelocity > setpoint+150) {
                     return this;
                 }
                 return ReadyToShoot;
@@ -56,7 +57,7 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.update(-AutonMap.HeadOn.SHOOTER_RPM);
+                Robot.shooter.update(-setpoint);
             }
 
             @Override
@@ -122,6 +123,14 @@ public class HeadOn extends AutonPath {
         public abstract HeadOnState nextState();
         public abstract void run();
         public abstract String toString();
+    }
+
+    public HeadOn(double rpm) {
+        setpoint = rpm;
+    }
+
+    public HeadOn() {
+        this(AutonMap.HeadOn.SHOOTER_RPM);
     }
 
     /**

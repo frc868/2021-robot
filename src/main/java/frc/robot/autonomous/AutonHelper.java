@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.autonomous.paths.DoNothing;
 import frc.robot.autonomous.paths.Baseline;
 import frc.robot.autonomous.paths.HeadOn;
-import frc.robot.autonomous.paths.TrenchRun;
 
 /**
  * Adds and selects autonomous paths by a SendableChooser.
@@ -21,7 +20,8 @@ public class AutonHelper {
         this.addPath("Nothing", new DoNothing());
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
-        this.addPath("Trench Run", new TrenchRun());
+        this.addPath("Head-On Left", new HeadOn(3400));
+        this.addPath("Head-On Right", new HeadOn(3400));
 
         chooser.setDefaultOption("Nothing", new DoNothing());
     }
