@@ -32,6 +32,8 @@ public class ControllerWrapper {
     private final double RUMBLE_DELAY = 0.3;
     private final boolean DEADZONE_ENABLED;
 
+    private boolean isAltMode = false;
+
     private Timer timer; // used for rumble timing
     private double deadzone = 0.1;
 
@@ -170,6 +172,20 @@ public class ControllerWrapper {
      */
     public double getDeadzone() {
         return this.deadzone;
+    }
+
+    /**
+     * Sets the given controller to the alternate mode.
+     */
+    public void toggleAltMode() {
+        this.isAltMode = !this.isAltMode;
+    }
+
+    /**
+     * Retrieves as to whether the controller is in the alternate mode.
+     */
+    public boolean isAltMode() {
+        return this.isAltMode;
     }
 
     /**

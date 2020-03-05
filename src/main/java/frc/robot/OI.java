@@ -29,39 +29,50 @@ public class OI {
         // DRIVER CONTROLS
 
         // OPERATOR CONTROLS
+        // set the operator mode state
+        operator.bMENU.whenPressed(operator::toggleAltMode);
 
-        // shoot
-        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
-        operator.bX.whenPressed(() -> Robot.shooter.stop());
-        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
-        operator.bSTART.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.hopper.resetOverride();
-        });
+        if (operator.isAltMode()) {
+            // climber controls
+            operator.dN.whenPressed(Robot.climber::moveArmUp);
+            operator.dS.whenPressed(() -> {
+                Robot.climber.moveArmDown();
+                Robot.climber.activateWinch();
+            });
+        } else {
+            // shoot
+            operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
+            operator.bX.whenPressed(Robot.shooter::stop);
+            operator.bSTART.whileHeld(() -> Robot.hopper.forward());
+            operator.bSTART.whenReleased(() -> {
+                Robot.hopper.stop();
+                Robot.hopper.resetOverride();
+            });
 
-        // intake
-        operator.bLB.whenPressed(() -> Robot.intake.toggle());
-        /*operator.bRB.whileHeld(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        operator.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });*/
+            // intake
+            operator.bLB.whenPressed(Robot.intake::toggle);
+            /*operator.bRB.whileHeld(() -> {
+                Robot.hopper.update();
+                Robot.intake.setSpeed(1);
+            });
+            operator.bRB.whenReleased(() -> {
+                Robot.hopper.stop();
+                Robot.intake.setSpeed(0);
+            });*/
 
-        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
-        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+            Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
+            Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
+            Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
+            Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
 
-        // hopper
-        operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
-        operator.bB.whenReleased(() -> Robot.hopper.stop());
+            // hopper
+            operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+            operator.bB.whenReleased(Robot.hopper::stop);
 
-        // WOF
-        operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
-        operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
+            // WOF
+            operator.dN.whenPressed(Robot.wheel::actuatorUp);
+            operator.dS.whenPressed(Robot.wheel::actuatorDown);
+        }
 
         // if it hasn't already been handled...
         driver.updateStates();

@@ -121,11 +121,12 @@ public class Climber {
     public void moveArmDown(){
         pidControllerArm.setReference(RobotMap.Climber.ARM_DOWNPOINT, ControlType.kPosition);
     }
+
     /**
      * moves the winch to a target setpoint that is made in RobotMap, might want to change if you want to 
      * make it a method that takes in a setpoint, however I dont think that was needed
      */
     public void activateWinch(){
-      pidControllerWinch.setReference(RobotMap.Climber.WINCH_SETPOINT, ControlType.kPosition);
-}
+        pidControllerWinch.setReference(RobotMap.Climber.WINCH_SETPOINT, ControlType.kPosition);
+    }
 }
