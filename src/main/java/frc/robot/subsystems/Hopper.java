@@ -82,18 +82,19 @@ public class Hopper {
      * Indexes hopper. 
      * @author igc
      */
-    public void update(double value) {
-        if(value > 0) {
-            count();
-            if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-                belt.set(0.5);
-                feeder.set(0.6); //.8
-                blueWheels.set(0.6);
 
-            } else {
-                stop();
-            }
-        }
+
+     // DIFFERENT FOR COMP AND PRACTICE : !GETBOT
+    public void update() {
+        count();
+        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
+            belt.set(0.5);
+            feeder.set(0.8); 
+            blueWheels.set(0.6);
+            System.out.println("Inside update");
+        } else {
+            stop();
+        }            
     }
 
     /**
@@ -115,9 +116,8 @@ public class Hopper {
      * Returns the state of the mid limits.
      */
     public boolean getMidLimit() {
-       
         return !midLeftLim.get();
-    }
+    }    
 
     /**
      * Returns true if beam break senses
@@ -222,10 +222,10 @@ public class Hopper {
      */
     public void forward() {
         driverOverride = true;
-        if(getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-        belt.set(.6);
-        feeder.set(1);
-        blueWheels.set(.7);
+        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
+            belt.set(.6);
+            feeder.set(1);
+            blueWheels.set(.7);
         } else {
             feeder.set(1);  
         }
