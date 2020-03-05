@@ -92,7 +92,7 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kPv = 0.012;
+                public static final double kPv = 0.0155;
                 public static final double kIv = 0;
                 public static final double kDv = 0.0001;
 
