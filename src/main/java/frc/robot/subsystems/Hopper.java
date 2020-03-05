@@ -177,25 +177,6 @@ public class Hopper {
     }
 
     /**
-     * index balls in the hopper, but not the belts that feed into the shooter
-     */
-    private void cycleIntake() {
-        double currentBeltPosition = belt.getSensorCollection().getQuadraturePosition();
-        double currentFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
-        if (currentBeltPosition - initialBeltPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
-            belt.set(RobotMap.Hopper.HOPPER_FLOOR_SPEED); // TODO: check motor speed with balls
-        } else {
-            belt.set(0);
-        }
-
-        if (currentFeederPosition - initialFeederPosition < RobotMap.Hopper.ENC_COUNT_PER_CYCLE) {
-            feeder.set(RobotMap.Hopper.FEEDER_SPEED); // TODO: check motor speed with balls
-        } else {
-            feeder.set(0);
-        }
-    }
-
-    /**
      * called when the driver is ready to shoot (pushing the button on the
      * controller) sets the belt speed to the tested value necessary to feed
      */
