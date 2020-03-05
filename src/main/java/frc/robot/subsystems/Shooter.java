@@ -40,13 +40,14 @@ public class Shooter {
     private Shooter() {
         primary = new CANSparkMax(RobotMap.Shooter.PRIMARY, MotorType.kBrushless);
         secondary = new CANSparkMax(RobotMap.Shooter.SECONDARY, MotorType.kBrushless);
+        
+        primary.restoreFactoryDefaults();
+        secondary.restoreFactoryDefaults();
 
         primary.setInverted(RobotMap.Shooter.PRIMARY_IS_INVERTED);
         secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_OPPOSITE);
         // Secondary motor is always inverted relative to primary
 
-        primary.restoreFactoryDefaults();
-        secondary.restoreFactoryDefaults();
         
         pid = primary.getPIDController();
 
@@ -80,10 +81,11 @@ public class Shooter {
         kIa = SmartDashboard.getNumber("kIa", 0);
         setpoint = SmartDashboard.getNumber("Setpoint", RobotMap.Shooter.SHOOTER_DEFAULT_SPEED);
 
-        pid.setP(kP);
-        pid.setI(kI);
-        pid.setD(kD);
-        pid.setFF(kFF);
+        pid.setP(kP/1000);
+        pid.setI(kI/1000);
+        pid.setD(kD/1000);
+        pid.setFF(kFF/1000);
+        pid.setIAccum(0);
 
         if (this.kI == 0) {
             pid.setIMaxAccum(0, 0);
