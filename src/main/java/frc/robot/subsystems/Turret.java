@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -49,6 +50,7 @@ public class Turret {
         this.isCompBot = compBot;
         
         motor = new WPI_TalonSRX(RobotMap.Turret.MOTOR);
+        motor.setNeutralMode(NeutralMode.Brake);
 
         if (compBot) {
             leftLimit = new DigitalInput(RobotMap.Turret.CompBot.Limits.LEFT_PORT);
@@ -149,7 +151,7 @@ public class Turret {
      */
     public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
-            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), 0);
+            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), 5.2);
             this.setSpeed(pidOutput);
             SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
             SmartDashboard.putNumber("PID output", pidOutput);
@@ -178,7 +180,7 @@ public class Turret {
      * Limits speed to 0.3 at most.
      */
     public void manualTurret() {
-        setSpeed(0.3*(OI.driver.getLT() - OI.driver.getRT()));
+        setSpeed(0.25*(OI.operator.getLX()));
     }
 
     /**
@@ -212,6 +214,14 @@ public class Turret {
      */
     public double getCompEncPosition() {
         return compEncoder.getDistance();
+    }
+
+    public boolean getLeftLimit() {
+        return leftLimit.get();
+    }
+
+    public boolean getRightLimit() {
+        return rightLimit.get();
     }
 
     /**

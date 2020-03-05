@@ -33,6 +33,7 @@ public class RobotMap {
     public static class Hopper {
         public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
         public static final double HOPPER_FLOOR_SPEED = 1; // TODO: untested
+    
         public static final double FEEDER_SPEED = 1; // TODO: untested
         public static final double BLUE_SPEED = 1;
 
@@ -91,7 +92,7 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kPv = 0.012;
+                public static final double kPv = 0.0155;
                 public static final double kIv = 0;
                 public static final double kDv = 0.0001;
 

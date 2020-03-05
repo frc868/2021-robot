@@ -33,6 +33,12 @@ public class OI {
 
         // OPERATOR CONTROLS
 
+        // turret
+        /*operator.bLB.whileHeld(() ->*/ Robot.turret.manualTurret();/*);*/
+        // operator.bLB.whenReleased(() -> {});
+        operator.bRB.whileHeld(() -> Robot.turret.trackVision());
+        operator.bRB.whenReleased(() -> Robot.turret.stop());
+
         // shoot
         operator.bA.whileHeld(() -> Robot.shooter.update(4000));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
@@ -43,23 +49,23 @@ public class OI {
         });
 
         // intake
-        operator.bLB.whenPressed(() -> Robot.intake.toggle());
-        /*operator.bLB.whenReleased(() -> {});
-        operator.bRB.whileHeld(() -> {
+        operator.bY.whenPressed(() -> Robot.intake.toggle());
+        operator.bY.whenReleased(() -> {});
+        // operator.bRB.whileHeld(() -> {
+        //     Robot.hopper.update();
+        //     Robot.intake.setSpeed(1);
+        // });
+        // operator.bRB.whenReleased(() -> {
+        //     Robot.hopper.stop();
+        //     Robot.intake.setSpeed(0);
+        // });
+        
+        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
+        operator.bRT.whileHeld(() -> {
             Robot.hopper.update();
             Robot.intake.setSpeed(1);
         });
-        operator.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });*/
-        
-        //Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
-        operator.bRT.whenPressed(() -> {
-            Robot.hopper.update(.6);
-            Robot.intake.setSpeed(1);
-        });
-        operator.bLT.whenPressed(() -> {
+        operator.bLT.whileHeld(() -> {
             Robot.hopper.reverse(.6);
             Robot.intake.setSpeed(-1);
         });
@@ -82,6 +88,9 @@ public class OI {
         operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
         operator.dS.whenReleased(() -> {});
 
+        driver.bRB.whileHeld(() -> Robot.turret.trackVision());
+        driver.bRB.whenReleased(() -> Robot.turret.stop());
+
         // if it hasn't already been handled...
         driver.updateStates();
         operator.updateStates();
@@ -94,11 +103,13 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
         SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
+
+        SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
+        SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
 
         SmartDashboard.putNumber("Left trigger", operator.getLT());
         SmartDashboard.putNumber("Right trigger", operator.getRT());
