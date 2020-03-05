@@ -21,7 +21,7 @@ public class Climber {
     private CANSparkMax primary_winch, secondary_winch, arm;
     public double kP_arm, kP_winch, kI_arm, kI_winch, kD_arm, kD_winch, kMaxOutput, kMinOutput, maxRPM, kFF_arm, kFF_winch, kIz_arm, kIz_winch;
     private CANPIDController pidControllerArm, pidControllerWinch;
-
+    private double initialPosition;
 
     private Climber() {
         primary_winch = new CANSparkMax(RobotMap.Climber.PRIMARY_WINCH, MotorType.kBrushless);
@@ -30,6 +30,8 @@ public class Climber {
         secondary_winch.follow(primary_winch);
         pidControllerArm = arm.getPIDController();
         pidControllerWinch = primary_winch.getPIDController();
+
+        initialPosition = 0;
         //PID coefficients
         kP_arm = 0.0; //TODO: untested
         kP_winch = 0.0; //TODO: untested
@@ -101,6 +103,18 @@ public class Climber {
     public void moveArmUp(){ 
         pidControllerArm.setReference(RobotMap.Climber.ARM_SETPOINT, ControlType.kPosition);
     }
+
+    public void toSetpoint(double targetDist, double power) {
+        double pGain = .1;
+        double distanceToTarget = Math.abs(targetDist) - Math.abs(arm.getEncoder().getPosition() - initialPosition);
+    
+        double targetSpeed = pGain * (power * distanceToTarget);
+    
+        if (distanceToTarget > 0) {
+            arm.set(targetSpeed); // TODO: code sanity check
+        }
+      }
+
     /**
      * moves the arm down to a setpoint of 0, or all the way down.
      */
