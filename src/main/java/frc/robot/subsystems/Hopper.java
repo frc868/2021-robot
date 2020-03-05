@@ -222,7 +222,7 @@ public class Hopper {
             feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
             blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
         } else {
-            feeder.set(1);  
+            feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);  
         }
     }
 
