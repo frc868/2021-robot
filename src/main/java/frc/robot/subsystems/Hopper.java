@@ -7,10 +7,11 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.RobotMap;
 
 /**
- * The Hopper subsystem consists of 3 motors to move the power cells in stages. Positions one and
- * two are on the bottom, position three is the transition to the upper level of the hopper, and
- * positions four and five are on the top level.
- *  
+ * The Hopper subsystem consists of 3 motors to move the power cells in stages.
+ * Positions one and two are on the bottom, position three is the transition to
+ * the upper level of the hopper, and positions four and five are on the top
+ * level.
+ * 
  * @author dri
  */
 
@@ -27,13 +28,15 @@ public class Hopper {
 
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
-    // a state variable to control whether the driver has overriden the autonomous functions
+    // a state variable to control whether the driver has overriden the autonomous
+    // functions
     private boolean driverOverride;
 
     private double initialBeltPosition;
     private double initialFeederPosition;
 
-    // store the last value of the limit switches to see if they have been triggered after
+    // store the last value of the limit switches to see if they have been triggered
+    // after
     private boolean lastBotState;
     private boolean lastMidState;
     private boolean lastTopState;
@@ -83,28 +86,25 @@ public class Hopper {
     }
 
     /**
-     * Indexes hopper. 
+     * Indexes hopper.
+     * 
      * @author igc
      */
-    public void update(double val) {
-        if (val>0) {
-            count();
-            if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-                if (isCompBot) {
-                    belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
-                    feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
-                    blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
-                }
-                else {
-                    belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
-                    feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
-                    blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
-                }
-            } 
-        }
-        else {
+    public void update() {
+        count();
+        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
+            if (isCompBot) {
+                belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
+                feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+                blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
+            } else {
+                belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
+                feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
+                blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
+            }
+        } else {
             stop();
-        }            
+        }
     }
 
     /**
@@ -118,7 +118,7 @@ public class Hopper {
      * Returns the state of the top limits.
      */
     public boolean getTopLimit() {
-       
+
         return !topLeftLim.get();
     }
 
@@ -126,12 +126,12 @@ public class Hopper {
      * Returns the state of the mid limits.
      */
     public boolean getMidLimit() {
-       
         return !midLeftLim.get();
     }
 
     /**
      * Returns true if beam break senses
+     * 
      * @author igc
      */
 
@@ -141,9 +141,8 @@ public class Hopper {
 
     /**
      * returns true if bottom limit switches are toggled from true to false
-     * (unsimplified expression:
-     * current left state is false and last state is true, or current right state is false
-     * and last state is true)
+     * (unsimplified expression: current left state is false and last state is true,
+     * or current right state is false and last state is true)
      * 
      * @return toggled
      */
@@ -155,14 +154,13 @@ public class Hopper {
             }
         }
         return false;
-       
+
     }
 
     /**
      * returns true if top limit switches are toggled from true to false
-     * (unsimplified expression:
-     * current left state is false and last state is true, or current right state is false
-     * and last state is true)
+     * (unsimplified expression: current left state is false and last state is true,
+     * or current right state is false and last state is true)
      * 
      * @return toggled
      */
@@ -174,15 +172,15 @@ public class Hopper {
             }
         }
         return false;
-       
+
     }
 
     private void count() {
-        if(getTopLimitToggled()) {
+        if (getTopLimitToggled()) {
             count--;
         }
 
-        if(getMidLimitToggled()) {
+        if (getMidLimitToggled()) {
             count++;
         }
     }
@@ -196,8 +194,7 @@ public class Hopper {
         if (isCompBot) {
             belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
             feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
-        }
-        else {
+        } else {
             belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
             feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
         }
@@ -220,18 +217,18 @@ public class Hopper {
      */
     public void forward() {
         driverOverride = true;
-        if(getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-            belt.set(.6);
-            feeder.set(1);
-            blueWheels.set(.7);
+        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
+            belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
+            feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
         } else {
             feeder.set(1);  
         }
     }
 
-
     /**
      * resets the driver override trigger
+     * 
      * @author hrl
      */
     public void resetOverride() {
@@ -240,6 +237,7 @@ public class Hopper {
 
     /**
      * returns count of how many balls are currently held in the hopper
+     * 
      * @return count
      */
     public int getBallCount() {
