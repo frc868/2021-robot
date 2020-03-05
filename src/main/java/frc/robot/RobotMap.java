@@ -54,7 +54,7 @@ public class RobotMap {
     public static class Intake {
         public static final int MOTOR = 1; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
-        public static final int ACTUATOR1 = 0; // TODO: untested
+        public static final int ACTUATOR1 = 3; // TODO: untested
         public static final int ACTUATOR2 = 7; // TODO: untested
     }
 
@@ -135,9 +135,11 @@ public class RobotMap {
     }
 
     public static class Climber {
-        public static final int PRIMARY_WINCH = 0; //TODO: untested
-        public static final int SECONDARY_WINCH = 0; //TODO: untested
-        public static final int ARM = 0; // TODO: untested
+        public static final int PRIMARY_WINCH = 5; //TODO: untested
+        public static final int SECONDARY_WINCH = 6; //TODO: untested
+        public static final int ARM = 9; // TODO: untested
+        public static final int ACTUATOR1 = 1; // TODO: untested
+        public static final int ACTUATOR2 = 6; // TODO: untested
         public static final double ARM_SETPOINT = 0; //TODO: untested
         public static final double WINCH_SETPOINT = 0; // TODO: untested
         public static final double ARM_DOWNPOINT = 0; //dont think we need to test this as this is reseting the arm to the down postion

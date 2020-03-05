@@ -27,7 +27,7 @@ public class CollisionDetection {
 
     private CollisionDetection() {
         try {
-            ahrs = new AHRS(RobotMap.CollisionDetection.NAVX);
+            //ahrs = new AHRS(RobotMap.CollisionDetection.NAVX);
         } catch (RuntimeException e) {
             System.out.println("Oopsie daisy");
         }

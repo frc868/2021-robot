@@ -14,9 +14,11 @@ import frc.robot.helpers.Helper;
 public class OI {
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
+    public static boolean armReset = false;
+    public static boolean engaged = false;
 
     public static void init() {
-
+        
     }
 
     public static void update() {
@@ -31,8 +33,7 @@ public class OI {
         // OPERATOR CONTROLS
 
         // shoot
-        operator.bA.whenPressed(() -> Robot.shooter.setSpeed(-0.6));
-        operator.bX.whenPressed(() -> Robot.shooter.stop());
+        operator.bA.whileHeld(() -> Robot.shooter.setSpeed(-0.6));
         operator.bSTART.whileHeld(() -> Robot.hopper.forward());
         operator.bSTART.whenReleased(() -> {
             Robot.hopper.stop();
@@ -67,7 +68,43 @@ public class OI {
         driver.updateStates();
         operator.updateStates();
 
+        // climber
+        // operator.bX.whileHeld(() -> Robot.climber.testWinch());
+        // operator.bX.whenReleased(() -> Robot.climber.testWinch());
+
+        //only for testing - pt 1
+        driver.bX.whenPressed(() -> Robot.climber.engageBrake());
+        driver.bY.whenPressed(() -> Robot.climber.disengageBrake());
+        driver.bA.whileHeld(() -> Robot.climber.testWinch());
+
+        // pt 2 testing
+        driver.bA.whileHeld(() -> {
+            Robot.climber.setEngaged(false);
+            Robot.climber.testWinch();
+        });
+        driver.bA.whenReleased(() -> {
+            Robot.climber.setEngaged(true);
+            Robot.climber.disengageBrake();
+        });
+
+        //pt 3 testing
+        driver.bA.whenPressed(() -> {
+            Robot.climber.disengageBrake();
+            Robot.climber.moveArmUp(0, 0); //TODO: set parameters
+            Robot.climber.engageBrake();
+        });
+
+
+
+
         updateSD();
+
+        if (armReset == false) {
+            Robot.climber.resetArmPosition();;
+            armReset = true;
+        }
+
+        
     }
 
     public static void updateSD() {
@@ -78,5 +115,6 @@ public class OI {
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+        SmartDashboard.putNumber("CL_deploy", Robot.climber.getArmPosition());
     }
 }
