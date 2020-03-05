@@ -115,6 +115,7 @@ public class Climber {
     public void moveArmDown(){
         pidControllerArm.setReference(RobotMap.Climber.ARM_DOWNPOINT, ControlType.kPosition);
     }
+
     /**
      * moves the winch to a target setpoint that is made in RobotMap, might want to change if you want to 
      * make it a method that takes in a setpoint, however I dont think that was needed
@@ -136,7 +137,7 @@ public class Climber {
     }
 
     public void testWinchAndEngage() {
-        if(!engaged) {
+        if (!engaged) {
             primary_winch.set(.1);
         } else {
             primary_winch.set(0);
@@ -149,8 +150,9 @@ public class Climber {
      * @author igc
      */
     public void engageBrake() {
-        if(engaged = false;)
-        actuator.set(Value.kForward);
+        if (!engaged) {
+            actuator.set(Value.kForward);
+        }
     }
 
     /**

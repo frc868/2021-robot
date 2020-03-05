@@ -27,10 +27,13 @@ import frc.robot.RobotMap;
 public class ControllerWrapper {
     private XboxController controller;
     public ButtonWrapper bA, bB, bX, bY, bRB, bLB, bRSTK, bLSTK, bSTART, bMENU; // read: "button Menu"
+    public ButtonWrapper bRT, bLT;
     public ButtonWrapper dN, dE, dS, dW, dNE, dNW, dSE, dSW; // read: "d-pad North"
 
     private final double RUMBLE_DELAY = 0.3;
     private final boolean DEADZONE_ENABLED;
+
+    private boolean isAltMode = false;
 
     private Timer timer; // used for rumble timing
     private double deadzone = 0.1;
@@ -53,6 +56,9 @@ public class ControllerWrapper {
         bRSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.RSTK);
         bLSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.LSTK);
 
+        // triggers to buttons
+        bRT = new ButtonWrapper(this.controller, RobotMap.Controllers.RT, true);
+        bLT = new ButtonWrapper(this.controller, RobotMap.Controllers.LT, true);
         // d-pad/"POV" buttons
         // reads angle value of the combined d-pad
         dN = new ButtonWrapper(this.controller, 0, RobotMap.Controllers.POV);
@@ -157,6 +163,10 @@ public class ControllerWrapper {
         return this.controller.getRawAxis(RobotMap.Controllers.RT);
     }
 
+    public boolean getRTButton() {
+        return Math.abs(this.controller.getRawAxis(RobotMap.Controllers.RT)) > 0.5;
+    }
+
     /**
      * Sets the controller's deadzone.
      * @param deadzone the deadzone (for both sides of the axis) to set
@@ -170,6 +180,20 @@ public class ControllerWrapper {
      */
     public double getDeadzone() {
         return this.deadzone;
+    }
+
+    /**
+     * Sets the given controller to the alternate mode.
+     */
+    public void toggleAltMode() {
+        this.isAltMode = !this.isAltMode;
+    }
+
+    /**
+     * Retrieves as to whether the controller is in the alternate mode.
+     */
+    public boolean isAltMode() {
+        return this.isAltMode;
     }
 
     /**

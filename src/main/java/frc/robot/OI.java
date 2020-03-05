@@ -1,13 +1,15 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 import frc.robot.helpers.Helper;
 
 /**
- * The class in which we map our driver/operator input to specific tasks on the robot
- * Init should be called once in the robotInit() method in the Robot class
+ * The class in which we map our driver/operator input to specific tasks on the
+ * robot Init should be called once in the robotInit() method in the Robot class
  * Update should be called either in robotPeriodic() or teleopPeriodic()
+ * 
  * @author hrl
  */
 
@@ -18,7 +20,7 @@ public class OI {
     public static boolean engaged = false;
 
     public static void init() {
-        
+        Robot.shooter.init();
     }
 
     public static void update() {
@@ -26,43 +28,65 @@ public class OI {
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
         Robot.turret.manualTurret();
+        
         //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
+        // turret
+        driver.bRB.whileHeld(Robot.turret::trackVision);
+        driver.bRB.whenReleased(Robot.turret::stop);
+
+        driver.bMENU.whenPressed(operator::toggleAltMode);
 
         // OPERATOR CONTROLS
+        // set the operator mode state
+        operator.bMENU.whenPressed(operator::toggleAltMode);
 
-        // shoot
-        operator.bA.whileHeld(() -> Robot.shooter.setSpeed(-0.6));
-        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
-        operator.bSTART.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.hopper.resetOverride();
-        });
+        if (operator.isAltMode()) {
+        } else {
+            // turret
+            operator.bRB.whileHeld(Robot.turret::trackVision);
+            operator.bRB.whenReleased(Robot.turret::stop);
 
-        // intake
-        operator.bLB.whenPressed(() -> Robot.intake.toggle());
-        /*operator.bRB.whileHeld(() -> {
-            Robot.hopper.update();
-            Robot.intake.setSpeed(1);
-        });
-        operator.bRB.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.intake.setSpeed(0);
-        });*/
+            // shoot
+            operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
+            operator.bA.whenReleased(Robot.shooter::stop);
+            operator.bSTART.whileHeld(Robot.hopper::forward);
+            operator.bSTART.whenReleased(() -> {
+                Robot.hopper.stop();
+                Robot.hopper.resetOverride();
+            });
 
-        Robot.hopper.update(Helper.analogToDigital(operator.getRT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1));
-        Robot.hopper.reverse(Helper.analogToDigital(operator.getLT(), .1, .6));
-        Robot.intake.setSpeed(Helper.analogToDigital(operator.getLT(), .1, -1));
+            // intake
+            operator.bY.whenPressed(Robot.intake::toggle);
 
-        // hopper
-        operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
-        operator.bB.whenReleased(() -> Robot.hopper.stop());
+            Robot.intake.setSpeed(
+                    Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
+            operator.bRT.whileHeld(() -> {
+                Robot.hopper.update();
+                Robot.intake.setSpeed(1);
+            });
+            operator.bLT.whileHeld(() -> {
+                Robot.hopper.reverse(.6);
+                Robot.intake.setSpeed(-1);
+            });
+            operator.bRT.whenReleased(() -> {
+                Robot.hopper.stop();
+                Robot.intake.setSpeed(0);
+            });
+            operator.bLT.whenReleased(() -> {
+                Robot.hopper.stop();
+                Robot.intake.setSpeed(0);
+            });
 
-        // WOF
-        operator.dN.whenPressed(() -> Robot.wheel.actuatorUp());
-        operator.dS.whenPressed(() -> Robot.wheel.actuatorDown());
+            // hopper
+            operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+            operator.bB.whenReleased(Robot.hopper::stop);
+
+            // WOF
+            operator.dN.whenPressed(Robot.wheel::actuatorUp);
+            operator.dS.whenPressed(Robot.wheel::actuatorDown);
+        }
 
         // if it hasn't already been handled...
         driver.updateStates();
@@ -109,12 +133,15 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putBoolean("Left limit", Robot.turret.getLeftLimit()); // TODO: for testing
-        SmartDashboard.putBoolean("Right limit", Robot.turret.getRightLimit()); // TODO: for testing
-        SmartDashboard.putNumber("Turret pos", Robot.turret.getPracticeEncPosition()); // TODO: for testing
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
         SmartDashboard.putNumber("CL_deploy", Robot.climber.getArmPosition());
+
+        SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
+        SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
+
+        SmartDashboard.putNumber("Left trigger", operator.getLT());
+        SmartDashboard.putNumber("Right trigger", operator.getRT());
     }
 }
