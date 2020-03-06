@@ -8,11 +8,10 @@ import frc.robot.RobotMap;
 
 /**
  * The Hopper subsystem consists of 3 motors to move the power cells in stages.
- * Positions one and two are on the bottom, position three is the transition to
- * the upper level of the hopper, and positions four and five are on the top
- * level.
+ * The bottom of the hopper is not indexed, and can hold three balls. They then
+ * transition into the tower, where they are indexed using 3 individual sensors.
  * 
- * @author dri
+ * @author dri, igc
  */
 
 public class Hopper {
