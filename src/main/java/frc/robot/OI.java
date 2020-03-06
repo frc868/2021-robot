@@ -13,8 +13,6 @@ import frc.robot.helpers.Helper;
 public class OI {
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
-    public static boolean armReset = false;
-    public static boolean engaged = false;
 
     public static void init() {
         Robot.shooter.init();
