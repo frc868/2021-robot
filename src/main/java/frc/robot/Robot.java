@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     public static Gyro gyro = Gyro.getInstance();
     public static Intake intake = Intake.getInstance();
     public static LED leds = LED.getInstance();
-    public static Hopper hopper = Hopper.getInstance();
+    public static Hopper hopper = Hopper.getInstance(true);
     public static Shooter shooter = Shooter.getInstance();
     public static Turret turret = Turret.getInstance(true); // TODO: change according to testing mode
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();

@@ -3,19 +3,15 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.RobotMap;
 
 /**
  * The Hopper subsystem consists of 3 motors to move the power cells in stages.
- * Positions one and two are on the bottom, position three is the transition to
- * the upper level of the hopper, and positions four and five are on the top
- * level.
+ * The bottom of the hopper is not indexed, and can hold three balls. They then
+ * transition into the tower, where they are indexed using 3 individual sensors.
  * 
- * @author dri
+ * @author dri, igc
  */
-
 public class Hopper {
     private static Hopper instance;
 
@@ -29,12 +25,6 @@ public class Hopper {
 
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
-    // a state variable to control whether the driver has overriden the autonomous
-    // functions
-    private boolean driverOverride;
-
-    private double initialBeltPosition;
-    private double initialFeederPosition;
 
     // store the last value of the limit switches to see if they have been triggered
     // after
@@ -42,9 +32,9 @@ public class Hopper {
     private boolean lastMidState;
     private boolean lastTopState;
 
-    private Hopper() {
-        driverOverride = false;
+    private boolean isCompBot = true;
 
+    private Hopper(boolean compBot) {
         botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
@@ -61,16 +51,15 @@ public class Hopper {
         lastMidState = getMidLimit();
         lastTopState = getTopLimit();
 
-        initialBeltPosition = belt.getSensorCollection().getQuadraturePosition();
-        initialFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
+        this.isCompBot = compBot;
     }
 
     /**
      * Returns a singular instance of the Intake subsystem.
      */
-    public static Hopper getInstance() {
+    public static Hopper getInstance(boolean compBot) {
         if (instance == null) {
-            instance = new Hopper();
+            instance = new Hopper(compBot);
         }
         return instance;
     }
@@ -78,7 +67,7 @@ public class Hopper {
     // ============ ACTUATION ============
 
     /**
-     * Stops the belt and feeder motors. Untested.
+     * Stops the belt and feeder motors.
      */
     public void stop() {
         belt.set(0);
@@ -94,9 +83,15 @@ public class Hopper {
     public void update() {
         count();
         if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-            belt.set(RobotMap.Hopper.Speeds.Update.BELT_SPEED);
-            feeder.set(RobotMap.Hopper.Speeds.Update.FEEDER_SPEED);
-            blueWheels.set(RobotMap.Hopper.Speeds.Update.BLUE_SPEED);
+            if (isCompBot) {
+                belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
+                feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+                blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
+            } else {
+                belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
+                feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
+                blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
+            }
         } else {
             stop();
         }
@@ -107,7 +102,6 @@ public class Hopper {
      * controller) sets the belt speed to the tested value necessary to feed
      */
     public void reverse(double speed) {
-        driverOverride = true;
         belt.set(-speed);
         feeder.set(-speed);
         blueWheels.set(-speed);
@@ -118,13 +112,27 @@ public class Hopper {
      * controller) sets the belt speed to the tested value necessary to feed
      */
     public void forward() {
-        driverOverride = true;
         if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
             belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
             feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
             blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
         } else {
             feeder.set(1);
+        }
+    }
+
+    /**
+     * Runs the hopper without logic. <i>Avoid using this.</i>
+     */
+    public void shootNoLogic() {
+        if (isCompBot) {
+            belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
+            feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
+        } else {
+            belt.set(0);
+            feeder.set(0);
+            blueWheels.set(0);
         }
     }
 
@@ -153,15 +161,6 @@ public class Hopper {
     }
 
     /**
-     * resets the driver override trigger
-     * 
-     * @author hrl
-     */
-    public void resetOverride() {
-        driverOverride = false;
-    }
-
-    /**
      * returns count of how many balls are currently held in the hopper     * 
      * @return count
      */
@@ -169,10 +168,6 @@ public class Hopper {
         return count;
     }
 
-    @Override
-    public String toString() {
-        return "Count: " + count + " , bottom: " + getBotSensor();
-    }
     // ========================================================
 
 
@@ -186,15 +181,14 @@ public class Hopper {
     }
 
     /**
-     * Returns the state of the mid limits.
+     * Returns the state of the mid limit.
      */
     public boolean getMidLimit() {
         return !midLeftLim.get();
     }
 
     /**
-     * Returns true if beam break senses
-     * 
+     * Returns true if the beam break senses something.
      * @author igc
      */
     public boolean getBotSensor() {
@@ -234,6 +228,11 @@ public class Hopper {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Count: " + count + " , bottom: " + getBotSensor();
     }
     // ========================================================
 }
