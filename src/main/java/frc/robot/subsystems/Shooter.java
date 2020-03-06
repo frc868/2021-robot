@@ -11,16 +11,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import frc.robot.Robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
 /**
- * This is the code for the shooter. It initializes motor controllers and has
- * methods for various functions of the shooter. It also uses PID control for
- * maintaining optimal velocity.
- * 
- * @author ama, gjs, hrl
+ * The shooter subsystem consists of the two-neo shooter mounted on the robot's
+ * turret. It is controlled with REV's PID Controller on the SparkMAXes.
+ *
+ * @author dri
  */
 public class Shooter {
     private static Shooter instance = null;
@@ -30,14 +30,10 @@ public class Shooter {
 
     private CANPIDController pid;
 
-    private double kP, kI, kD, kFF, kIa, setpoint;
+    private double kP, kD, kFF, kI, kIa;
 
-    /**
-     * The shooter subsystem consists of the two-neo shooter mounted on the robot's turret.
-     * It is controlled with REV's PID Controller on the SparkMAXes.
-     * 
-     * @author dri
-     */
+    private double setpoint = RobotMap.Shooter.SHOOTER_DEFAULT_SPEED;
+
     private Shooter() {
         primary = new CANSparkMax(RobotMap.Shooter.PRIMARY, MotorType.kBrushless);
         secondary = new CANSparkMax(RobotMap.Shooter.SECONDARY, MotorType.kBrushless);
@@ -47,8 +43,6 @@ public class Shooter {
 
         primary.setInverted(RobotMap.Shooter.PRIMARY_IS_INVERTED);
         secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_OPPOSITE);
-        // Secondary motor is always inverted relative to primary
-
         
         pid = primary.getPIDController();
 
@@ -86,23 +80,30 @@ public class Shooter {
         pid.setI(kI/1000);
         pid.setD(kD/1000);
         pid.setFF(kFF/1000);
-        pid.setIAccum(0);
+        pid.setIMaxAccum(kIa, 0);
 
         if (this.kI == 0) {
-            pid.setIMaxAccum(0, 0);
-        } else {
-            pid.setIMaxAccum(kIa, 0);
+            pid.setIAccum(0);
         }
         
         pid.setOutputRange(0, 1);
     }
 
     /**
-     * Sets the output of the PID loop to the primary motor. 
+     * sets the output of the PID loop to the setpoint
      */
-    public void update() {
+    public void update(double rpm) {
+        this.setpoint = rpm;
         pid.setReference(setpoint, ControlType.kVelocity);
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Motor output", primary.get());
+    }
+
+    /**
+     * runs the shooter at the current RPM
+     */
+    public void update() {
+        this.update(this.setpoint);
     }
 
     /**
@@ -125,10 +126,30 @@ public class Shooter {
     }
 
     /**
+     * Retrieves the RPM of the shooter.
+     */
+    public double getRPM() {
+        return primary.getEncoder().getVelocity();
+    }
+
+    /**
      * Stops the shooter.
      */
     public void stop() {
         primary.stopMotor();
         secondary.stopMotor();
+    }
+
+    /**
+     * Shoots until all balls are cleared from the hopper.
+     * Useful in autonomous.
+     * TODO: this should have checking as to the hopper state, but that logic doesn't exist yet
+     * @param rpm the RPM to run the shooter at
+     * @author hrl
+     */
+    public void shootUntilClear(double rpm) {
+        Robot.hopper.forward(this.atTarget());
+        this.setpoint = rpm;
+        this.update();
     }
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 import frc.robot.helpers.Helper;
 
+
 /**
  * The class in which we map our driver/operator input to specific tasks on the
  * robot Init should be called once in the robotInit() method in the Robot class
@@ -18,6 +19,7 @@ public class OI {
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
 
     public static void init() {
+        initSD();
         Robot.shooter.init();
     }
 
@@ -25,8 +27,6 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
-        // Robot.shooter.update();
-        
         //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
@@ -49,7 +49,6 @@ public class OI {
         operator.bSTART.whenReleased(() -> {
             Robot.shooter.stop();
             Robot.hopper.stop();
-            Robot.hopper.resetOverride();
         });
 
         // intake
@@ -64,7 +63,6 @@ public class OI {
         //     Robot.hopper.stop();
         //     Robot.intake.setSpeed(0);
         // });
-
         
         Robot.intake.setSpeed(Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
         operator.bRT.whileHeld(() -> {
@@ -83,9 +81,6 @@ public class OI {
             Robot.hopper.stop();
             Robot.intake.setSpeed(0);
         });
-
-
-
 
         // hopper
         operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
@@ -107,11 +102,15 @@ public class OI {
         updateSD();
     }
 
+    public static void initSD() {
+    }
+
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
         SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+        SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
 
         SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
         SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
