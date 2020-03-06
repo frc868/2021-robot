@@ -41,6 +41,7 @@ public class OI {
         driver.bA.whileHeld(() -> {
             Robot.climber.setEngaged(false);
             Robot.climber.testWinch();
+
         });
         driver.bA.whenReleased(() -> {
             Robot.climber.setEngaged(true);
@@ -68,7 +69,7 @@ public class OI {
             // shoot
             operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
             operator.bA.whenReleased(Robot.shooter::stop);
-            operator.bSTART.whileHeld(Robot.hopper::forward);
+            operator.bSTART.whileHeld(() -> Robot.hopper.forward(true));
             operator.bSTART.whenReleased(Robot.hopper::stop);
 
             // intake
@@ -126,5 +127,7 @@ public class OI {
 
         SmartDashboard.putNumber("Left trigger", operator.getLT());
         SmartDashboard.putNumber("Right trigger", operator.getRT());
+
+        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
     }
 }
