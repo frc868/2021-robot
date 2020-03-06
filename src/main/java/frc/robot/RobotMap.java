@@ -27,11 +27,27 @@ public class RobotMap {
     }
 
     public static class Hopper {
-        public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
-        public static final double HOPPER_FLOOR_SPEED = 1; // TODO: untested
-    
-        public static final double FEEDER_SPEED = 1; // TODO: untested
-        public static final double BLUE_SPEED = 1;
+        public static class Speeds {
+            public static class CompBot {
+                public static class Update {
+                    public static final double BELT_SPEED = 0.5;
+                    public static final double FEEDER_SPEED = 0.8;
+                    public static final double BLUE_SPEED = 0.6;
+                }
+            }            
+            public static class PracticeBot {
+                public static class Update {
+                    public static final double BELT_SPEED = 0.5;
+                    public static final double FEEDER_SPEED = 0.8;
+                    public static final double BLUE_SPEED = 0.6;
+                }
+            }
+            public static class Forward {
+                public static final double BELT_SPEED = 0.6;
+                public static final double FEEDER_SPEED = 1;
+                public static final double BLUE_SPEED = 0.7;
+            }
+        }
 
         public static class Sensors {
             public static final int BOT_SENSOR_PORT = 5; // TODO: untested
@@ -154,12 +170,15 @@ public class RobotMap {
     public static class Climber {
         public static final int PRIMARY_WINCH = 5; //TODO: untested
         public static final int SECONDARY_WINCH = 6; //TODO: untested
+        public static final boolean PRIMARY_WINCH_IS_INVERTED = true;
         public static final int ARM = 9; // TODO: untested
+        public static final boolean ARM_IS_INVERTED = true;
         public static final int ACTUATOR1 = 1; // TODO: untested
         public static final int ACTUATOR2 = 6; // TODO: untested
         public static final double ARM_SETPOINT = 0; //TODO: untested
         public static final double WINCH_SETPOINT = 0; // TODO: untested
         public static final double ARM_DOWNPOINT = 0; //dont think we need to test this as this is reseting the arm to the down postion
+        public static final int ARM_DEPLOY_SENSOR = 9;
     }
 
     public static class Sensors {

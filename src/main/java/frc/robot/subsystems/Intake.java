@@ -5,6 +5,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Timer;
+
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 /**
@@ -16,9 +19,13 @@ public class Intake {
     private CANSparkMax motor;
     private DoubleSolenoid actuator;
 
+    private Timer timer;
+    private boolean timerStarted = false;
+
     private Intake() {
         motor = new CANSparkMax(RobotMap.Intake.MOTOR, MotorType.kBrushless);
         actuator = new DoubleSolenoid(RobotMap.Intake.ACTUATOR1, RobotMap.Intake.ACTUATOR2);
+        timer = new Timer();
 
         motor.setInverted(RobotMap.Intake.MOTOR_IS_INVERTED);
     }
@@ -76,5 +83,32 @@ public class Intake {
      */
     public void actuatorDown() {
         actuator.set(Value.kForward);
+    }
+
+    /**
+     * intakes balls until either the hopper is full or a time delay is exceeded.
+     * this sanity checking is to ensure we don't waste time intaking <i>forever</i>
+     * in autonomous.
+     * @param delay the threshold for how long the intake can run, in seconds
+     * @param power the power to run the intake at from -1 to 1
+     * @return false if not finished, true if finished
+     * @author hrl
+     */
+    public boolean intakeUntilFull(double delay, double power) {
+        if (!timerStarted) {
+            timer.reset();
+            timer.start();
+            this.timerStarted = true;
+        }
+
+        // while we're either not full or we're behind the delay...
+        if ((Robot.hopper.getBallCount() < 5) || (timer.get() < delay)) {
+            this.setSpeed(power);
+            return false;
+        } else { // either delay elapsed or we're full
+            timer.stop();
+            this.timerStarted = false;
+            return true;
+        }
     }
 }
