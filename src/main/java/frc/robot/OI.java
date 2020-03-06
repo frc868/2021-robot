@@ -17,7 +17,6 @@ public class OI {
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
     public static boolean armReset = false;
-    public static boolean engaged = false;
 
     public static void init() {
         Robot.shooter.init();
@@ -32,17 +31,23 @@ public class OI {
         //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
-        // turret
-        driver.bRB.whileHeld(Robot.turret::trackVision);
-        driver.bRB.whenReleased(Robot.turret::stop);
+        driver.bRB.whenPressed(driver::toggleAltMode);
+        driver.bRB.whenReleased(driver::toggleAltMode);
 
-        driver.bMENU.whenPressed(operator::toggleAltMode);
+        if (driver.isAltMode()) {
+            //Robot.climber.manualClimb(.2); // TODO: Hold power needs testing
+        } else {
+            // turret
+            driver.bRB.whileHeld(Robot.turret::trackVision);
+            driver.bRB.whenReleased(Robot.turret::stop);
+        }
+            
+            // OPERATOR CONTROLS
+            // set the operator mode state
+            operator.bMENU.whenPressed(operator::toggleAltMode);
+            operator.bMENU.whenReleased(operator::toggleAltMode);
 
-        // OPERATOR CONTROLS
-        // set the operator mode state
-        operator.bMENU.whenPressed(operator::toggleAltMode);
-
-        if (operator.isAltMode()) {
+            if (operator.isAltMode()) {
         } else {
             // turret
             operator.bRB.whileHeld(Robot.turret::trackVision);
@@ -100,23 +105,28 @@ public class OI {
         driver.bX.whenPressed(() -> Robot.climber.engageBrake());
         driver.bY.whenPressed(() -> Robot.climber.disengageBrake());
         driver.bA.whileHeld(() -> Robot.climber.testWinch());
-
+        driver.bA.whenReleased(() -> Robot.climber.stopWinch());
         // pt 2 testing
-        driver.bA.whileHeld(() -> {
-            Robot.climber.setEngaged(false);
-            Robot.climber.testWinch();
-        });
-        driver.bA.whenReleased(() -> {
-            Robot.climber.setEngaged(true);
-            Robot.climber.disengageBrake();
-        });
+        // driver.bA.whileHeld(() -> {
+        //     Robot.climber.disengageBrake();
+        //     Robot.climber.testWinch();
+        // });
+        // driver.bA.whenReleased(() -> {
+        //     Robot.climber.engageBrake();
+        // });
 
-        //pt 3 testing
-        driver.bA.whenPressed(() -> {
-            Robot.climber.disengageBrake();
-            Robot.climber.moveArmUp(0, 0); //TODO: set parameters
-            Robot.climber.engageBrake();
-        });
+        // driver.bLB.whileHeld(() -> {
+
+        //     Robot.climber.disengageBrake();
+
+        // });
+
+        // //pt 3 testing
+        // driver.bA.whenPressed(() -> {
+        //     Robot.climber.disengageBrake();
+        //     Robot.climber.moveArmUp(0, 0); //TODO: set parameters
+        //     Robot.climber.engageBrake();
+        // });
 
 
 

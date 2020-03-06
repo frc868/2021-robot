@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import frc.robot.OI;
 import frc.robot.RobotMap;
 
 /**
@@ -25,17 +26,14 @@ public class Climber {
     private CANPIDController pidControllerArm, pidControllerWinch;
     private double initialPosition;
     private DoubleSolenoid actuator;
-    private static boolean engaged;
 
     private Climber() {
         primary_winch = new CANSparkMax(RobotMap.Climber.PRIMARY_WINCH, MotorType.kBrushless);
         secondary_winch = new CANSparkMax(RobotMap.Climber.SECONDARY_WINCH, MotorType.kBrushless);
         arm = new CANSparkMax(RobotMap.Climber.ARM, MotorType.kBrushless);
         secondary_winch.follow(primary_winch);
-        actuator = new DoubleSolenoid(RobotMap.Climber.ACTUATOR1, RobotMap.Intake.ACTUATOR2);
+        actuator = new DoubleSolenoid(RobotMap.Climber.ACTUATOR1, RobotMap.Climber.ACTUATOR2);
         pidControllerWinch = primary_winch.getPIDController();
-
-        engaged = false;
 
         initialPosition = 0;
         //PID coefficients
@@ -124,44 +122,46 @@ public class Climber {
       pidControllerWinch.setReference(RobotMap.Climber.WINCH_SETPOINT, ControlType.kPosition);
     }
 
-    public boolean getEngaged() {
-        return engaged;
-    }
-
-    public void setEngaged(boolean setEngaged) {
-        engaged = setEngaged;
-    }
-
     public void testWinch() {
         primary_winch.set(.1);
     }
 
-    public void testWinchAndEngage() {
-        if (!engaged) {
-            primary_winch.set(.1);
-        } else {
-            primary_winch.set(0);
-        }
-
+    public void stopWinch() {
+        primary_winch.set(0);
     }
 
+    public void testWinchAndEngage() {
+        primary_winch.set(.1);
+
+    }
+    
     /**
-     * Raise the intake.
+     * Engage brake
      * @author igc
      */
     public void engageBrake() {
-        if (!engaged) {
-            actuator.set(Value.kForward);
-        }
+        actuator.set(Value.kForward);
+
     }
 
     /**
-     * Lower the intake.
+     * Disengage brake
      * @author igc
      */
     public void disengageBrake() {
         actuator.set(Value.kReverse);
     }
 
+    public void manualClimb(double holdPower) {
+        if(OI.driver.getLY() > holdPower) {
+            disengageBrake();
+            primary_winch.set(OI.driver.getLY());
+        } if(OI.driver.getLY() < -.05) {
+            disengageBrake();
+            primary_winch.set(OI.driver.getLY() + holdPower);
+        } else {
+           engageBrake(); 
+        }
+    }
 
 }
