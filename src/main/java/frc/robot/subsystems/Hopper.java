@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.RobotMap;
@@ -44,6 +45,8 @@ public class Hopper {
         belt.setInverted(RobotMap.Hopper.Motor.HOPPER_FLOOR_IS_INVERTED);
         feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
 
+        feeder.setNeutralMode(NeutralMode.Brake);
+
         lastBotState = getBotSensor();
         lastMidState = getMidLimit();
         lastTopState = getTopLimit();
@@ -60,6 +63,8 @@ public class Hopper {
         }
         return instance;
     }
+
+    // ============ ACTUATION ============
 
     /**
      * Stops the belt and feeder motors.
@@ -93,6 +98,49 @@ public class Hopper {
     }
 
     /**
+     * called when the driver is ready to shoot (pushing the button on the
+     * controller) sets the belt speed to the tested value necessary to feed
+     */
+    public void reverse(double speed) {
+        belt.set(-speed);
+        feeder.set(-speed);
+        blueWheels.set(-speed);
+    }
+
+    /**
+     * called when the driver is ready to shoot (pushing the button on the
+     * controller) sets the belt speed to the tested value necessary to feed
+     */
+    public void forward() {
+        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
+            belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
+            feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
+        } else {
+            feeder.set(1);
+        }
+    }
+
+    /**
+     * Runs the hopper without logic. <i>Avoid using this.</i>
+     */
+    public void shootNoLogic() {
+        if (isCompBot) {
+            belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
+            feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
+        } else {
+            belt.set(0);
+            feeder.set(0);
+            blueWheels.set(0);
+        }
+    }
+
+    // ========================================================
+
+    // ============ UTILITIES ============
+
+    /**
      * Determine whether we are in a state where shooting is possible.
      */
     public boolean readyToShoot() {
@@ -100,10 +148,35 @@ public class Hopper {
     }
 
     /**
-     * Returns the state of the top limit.
+     * Increments count variable for number of balls stored in the hopper.
+     */
+    private void count() {
+        if (getTopLimitToggled()) {
+            count--;
+        }
+
+        if (getMidLimitToggled()) {
+            count++;
+        }
+    }
+
+    /**
+     * returns count of how many balls are currently held in the hopper     * 
+     * @return count
+     */
+    public int getBallCount() {
+        return count;
+    }
+
+    // ========================================================
+
+
+    // ============ SENSORS ============
+
+    /**
+     * Returns the state of the top limits.
      */
     public boolean getTopLimit() {
-
         return !topLeftLim.get();
     }
 
@@ -155,71 +228,11 @@ public class Hopper {
             }
         }
         return false;
-
-    }
-
-    /**
-     * Updates the count of balls in the hopper.
-     */
-    private void count() {
-        if (getTopLimitToggled()) {
-            count--;
-        }
-
-        if (getMidLimitToggled()) {
-            count++;
-        }
-    }
-
-    /**
-     * called when the driver is ready to shoot (pushing the button on the
-     * controller) sets the belt speed to the tested value necessary to feed
-     */
-    public void shoot() {
-        if (isCompBot) {
-            belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
-            feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
-        } else {
-            belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
-            feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
-        }
-    }
-
-    /**
-     * called when the driver is ready to shoot (pushing the button on the
-     * controller) sets the belt speed to the tested value necessary to feed
-     */
-    public void reverse(double speed) {
-        belt.set(-speed);
-        feeder.set(-speed);
-        blueWheels.set(-speed);
-    }
-
-    /**
-     * called when the driver is ready to shoot (pushing the button on the
-     * controller) sets the belt speed to the tested value necessary to feed
-     */
-    public void forward() {
-        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-            belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
-            feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
-            blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
-        } else {
-            feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);  
-        }
-    }
-
-    /**
-     * returns count of how many balls are currently held in the hopper
-     * 
-     * @return count
-     */
-    public int getBallCount() {
-        return count;
     }
 
     @Override
     public String toString() {
         return "Count: " + count + " , bottom: " + getBotSensor();
     }
+    // ========================================================
 }
