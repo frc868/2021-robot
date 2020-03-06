@@ -35,7 +35,7 @@ public class RobotMap {
             public static class CompBot {
                 public static class Update {
                     public static final double BELT_SPEED = 0.5;
-                    public static final double FEEDER_SPEED = 0.6;
+                    public static final double FEEDER_SPEED = 0.8;
                     public static final double BLUE_SPEED = 0.6;
                 }
             }            
@@ -52,7 +52,6 @@ public class RobotMap {
                 public static final double BLUE_SPEED = 0.7;
             }
         }
-        // public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
 
         public static class Sensors {
             public static final int BOT_SENSOR_PORT = 5; // TODO: untested
