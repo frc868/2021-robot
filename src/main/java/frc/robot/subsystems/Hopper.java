@@ -114,17 +114,20 @@ public class Hopper {
     }
 
     /**
-     * called when the driver is ready to shoot (pushing the button on the
-     * controller) sets the belt speed to the tested value necessary to feed
+     * Called when the driver is ready to shoot. Doesn't index balls until
+     * shooterAtSpeed argument is true, meaning the shooter has spun up.
+     * @param shooterAtSpeed whether the shooter is at target RPM
      */
-    public void forward() {
+    public void forward(boolean shooterAtSpeed) {
         driverOverride = true;
-        if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-            belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
-            feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
-            blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
-        } else {
-            feeder.set(1);
+        if (shooterAtSpeed) {
+            if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
+                belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
+                feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
+                blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
+            } else {
+                feeder.set(1);
+            }
         }
     }
 

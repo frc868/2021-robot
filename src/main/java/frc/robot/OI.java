@@ -42,7 +42,7 @@ public class OI {
         // shoot
         operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
-        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
+        operator.bSTART.whileHeld(() -> Robot.hopper.forward(true));//Robot.shooter.atTarget()));
         operator.bSTART.whenReleased(() -> {
             Robot.hopper.stop();
             Robot.hopper.resetOverride();
@@ -54,6 +54,7 @@ public class OI {
         // operator.bRB.whileHeld(() -> {
         //     Robot.hopper.update();
         //     Robot.intake.setSpeed(1);
+    
         // });
         // operator.bRB.whenReleased(() -> {
         //     Robot.hopper.stop();

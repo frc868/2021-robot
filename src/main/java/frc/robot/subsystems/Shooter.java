@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.helpers.Helper;
 
 /**
  * This is the code for the shooter. It initializes motor controllers and has
@@ -102,6 +103,17 @@ public class Shooter {
     public void update() {
         pid.setReference(setpoint, ControlType.kVelocity);
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
+    }
+
+    /**
+     * Checks whether the shooter is within a range of its target RPM.
+     * @return is shooter at target
+     */
+    public boolean atTarget() {
+        return Helper.tolerance(
+            primary.getEncoder().getVelocity(),
+            SmartDashboard.getNumber("Setpoint", 0),
+            0.01);
     }
 
     /**
