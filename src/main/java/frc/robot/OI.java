@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.helpers.ControllerWrapper;
 import frc.robot.helpers.Helper;
@@ -9,10 +8,8 @@ import frc.robot.helpers.Helper;
  * The class in which we map our driver/operator input to specific tasks on the
  * robot Init should be called once in the robotInit() method in the Robot class
  * Update should be called either in robotPeriodic() or teleopPeriodic()
- * 
  * @author hrl
  */
-
 public class OI {
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
@@ -24,25 +21,45 @@ public class OI {
     }
 
     public static void update() {
-        // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
         Robot.turret.manualTurret();
-        
-        //TODO: change manual turret to joystick
 
         // DRIVER CONTROLS
+        driver.bMENU.whenPressed(operator::toggleAltMode);
+
         // turret
         driver.bRB.whileHeld(Robot.turret::trackVision);
         driver.bRB.whenReleased(Robot.turret::stop);
 
-        driver.bMENU.whenPressed(operator::toggleAltMode);
+        // only for testing - pt 1
+        driver.bX.whenPressed(Robot.climber::engageBrake);
+        driver.bY.whenPressed(Robot.climber::disengageBrake);
+        driver.bA.whileHeld(Robot.climber::testWinch);
+
+        // pt 2 testing
+        driver.bA.whileHeld(() -> {
+            Robot.climber.setEngaged(false);
+            Robot.climber.testWinch();
+        });
+        driver.bA.whenReleased(() -> {
+            Robot.climber.setEngaged(true);
+            Robot.climber.disengageBrake();
+        });
+
+        // pt 3 testing
+        driver.bB.whenPressed(() -> {
+            Robot.climber.disengageBrake();
+            Robot.climber.moveArmUp(0, 0); //TODO: set parameters
+            Robot.climber.engageBrake();
+        });
 
         // OPERATOR CONTROLS
         // set the operator mode state
         operator.bMENU.whenPressed(operator::toggleAltMode);
 
         if (operator.isAltMode()) {
+            // TODO: set these controls
         } else {
             // turret
             operator.bRB.whileHeld(Robot.turret::trackVision);
@@ -62,6 +79,7 @@ public class OI {
 
             Robot.intake.setSpeed(
                     Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
+
             operator.bRT.whileHeld(() -> {
                 Robot.hopper.update();
                 Robot.intake.setSpeed(1);
@@ -92,43 +110,7 @@ public class OI {
         driver.updateStates();
         operator.updateStates();
 
-        // climber
-        // operator.bX.whileHeld(() -> Robot.climber.testWinch());
-        // operator.bX.whenReleased(() -> Robot.climber.testWinch());
-
-        //only for testing - pt 1
-        driver.bX.whenPressed(() -> Robot.climber.engageBrake());
-        driver.bY.whenPressed(() -> Robot.climber.disengageBrake());
-        driver.bA.whileHeld(() -> Robot.climber.testWinch());
-
-        // pt 2 testing
-        driver.bA.whileHeld(() -> {
-            Robot.climber.setEngaged(false);
-            Robot.climber.testWinch();
-        });
-        driver.bA.whenReleased(() -> {
-            Robot.climber.setEngaged(true);
-            Robot.climber.disengageBrake();
-        });
-
-        //pt 3 testing
-        driver.bA.whenPressed(() -> {
-            Robot.climber.disengageBrake();
-            Robot.climber.moveArmUp(0, 0); //TODO: set parameters
-            Robot.climber.engageBrake();
-        });
-
-
-
-
         updateSD();
-
-        if (armReset == false) {
-            Robot.climber.resetArmPosition();;
-            armReset = true;
-        }
-
-        
     }
 
     public static void updateSD() {
