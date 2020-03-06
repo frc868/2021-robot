@@ -93,7 +93,7 @@ public class Shooter {
      */
     public void update(double rpm) {
         this.setpoint = rpm;
-        pid.setReference(setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
+        pid.setReference(setpoint, ControlType.kVelocity);
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
         SmartDashboard.putNumber("Motor output", primary.get());
     }

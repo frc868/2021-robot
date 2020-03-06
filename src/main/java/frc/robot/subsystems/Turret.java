@@ -41,8 +41,7 @@ public class Turret {
     private double kPv, kIv, kDv;
     // for goal-centric gyro-based positioning
     private double kP, kI, kD;
-    // the offset for the vision target
-    private final double VISION_OFFSET = 4.85;
+    private final double VISION_OFFSET = 4.85; // the offset for the vision target
     private final double MAX_POS = 30; // maximum angle for x-position
 
     private boolean isCompBot = true;

@@ -56,6 +56,11 @@ public class Baseline extends AutonPath {
     }
 
     @Override
+    public void reset() {
+        this.currentState = BaselineState.ToBaseline;
+    }
+
+    @Override
     public String toString() {
         return "Baseline";
     }

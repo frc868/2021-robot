@@ -181,6 +181,11 @@ public class HeadOn extends AutonPath {
     }
 
     @Override
+    public void reset() {
+        this.currentState = HeadOnState.ToShootPosition;
+    }
+
+    @Override
     public String toString() {
         return "Head-on";
     }

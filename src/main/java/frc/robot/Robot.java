@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         auton.initSD();
+        auton.resetSelectedPath();
     }
 
     @Override
@@ -61,6 +62,8 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         drivetrain.resetInitialDistance();
         drivetrain.resetEncoderPositions();
+        gyro.reset();
+
         wheel.actuatorDown();
     }
 

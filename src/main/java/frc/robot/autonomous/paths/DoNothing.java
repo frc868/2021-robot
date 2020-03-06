@@ -21,6 +21,11 @@ public class DoNothing extends AutonPath {
     }
 
     @Override
+    public void reset() {
+        // NOTE: intentionally a stub
+    }
+
+    @Override
     public String toString() {
         return "Nothing";
     }

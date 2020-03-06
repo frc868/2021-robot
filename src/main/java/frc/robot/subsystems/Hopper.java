@@ -84,7 +84,6 @@ public class Hopper {
      * Indexes hopper. 
      * @author igc
      */
-    // DIFFERENT FOR COMP AND PRACTICE : !GETBOT
     public void update() {
         count();
         if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {

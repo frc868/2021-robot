@@ -60,6 +60,13 @@ public class AutonHelper {
     }
 
     /**
+     * Resets the currently selected path to its initial state.
+     */
+    public void resetSelectedPath() {
+        this.getCurrentPath().reset();
+    }
+
+    /**
      * Puts the SendableChooser to the SmartDashboard.
      */
     public void initSD() {

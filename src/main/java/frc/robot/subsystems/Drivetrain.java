@@ -14,7 +14,7 @@ import frc.robot.RobotMap;
  * @author gjs
  */
 public class Drivetrain {
-    public CANSparkMax l_primary, l_secondary, r_primary, r_secondary;
+    private CANSparkMax l_primary, l_secondary, r_primary, r_secondary;
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
