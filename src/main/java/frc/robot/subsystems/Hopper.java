@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.RobotMap;
 
 /**
@@ -11,10 +9,8 @@ import frc.robot.RobotMap;
  * Positions one and two are on the bottom, position three is the transition to
  * the upper level of the hopper, and positions four and five are on the top
  * level.
- * 
  * @author dri
  */
-
 public class Hopper {
     private static Hopper instance;
 
@@ -28,12 +24,6 @@ public class Hopper {
 
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
-    // a state variable to control whether the driver has overriden the autonomous
-    // functions
-    private boolean driverOverride;
-
-    private double initialBeltPosition;
-    private double initialFeederPosition;
 
     // store the last value of the limit switches to see if they have been triggered
     // after
@@ -44,8 +34,6 @@ public class Hopper {
     private boolean isCompBot = true;
 
     private Hopper(boolean compBot) {
-        driverOverride = false;
-
         botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
@@ -59,9 +47,6 @@ public class Hopper {
         lastBotState = getBotSensor();
         lastMidState = getMidLimit();
         lastTopState = getTopLimit();
-
-        initialBeltPosition = belt.getSensorCollection().getQuadraturePosition();
-        initialFeederPosition = feeder.getSensorCollection().getQuadraturePosition();
 
         this.isCompBot = compBot;
     }
@@ -77,7 +62,7 @@ public class Hopper {
     }
 
     /**
-     * Stops the belt and feeder motors. Untested.
+     * Stops the belt and feeder motors.
      */
     public void stop() {
         belt.set(0);
@@ -115,7 +100,7 @@ public class Hopper {
     }
 
     /**
-     * Returns the state of the top limits.
+     * Returns the state of the top limit.
      */
     public boolean getTopLimit() {
 
@@ -123,18 +108,16 @@ public class Hopper {
     }
 
     /**
-     * Returns the state of the mid limits.
+     * Returns the state of the mid limit.
      */
     public boolean getMidLimit() {
         return !midLeftLim.get();
     }
 
     /**
-     * Returns true if beam break senses
-     * 
+     * Returns true if the beam break senses something.
      * @author igc
      */
-
     public boolean getBotSensor() {
         return !botSensor.get();
     }
@@ -175,6 +158,9 @@ public class Hopper {
 
     }
 
+    /**
+     * Updates the count of balls in the hopper.
+     */
     private void count() {
         if (getTopLimitToggled()) {
             count--;
@@ -190,7 +176,6 @@ public class Hopper {
      * controller) sets the belt speed to the tested value necessary to feed
      */
     public void shoot() {
-        driverOverride = true;
         if (isCompBot) {
             belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
             feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
@@ -205,7 +190,6 @@ public class Hopper {
      * controller) sets the belt speed to the tested value necessary to feed
      */
     public void reverse(double speed) {
-        driverOverride = true;
         belt.set(-speed);
         feeder.set(-speed);
         blueWheels.set(-speed);
@@ -216,7 +200,6 @@ public class Hopper {
      * controller) sets the belt speed to the tested value necessary to feed
      */
     public void forward() {
-        driverOverride = true;
         if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
             belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
             feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
@@ -224,15 +207,6 @@ public class Hopper {
         } else {
             feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);  
         }
-    }
-
-    /**
-     * resets the driver override trigger
-     * 
-     * @author hrl
-     */
-    public void resetOverride() {
-        driverOverride = false;
     }
 
     /**

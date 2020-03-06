@@ -43,10 +43,7 @@ public class OI {
         operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
         operator.bSTART.whileHeld(() -> Robot.hopper.forward());
-        operator.bSTART.whenReleased(() -> {
-            Robot.hopper.stop();
-            Robot.hopper.resetOverride();
-        });
+        operator.bSTART.whenReleased(Robot.hopper::stop);
 
         // intake
         operator.bY.whenPressed(() -> Robot.intake.toggle());
