@@ -25,7 +25,7 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
-        Robot.shooter.update();
+        // Robot.shooter.update();
         
         //TODO: change manual turret to joystick
 
@@ -42,8 +42,12 @@ public class OI {
         // shoot
         operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
-        operator.bSTART.whileHeld(() -> Robot.hopper.forward(true));//Robot.shooter.atTarget()));
+        operator.bSTART.whileHeld(() -> {
+            Robot.shooter.update();
+            Robot.hopper.forward(Robot.shooter.atTarget());
+        });
         operator.bSTART.whenReleased(() -> {
+            Robot.shooter.stop();
             Robot.hopper.stop();
             Robot.hopper.resetOverride();
         });
@@ -114,5 +118,7 @@ public class OI {
 
         SmartDashboard.putNumber("Left trigger", operator.getLT());
         SmartDashboard.putNumber("Right trigger", operator.getRT());
+
+        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
     }
 }
