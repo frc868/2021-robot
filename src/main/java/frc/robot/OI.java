@@ -40,7 +40,7 @@ public class OI {
         operator.bRB.whenReleased(() -> Robot.turret.stop());
 
         // shoot
-        operator.bA.whileHeld(() -> Robot.shooter.update(4000));
+        operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
         operator.bSTART.whileHeld(() -> Robot.hopper.forward());
         operator.bSTART.whenReleased(() -> {

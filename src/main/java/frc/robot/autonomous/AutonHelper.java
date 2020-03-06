@@ -8,7 +8,6 @@ import frc.robot.autonomous.paths.HeadOn;
 
 /**
  * Adds and selects autonomous paths by a SendableChooser.
- *
  * @author hrl
  */
 public class AutonHelper {
@@ -20,8 +19,8 @@ public class AutonHelper {
         this.addPath("Nothing", new DoNothing());
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
-        this.addPath("Head-On Left", new HeadOn(3400));
-        this.addPath("Head-On Right", new HeadOn(3400));
+        this.addPath("Head-On Left", new HeadOn(true)); // TODO: have these take setpoints
+        this.addPath("Head-On Right", new HeadOn(true));
 
         chooser.setDefaultOption("Nothing", new DoNothing());
     }
@@ -65,12 +64,5 @@ public class AutonHelper {
      */
     public void initSD() {
         SmartDashboard.putData(chooser);
-    }
-
-    /**
-     * Updates the status of the autonomous to the SmartDashboard.
-     */
-    public void updateSD() {
-        SmartDashboard.putString("Selected auto:", this.getCurrentPath().toString());
     }
 }

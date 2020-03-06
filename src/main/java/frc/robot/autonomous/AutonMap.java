@@ -28,14 +28,17 @@ public class AutonMap {
 
     public static class HeadOn {
         // the distance to drive (backwards) from the baseline
+        // NOTE: since IPT is 1 (@Bloomington) this is actually encoder ticks
         public static final double DISTANCE = 10.0;
         // the power to start driving with
-        public static final double START_POWER = -0.5;
+        public static final double START_POWER = 0.5;
         // the power to end driving with
         public static final double END_POWER = 0;
 
+        // the backup (not PID) dead-reckoned power to run the shooter at
+        public static final double SHOOTER_POWER = 0.73;
         // the power to run the shooter at
-        public static final double SHOOTER_RPM = -3800;
+        public static final double SHOOTER_RPM = 3800;
     }
 
     public static class TrenchRun {

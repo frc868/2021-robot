@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -42,6 +41,8 @@ public class Turret {
     private double kPv, kIv, kDv;
     // for goal-centric gyro-based positioning
     private double kP, kI, kD;
+    // the offset for the vision target
+    private final double VISION_OFFSET = 4.85;
     private final double MAX_POS = 30; // maximum angle for x-position
 
     private boolean isCompBot = true;
@@ -104,7 +105,7 @@ public class Turret {
      */
     public void setSpeed(double speed) {
         if (isCompBot) {
-            if (leftLimit.get() == RobotMap.Turret.CompBot.Limits.LIMIT_TRIGGERED) { // TODO: add modularity
+            if (leftLimit.get() == RobotMap.Turret.CompBot.Limits.LIMIT_TRIGGERED) {
                 speed = Helper.boundValue(speed, 0, 1);
             }
             if (rightLimit.get() == RobotMap.Turret.CompBot.Limits.LIMIT_TRIGGERED) {
@@ -112,7 +113,7 @@ public class Turret {
             }
         }
         else {
-            if (leftLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) { // TODO: add modularity
+            if (leftLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) {
                 speed = Helper.boundValue(speed, 0, 1);
             }
             if (rightLimit.get() == RobotMap.Turret.PracticeBot.Limits.LIMIT_TRIGGERED) {
@@ -151,7 +152,7 @@ public class Turret {
      */
     public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
-            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), 5.2);
+            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), VISION_OFFSET);
             this.setSpeed(pidOutput);
             SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
             SmartDashboard.putNumber("PID output", pidOutput);
@@ -177,7 +178,7 @@ public class Turret {
 
     /**
      * Allows manual control of the turret from operator controller triggers.
-     * Limits speed to 0.3 at most.
+     * Limits speed to 0.25 at most. <i>Do not change this.</i>
      */
     public void manualTurret() {
         setSpeed(0.25*(OI.operator.getLX()));

@@ -4,9 +4,8 @@ import frc.robot.Robot;
 import frc.robot.autonomous.AutonPath;
 
 /**
- * <i>python</i>
- *
- * @author you know who to blame for this one
+ * Does nothing.
+ * @author Who cares?
  */
 public class DoNothing extends AutonPath {
     private final double DONT_SPEED = 0;

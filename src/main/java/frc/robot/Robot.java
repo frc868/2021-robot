@@ -27,6 +27,7 @@ import frc.robot.subsystems.WheelOfFortune;
  * @author dri
  */
 public class Robot extends TimedRobot {
+    public static AutonHelper auton = AutonHelper.getInstance();
     public static Camera camera = Camera.getInstance();
     public static Climber climber = Climber.getInstance();
     public static Compressor compressor = new Compressor();
@@ -36,22 +37,17 @@ public class Robot extends TimedRobot {
     public static LED leds = LED.getInstance();
     public static Hopper hopper = Hopper.getInstance();
     public static Shooter shooter = Shooter.getInstance();
-    public static Turret turret = Turret.getInstance(true); // TODO: change according to testing mode
+    public static Turret turret = Turret.getInstance(true);
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
-
-    public static AutonHelper auton = AutonHelper.getInstance();
 
     @Override
     public void disabledInit() {
         auton.initSD();
     }
 
-    /**
-     * This function is run when the robot is first started up and should be used
-     * for any initialization code.
-     */
     @Override
     public void robotInit() {
+        shooter.init();
     }
 
     @Override
@@ -65,8 +61,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         drivetrain.resetInitialDistance();
         drivetrain.resetEncoderPositions();
-        shooter.init();
-        //wheel.actuatorDown();
+        wheel.actuatorDown();
     }
 
     @Override

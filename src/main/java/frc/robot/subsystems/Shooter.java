@@ -16,11 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 
 /**
- * This is the code for the shooter. It initializes motor controllers and has
- * methods for various functions of the shooter. It also uses PID control for
- * maintaining optimal velocity.
- * 
- * @author ama, gjs, hrl
+ * The shooter subsystem consists of the two-neo shooter mounted on the robot's
+ * turret. It is controlled with REV's PID Controller on the SparkMAXes.
+ *
+ * @author dri
  */
 public class Shooter {
     private static Shooter instance = null;
@@ -30,17 +29,10 @@ public class Shooter {
 
     private CANPIDController pid;
 
-    private double kP, kD, kFF, kIa;
-    private double kI = 0.000001;
+    private double kP, kD, kFF, kI, kIa;
 
-    private double setpoint = 4500;
+    private double setpoint = RobotMap.Shooter.SHOOTER_DEFAULT_SPEED;
 
-    /**
-     * The shooter subsystem consists of the two-neo shooter mounted on the robot's turret.
-     * It is controlled with REV's PID Controller on the SparkMAXes.
-     * 
-     * @author dri
-     */
     private Shooter() {
         primary = new CANSparkMax(RobotMap.Shooter.PRIMARY, MotorType.kBrushless);
         secondary = new CANSparkMax(RobotMap.Shooter.SECONDARY, MotorType.kBrushless);
@@ -50,13 +42,11 @@ public class Shooter {
 
         primary.setInverted(RobotMap.Shooter.PRIMARY_IS_INVERTED);
         secondary.follow(primary, RobotMap.Shooter.SECONDARY_IS_OPPOSITE);
-        // Secondary motor is always inverted relative to primary
-
         
         pid = primary.getPIDController();
 
         SmartDashboard.putNumber("kP", 0);
-        //SmartDashboard.putNumber("kI", 0);
+        SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
         SmartDashboard.putNumber("kFF", 0);
         SmartDashboard.putNumber("kIa", 0);
@@ -79,7 +69,7 @@ public class Shooter {
      */
     public void init() {
         kP = SmartDashboard.getNumber("kP", 0);
-        //kI = SmartDashboard.getNumber("kI", 0);
+        kI = SmartDashboard.getNumber("kI", 0);
         kD = SmartDashboard.getNumber("kD", 0);
         kFF = SmartDashboard.getNumber("kFF", 0);
         kIa = SmartDashboard.getNumber("kIa", 0);
@@ -89,15 +79,13 @@ public class Shooter {
         pid.setI(kI/1000);
         pid.setD(kD/1000);
         pid.setFF(kFF/1000);
-        pid.setIAccum(0);
+        pid.setIMaxAccum(kIa, 0);
 
-        //if (this.kI == 0) {
-        //    pid.setIMaxAccum(0, 0);
-        //} else {
-            pid.setIMaxAccum(kIa, 0);
-        //}
+        if (this.kI == 0) {
+            pid.setIAccum(0);
+        }
         
-        pid.setOutputRange(-1, 0);
+        pid.setOutputRange(0, 1);
     }
 
     /**
@@ -105,9 +93,9 @@ public class Shooter {
      */
     public void update(double rpm) {
         this.setpoint = rpm;
-        pid.setReference(-setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
+        pid.setReference(setpoint, ControlType.kVelocity); // TODO: establish whether this actually works
         SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
-        SmartDashboard.putNumber("Actual output", primary.get());
+        SmartDashboard.putNumber("Motor output", primary.get());
     }
 
     /**
@@ -125,10 +113,12 @@ public class Shooter {
         primary.set(speed);
     }
 
+    /**
+     * Retrieves the RPM of the shooter.
+     */
     public double getRPM() {
         return primary.getEncoder().getVelocity();
     }
-
 
     /**
      * Stops the shooter.
@@ -139,16 +129,15 @@ public class Shooter {
     }
 
     /**
-     * shoots until all balls are cleared from the hopper.
-     * useful in autonomous.
-     * @param pwr the power to run the shooter at; will be obsoleted by PID
+     * Shoots until all balls are cleared from the hopper.
+     * Useful in autonomous.
+     * TODO: this should have checking as to the hopper state, but that logic doesn't exist yet
+     * @param rpm the RPM to run the shooter at
      * @author hrl
      */
     public void shootUntilClear(double rpm) {
-        //if (Robot.hopper.getBallCount() > 0) {
-            Robot.hopper.forward();
-            this.setpoint = rpm;
-            this.update();
-        //}
+        Robot.hopper.forward();
+        this.setpoint = rpm;
+        this.update();
     }
 }
