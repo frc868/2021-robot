@@ -7,7 +7,6 @@ import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -290,10 +289,11 @@ public class WheelOfFortune {
     public void toggle() {
         if (actuator.get() == Value.kForward) {
             actuator.set(Value.kReverse);
-        } else if (actuator.get() == Value.kReverse) {
+        } else {
             actuator.set(Value.kForward);
         }
     }
+
 
     /**
      * Raise the arm.

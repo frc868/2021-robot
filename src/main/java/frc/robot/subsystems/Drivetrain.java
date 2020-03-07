@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 
@@ -18,6 +19,10 @@ public class Drivetrain {
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
 
+    private double initialDistance = 0; // used for driveStraight()
+
+    private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
+
     private Drivetrain() {
         l_primary = new CANSparkMax(RobotMap.Drivetrain.LEFT_PRIMARY, MotorType.kBrushless);
         r_primary = new CANSparkMax(RobotMap.Drivetrain.RIGHT_PRIMARY, MotorType.kBrushless);
@@ -29,6 +34,11 @@ public class Drivetrain {
 
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
+
+        l_primary.getEncoder()
+            .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
+        r_primary.getEncoder()
+            .setPositionConversionFactor(INCHES_PER_TICK);
     }
 
     /**
@@ -85,17 +95,70 @@ public class Drivetrain {
      * @param targetDist the distance you want the robot to travel
      * @param startPower the starting power
      * @param endPower the ending power
+     * @author hrl
      */
     public void driveStraight(double targetDist, double startPower, double endPower) {
-        double pGain = 0.5; // TODO: check this constant
-        double initialDist = getAveragePosition();
-        double distanceToTarget = Math.abs(targetDist) - Math.abs(getAveragePosition() - initialDist);
+        if (this.initialDistance == 0) {
+            this.initialDistance = Math.abs(getLeftPosition());
+        }
+
+        double pGain = 0.5; // TODO: untested
+        double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
 
         double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
+        setSpeed(targetSpeed, targetSpeed);
 
-        if (distanceToTarget > 0) {
-            setSpeed(targetSpeed, targetSpeed); // TODO: code sanity check
+        distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+    }
+
+    /**
+     * resets the initial distance used by driveStraight()
+     * @author hrl
+     */
+    public void resetInitialDistance() {
+        this.initialDistance = 0;
+    }
+
+    /**
+     * returns the current distance traversed relative to the initial distance
+     * @author hrl
+     */
+    public double getCurrentDistance() {
+        // ensure no races
+        if (this.initialDistance == 0) {
+            this.initialDistance = Math.abs(getLeftPosition());
         }
+
+        return Math.abs(this.getLeftPosition() - this.initialDistance);
+    }
+
+    /**
+     * drives in an arc
+     * loosely adapted from 2018-robot
+     * @param rightInitial the current (at the beginning of driveArc) drivetrain position for the right side
+     * @param leftInitial the current (at the beginning of driveArc) drivetrain position for the left side
+     * @param rightInches the number of inches to move the right side of the drivetrain
+     * @param leftInches the number of inches to move the left side of the drivetrain
+     * @param rightPower the power to set the right side of the drivetrain to
+     * @param leftPower the power to set the left side of the drivetrain to
+     * @author hrl
+     */
+    public void driveArc(double rightInitial, double leftInitial, double rightInches,
+                         double leftInches, double rightPower, double leftPower) {
+        double setRight = rightPower;
+        double setLeft = leftPower;
+
+        // is the right side of the drivetrain finished moving?
+        if (Math.abs(this.getRightPosition() - rightInitial) > Math.abs(rightInches)) {
+            setRight = 0;
+        }
+
+        // is the left side of the drivetrain finished moving?
+        if (Math.abs(this.getLeftPosition() - leftInitial) > Math.abs(leftInches)) {
+            setLeft = 0;
+        }
+
+        this.setSpeed(setLeft, setRight);
     }
 
     /**
@@ -123,5 +186,30 @@ public class Drivetrain {
      */
     public double getAveragePosition() {
         return (l_primary.getEncoder().getPosition() + r_primary.getEncoder().getPosition())/2;
+    }
+
+    /**
+     * resets both of the encoder positions
+     * @author hrl
+     */
+    public void resetEncoderPositions() {
+        // this has a time delay. this is a hack. i hate it. but this is how it's
+        // going to go down.
+        l_primary.getEncoder().setPosition(0);
+        r_primary.getEncoder().setPosition(0);
+
+        Timer timer = new Timer();
+        timer.reset();
+        timer.start();
+
+        while (timer.get() < 0.2) {
+            // do nothing
+        }
+        timer.stop();
+    }
+
+    @Override
+    public String toString() {
+        return "" + getAveragePosition();
     }
 }

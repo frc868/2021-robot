@@ -36,7 +36,7 @@ public class Helper {
      * @author ic, jm
      */
     public static double analogToDigital(double value, double deadzone, double output) {
-        if (value < deadzone) {
+        if (Math.abs(value) < deadzone) {
             return 0;
         } else {
             return output;
@@ -91,5 +91,20 @@ public class Helper {
      */
     public static double desensitize(double value) {
         return Math.pow(value, 3);
-    } 
+    }
+
+    /**
+     * Checks whether given value is within the given tolerance percentage range of the target.
+     * @param value the value to check (usually RPM, position, or other measurements)
+     * @param target the target value for the output
+     * @param tolerance percentage range of tolerance as a decimal (0 to 1)
+     * @return whether value is within tolerance
+     * @author dri
+     */
+    public static boolean tolerance(double value, double target, double tolerance) {
+        boolean lower = value >= target - (target * tolerance); // is value above the lower limit?
+        boolean upper = value <= target + (target * tolerance); // is value below the upper limit?
+
+        return lower && upper;
+    }
 }

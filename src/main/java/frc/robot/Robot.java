@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.autonomous.AutonHelper;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Gyro;
 import frc.robot.subsystems.Climber;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.WheelOfFortune;
  * @author dri
  */
 public class Robot extends TimedRobot {
+    public static AutonHelper auton = AutonHelper.getInstance();
     public static Camera camera = Camera.getInstance();
     public static Climber climber = Climber.getInstance();
     public static Compressor compressor = new Compressor();
@@ -33,31 +35,42 @@ public class Robot extends TimedRobot {
     public static Gyro gyro = Gyro.getInstance();
     public static Intake intake = Intake.getInstance();
     public static LED leds = LED.getInstance();
-    public static Hopper hopper = Hopper.getInstance();
+    public static Hopper hopper = Hopper.getInstance(true);
     public static Shooter shooter = Shooter.getInstance();
-    public static Turret turret = Turret.getInstance(false); // TODO: change according to testing mode
+    public static Turret turret = Turret.getInstance(true);
     public static WheelOfFortune wheel = WheelOfFortune.getInstance();
-    
-    /**
-     * This function is run when the robot is first started up and should be used
-     * for any initialization code.
-     */
+
+    @Override
+    public void disabledInit() {
+        auton.initSD();
+        auton.resetSelectedPath();
+    }
+
     @Override
     public void robotInit() {
+        shooter.init();
     }
 
     @Override
     public void robotPeriodic() {
         camera.update();
         leds.colorInventory();
+        System.out.println(camera.toString());
     }
 
     @Override
     public void autonomousInit() {
+        drivetrain.resetInitialDistance();
+        drivetrain.resetEncoderPositions();
+        gyro.reset();
+
+        wheel.actuatorDown();
     }
 
     @Override
     public void autonomousPeriodic() {
+        auton.runSelectedPath();
+        turret.trackVision();
         Scheduler.getInstance().run();
     }
 

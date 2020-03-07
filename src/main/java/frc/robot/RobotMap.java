@@ -27,10 +27,27 @@ public class RobotMap {
     }
 
     public static class Hopper {
-        public static final double ENC_COUNT_PER_CYCLE = 9127; // TODO: untested
-        public static final double HOPPER_FLOOR_SPEED = 1; // TODO: untested
-        public static final double FEEDER_SPEED = 1; // TODO: untested
-        public static final double BLUE_SPEED = 1;
+        public static class Speeds {
+            public static class CompBot {
+                public static class Update {
+                    public static final double BELT_SPEED = 0.5;
+                    public static final double FEEDER_SPEED = 0.8;
+                    public static final double BLUE_SPEED = 0.6;
+                }
+            }            
+            public static class PracticeBot {
+                public static class Update {
+                    public static final double BELT_SPEED = 0.5;
+                    public static final double FEEDER_SPEED = 0.8;
+                    public static final double BLUE_SPEED = 0.6;
+                }
+            }
+            public static class Forward {
+                public static final double BELT_SPEED = 0.6;
+                public static final double FEEDER_SPEED = 1;
+                public static final double BLUE_SPEED = 0.7;
+            }
+        }
 
         public static class Sensors {
             public static final int BOT_SENSOR_PORT = 5; // TODO: untested
@@ -54,7 +71,7 @@ public class RobotMap {
     public static class Intake {
         public static final int MOTOR = 1; // TODO: untested
         public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
-        public static final int ACTUATOR1 = 0; // TODO: untested
+        public static final int ACTUATOR1 = 3; // TODO: untested
         public static final int ACTUATOR2 = 7; // TODO: untested
     }
 
@@ -67,7 +84,8 @@ public class RobotMap {
         public static final int PRIMARY = 7; // TODO: untested
         public static final int SECONDARY = 8; // TODO: untested
         public static final boolean PRIMARY_IS_INVERTED = true; // TODO: untested
-        public static final boolean SECONDARY_IS_INVERTED = true; // TODO: untested
+        public static final boolean SECONDARY_IS_OPPOSITE = true; // TODO: untested
+        public static final double SHOOTER_DEFAULT_SPEED = 4824.6;
     }
 
     public static class Turret {
@@ -86,14 +104,26 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kP = 0.012;
+                public static final double kPv = 0.0155;
+                public static final double kIv = 0;
+                public static final double kDv = 0.0001;
+
+                public static final double kP = 0;
                 public static final double kI = 0;
-                public static final double kD = 0.0001;
+                public static final double kD = 0;
+                
+                public static final double GYRO_TO_ENCODER = 1; // TODO: untested
+            }
+                        
+            public static class Setpoints {
+                public static final double SAFE_POSITION = 0; // TODO: untested
+                public static final double DEADZONE_LEFT = 0; // TODO: untested
+                public static final double DEADZONE_RIGHT = 23000;
             }
         }
 
         public static class PracticeBot {
-            public static final boolean MOTOR_IS_INVERTED = false; // TODO: untested
+            public static final boolean MOTOR_IS_INVERTED = true; // TODO: untested
 
             public static class Limits {
                 public static final int LEFT_PORT = 0; // TODO: untested
@@ -103,19 +133,22 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kP = 0.015; // TODO: untested
+                public static final double kPv = 0.015; // TODO: untested
+                public static final double kIv = 0; // TODO: untested
+                public static final double kDv = 0.0001; // TODO: untested
+
+                public static final double kP = 0; // TODO: untested
                 public static final double kI = 0; // TODO: untested
-                public static final double kD = 0.0001; // TODO: untested
+                public static final double kD = 0; // TODO: untested
+
+                public static final double GYRO_TO_ENCODER = 1; // TODO: untested
             }
-        }
-
-
-        
-
-        public static class Setpoints {
-            public static final double SAFE_POSITION = 0; // TODO: untested
-            public static final double DEADZONE_LEFT = 0; // TODO: untested
-            public static final double DEADZONE_RIGHT = 23000; // TODO: untested
+            
+            public static class Setpoints {
+                public static final double SAFE_POSITION = 0; // TODO: untested
+                public static final double DEADZONE_LEFT = 0; // TODO: untested
+                public static final double DEADZONE_RIGHT = 23000; // TODO: untested
+            }
         }
     }
 
