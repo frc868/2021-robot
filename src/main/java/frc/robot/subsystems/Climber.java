@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.OI;
 import frc.robot.RobotMap;
+import frc.robot.helpers.Helper;
 
 /**
  * This is the code for the climber. It initializes motor controllers/pneumatics
@@ -192,8 +193,10 @@ public class Climber {
     }
 
     public void setSpeedArm(double speed) {
-        if (getArmDeployToggled() || (getArmPosition() == 0)) {
+        if (getArmDeployToggled()) {
             arm.set(0);
+        } else if (getArmPosition() == 0) {
+            arm.set(Helper.boundValue(speed, 0, 1));
         } else {
             arm.set(speed);
         }
