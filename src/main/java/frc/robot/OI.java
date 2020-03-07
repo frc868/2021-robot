@@ -32,6 +32,22 @@ public class OI {
             Robot.climber.engageBrake();
         });
 
+         // shoot
+         driver.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
+         driver.bA.whenReleased(Robot.shooter::stop);
+         driver.bSTART.whileHeld(() -> Robot.hopper.forward(Robot.shooter.atTarget()));
+         driver.bSTART.whenReleased(Robot.hopper::stop);
+
+          // hopper
+          driver.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+          driver.bB.whenReleased(Robot.hopper::stop);
+
+          // WOF
+          driver.dN.whenPressed(Robot.wheel::actuatorUp);
+          driver.dS.whenPressed(Robot.wheel::actuatorDown);
+
+
+
         if (driver.isAltMode()) {
             Robot.drivetrain.arcadeDrive(0.4);
         } else {
@@ -42,17 +58,14 @@ public class OI {
         driver.bRB.whileHeld(Robot.turret::trackVision);
         driver.bRB.whenReleased(Robot.turret::stop);
 
-        operator.bY.whileHeld(() -> Robot.climber.manualArm(0.1));
-        operator.bY.whenReleased(Robot.climber::stopArm);
-        driver.bA.whileHeld(() -> Robot.climber.manualArm(-0.1));
-        driver.bA.whenReleased(Robot.climber::stopArm);
-
-        // pt 3 testing
-        driver.bB.whenPressed(() -> {
-            Robot.climber.disengageBrake();
-            Robot.climber.moveArmUp(0.1);
-            Robot.climber.engageBrake();
-        });
+        // working manual arm
+//         driver.bA.whileHeld(() -> Robot.climber.manualArm(-0.1));
+//         driver.bA.whenReleased(Robot.climber::stopArm);
+// // ===========================================================
+//         // working manual arm
+//         operator.bY.whileHeld(() -> Robot.climber.manualArm(0.1));
+//         operator.bY.whenReleased(Robot.climber::stopArm);
+        
 
         // OPERATOR CONTROLS
         // set the operator mode state
@@ -67,6 +80,8 @@ public class OI {
 
         if (operator.isAltMode()) {
             System.out.println("=== ALT MODE ENABLED ===");
+
+            //
             operator.trigLSTK.whileHeld(() -> {
                 Robot.climber.manualClimb(RobotMap.Climber.HOLD_POWER);
             });
@@ -96,6 +111,8 @@ public class OI {
             //     }
             // });
             // TODO: check these 2020-03-07
+            
+            //auto mode
             operator.dN.whenPressed(() -> {
                 Robot.climber.moveArmUp(0.1);
             });
@@ -103,6 +120,8 @@ public class OI {
                 Robot.climber.moveArmDown(-0.1);
                 Robot.climber.activateWinch();
             });
+
+            //working winch
             // operator.dN.whenPressed(() -> {
             //     Robot.climber.disengageBrake();
             //     Robot.climber.setSpeedWinch(0.3);

@@ -194,7 +194,7 @@ public class Climber {
 
     public void setSpeedArm(double speed) {
         if (getArmDeployToggled()) {
-            arm.set(0);
+            arm.set(Helper.boundValue(speed, -1, 0));
         } else if (getArmPosition() == 0) {
             arm.set(Helper.boundValue(speed, 0, 1));
         } else {
