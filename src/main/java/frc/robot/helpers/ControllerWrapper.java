@@ -100,6 +100,9 @@ public class ControllerWrapper {
         bRSTK.updateState();
         bLSTK.updateState();
 
+        trigRSTK.updateState();
+        trigLSTK.updateState();
+
         dN.updateState();
         dNE.updateState();
         dE.updateState();
