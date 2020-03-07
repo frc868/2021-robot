@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 public class RobotMap {
     public static class Camera {
         public static final double PIPELINE = 0.0;
+        public static final double AREA_MULTIPLIER_INCHES = 0; // TODO: untested
     }
 
     public static class Climber {
@@ -113,9 +114,9 @@ public class RobotMap {
                 public static final double kIv = 0;
                 public static final double kDv = 0.0001;
 
-                public static final double kP = 0;
-                public static final double kI = 0;
-                public static final double kD = 0;
+                public static final double kP = 0; // TODO: untested
+                public static final double kI = 0; // TODO: untested
+                public static final double kD = 0; // TODO: untested
                 
                 public static final double GYRO_TO_ENCODER = 1; // TODO: untested
             }

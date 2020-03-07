@@ -68,6 +68,10 @@ public class Camera {
         return tArea.getDouble(0.0);
     }
 
+    // public double getCalculatedDistance() {
+    //     return RobotMap.Camera.AREA_MULTIPLIER_INCHES * Math.sqrt(getArea()); // TODO: implement after data collection
+    // }
+
     /**
      * Get the x-position of the target, if detected.
      * @return 0.0 if no target, x-position otherwise

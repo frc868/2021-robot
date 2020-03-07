@@ -47,6 +47,7 @@ public class OI {
         operator.bA.whenReleased(() -> Robot.shooter.stop());
         operator.bSTART.whileHeld(() -> {
             Robot.shooter.update();
+            // Robot.shooter.update(Robot.turret.getCalculatedDistance()); // TODO: needs testing
             Robot.hopper.forward(Robot.shooter.atTarget());
         });
         operator.bSTART.whenReleased(() -> {
