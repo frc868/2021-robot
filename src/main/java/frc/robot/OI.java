@@ -42,8 +42,14 @@ public class OI {
         // shoot
         operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
-        operator.bSTART.whileHeld(() -> Robot.hopper.forward());
-        operator.bSTART.whenReleased(Robot.hopper::stop);
+        operator.bSTART.whileHeld(() -> {
+            Robot.shooter.update();
+            Robot.hopper.forward(Robot.shooter.atTarget());
+        });
+        operator.bSTART.whenReleased(() -> {
+            Robot.shooter.stop();
+            Robot.hopper.stop();
+        });
 
         // intake
         operator.bY.whenPressed(() -> Robot.intake.toggle());
@@ -51,6 +57,7 @@ public class OI {
         // operator.bRB.whileHeld(() -> {
         //     Robot.hopper.update();
         //     Robot.intake.setSpeed(1);
+    
         // });
         // operator.bRB.whenReleased(() -> {
         //     Robot.hopper.stop();
@@ -110,5 +117,7 @@ public class OI {
 
         SmartDashboard.putNumber("Left trigger", operator.getLT());
         SmartDashboard.putNumber("Right trigger", operator.getRT());
+
+        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
     }
 }
