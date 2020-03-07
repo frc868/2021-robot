@@ -184,6 +184,9 @@ public class RobotMap {
         
         public static final int ARM_DEPLOY_SENSOR = 9;
         public static final boolean ARM_LAST_STATE_VALUE = true; // TODO: untested
+
+        public static final double HOLD_POWER = 0.3;
+        public static final double ARM_POWER = 0.1;
     }
 
     public static class Sensors {
