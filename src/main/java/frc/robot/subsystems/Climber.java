@@ -4,13 +4,10 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 
@@ -23,13 +20,16 @@ public class Climber {
     private static Climber instance;
 
     private CANSparkMax primary_winch, secondary_winch, arm;
-    private CANPIDController pidControllerArm, pidControllerWinch;
+    private CANPIDController pidController;
 
-    public double kP_arm, kP_winch, kI_arm, kI_winch, kD_arm, kD_winch,
-        kMaxOutput, kMinOutput, maxRPM, kFF_arm, kFF_winch, kIz_arm, kIz_winch;
+    // winch PID constants
+    private double kP, kI, kD, kFF, kIa;
+    // global PID constants
+    private double kMaxOutput, kMinOutput;
 
     private DigitalInput isDeployed;
     private double initialPosition;
+    private boolean lastArmState;
     private DoubleSolenoid actuator;
 
     private Climber() {
@@ -44,28 +44,31 @@ public class Climber {
         actuator = new DoubleSolenoid(RobotMap.Climber.ACTUATOR1, RobotMap.Climber.ACTUATOR2);
         isDeployed = new DigitalInput(RobotMap.Climber.ARM_DEPLOY_SENSOR);
 
-        pidControllerWinch = primary_winch.getPIDController();
+        pidController = primary_winch.getPIDController();
 
         initialPosition = 0;
         // PID coefficients
-        kP_winch = 0.0; // TODO: untested
-        kI_winch = 0.0; // TODO: untested
-        kD_winch = 0.0; // TODO: untested
+        kP = 0.0; // TODO: untested
+        kI = 0.0; // TODO: untested
+        kD = 0.0; // TODO: untested
         kMaxOutput = 1;
         kMinOutput = -1;
-        kFF_winch = 0;
-        kIz_winch = 0;
-        maxRPM = 100;
+        kFF = 0;
+        kIa = 0;
 
-        pidControllerWinch.setP(kP_winch);
-        pidControllerWinch.setI(kI_winch);
-        pidControllerWinch.setD(kD_winch);
-        pidControllerWinch.setFF(kFF_winch);
-        pidControllerWinch.setIZone(kIz_winch);
-        pidControllerWinch.setOutputRange(kMinOutput, kMaxOutput);
+        pidController.setP(kP);
+        pidController.setI(kI);
+        pidController.setD(kD);
+        pidController.setFF(kFF);
+        pidController.setIMaxAccum(kIa, 0);
+        pidController.setOutputRange(kMinOutput, kMaxOutput);
+
+        if (this.kI == 0) {
+            pidController.setIAccum(0);
+        }
 
         resetArmPosition();
-
+        resetWinchPosition();
     }
 
     /**
@@ -106,7 +109,7 @@ public class Climber {
     /**
      * resets the arm position
      */
-    public void resetArmPosition(){
+    public void resetArmPosition() {
         arm.getEncoder().setPosition(0);
     }
 
@@ -114,42 +117,38 @@ public class Climber {
      * Moves the arm-hook apparatus up to a given setpoint up.
      * @author dri
      */
-    public void moveArmUp(double targetDist, double power) {
-        double pGain = .1;
-        double distanceToTarget = Math.abs(targetDist) - Math.abs(arm.getEncoder().getPosition() - initialPosition);
-    
-        double targetSpeed = pGain * (power * distanceToTarget);
-    
-        if (distanceToTarget > 0) {
-            arm.set(targetSpeed); // TODO: code sanity check
-        }  
+    public void moveArmUp(double power) {
+        if (getArmDeployToggled()) {
+            arm.set(0);
+        } else {
+            arm.set(power);
+        }
     }
 
-    /**
-     * moves the arm down to a setpoint of 0, or all the way down.
-     */
-    public void moveArmDown(){
-        pidControllerArm.setReference(RobotMap.Climber.ARM_DOWNPOINT, ControlType.kPosition);
+    public void moveArmDown(double power) {
+        if (getArmPosition() <= 1) {
+            arm.set(0);
+        } else {
+            arm.set(power);
+        }
     }
 
     /**
      * moves the winch to its target setpoint.
      */
-    public void activateWinch(){
-      pidControllerWinch.setReference(RobotMap.Climber.WINCH_SETPOINT, ControlType.kPosition);
+    public void activateWinch() {
+        pidController.setReference(RobotMap.Climber.WINCH_SETPOINT, ControlType.kPosition);
     }
 
     /**
-     * TODO: remove this.
-     * runs the winch at a ludicrously slow speed for testing.
+     * Kills the winch motor.
      */
-
     public void stopWinch() {
         primary_winch.set(0);
     }
 
     /**
-     * Engage brake
+     * Engages the brake.
      * @author igc
      */
     public void engageBrake() {
@@ -158,18 +157,22 @@ public class Climber {
     }
 
     /**
-     * Disengage brake
+     * Disengages the brake.
      * @author igc
      */
     public void disengageBrake() {
         actuator.set(Value.kReverse);
     }
 
+    /**
+     * Climbs based on joystick inputs with no closed-loop control.
+     * @param holdPower the power to hold the motor at
+     */
     public void manualClimb(double holdPower) {
-        if(OI.driver.getLY() > holdPower) {
+        if (OI.driver.getLY() > holdPower) {
             disengageBrake();
             primary_winch.set(OI.driver.getLY());
-        } if(OI.driver.getLY() < -.05) {
+        } if (OI.driver.getLY() < -.05) {
             disengageBrake();
             primary_winch.set(OI.driver.getLY() + holdPower);
         } else {
@@ -177,10 +180,13 @@ public class Climber {
         }
     }
 
-    public void manualArm(double speed) {
-        arm.set(speed);
+    public void setSpeedArm(double speed) {
+        if (getArmDeployToggled() || (getArmPosition() == 0)) {
+            arm.set(0);
+        } else {
+            arm.set(speed);
+        }
     }
-
 
     public void stopArm() {
         arm.set(0);
@@ -193,5 +199,15 @@ public class Climber {
 
     public boolean getArmDeploy() {
         return isDeployed.get();
+    }
+
+    private boolean getArmDeployToggled() {
+        if (getArmDeploy() != lastArmState) {
+            lastArmState = getArmDeploy();
+            if (lastArmState == RobotMap.Climber.ARM_LAST_STATE_VALUE) {
+                return true;
+            }
+        }
+        return false;
     }
 }

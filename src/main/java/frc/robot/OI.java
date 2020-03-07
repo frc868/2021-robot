@@ -22,22 +22,27 @@ public class OI {
 
     public static void update() {
         // GENERAL CONTROLS/CONTROL METHODS
-        Robot.drivetrain.arcadeDrive(1);
         Robot.turret.manualTurret();
 
         // DRIVER CONTROLS
-        driver.bMENU.whenPressed(operator::toggleAltMode);
+        driver.bMENU.whenPressed(() -> {
+            driver.toggleAltMode();
+            operator.toggleAltMode();
+        });
+        driver.bMENU.whenReleased(() -> {
+            Robot.climber.stopWinch();
+            Robot.climber.engageBrake();
+        });
+
+        if (driver.isAltMode()) {
+            Robot.drivetrain.arcadeDrive(0.4);
+        } else {
+            Robot.drivetrain.arcadeDrive(1);
+        }
 
         // turret
         driver.bRB.whileHeld(Robot.turret::trackVision);
-        driver.bRB.whenReleased(Robot.turret::stop);
-
-        // only for testing - pt 1
-        // driver.bX.whenPressed(Robot.climber::engageBrake);
-        // driver.bY.whenPressed(Robot.climber::disengageBrake);
-        // driver.bA.whileHeld(Robot.climber::testWinch);
-        // driver.bA.whenReleased(Robot.climber::stopWinch);
-        
+        driver.bRB.whenReleased(Robot.turret::stop);        
 
         driver.bY.whenPressed(() -> Robot.climber.manualArm(0.1));
         driver.bY.whenReleased(Robot.climber::stopArm);
@@ -53,35 +58,61 @@ public class OI {
 
         // OPERATOR CONTROLS
         // set the operator mode state
-        operator.bMENU.whenPressed(operator::toggleAltMode);
+        operator.bMENU.whenPressed(() -> {
+            driver.toggleAltMode();
+            operator.toggleAltMode();
+        });
+        operator.bMENU.whenReleased(() -> {
+            Robot.climber.stopWinch();
+            Robot.climber.engageBrake();
+        });
 
         if (operator.isAltMode()) {
-            System.out.println("ALT MODE ENABLED"); //TODO: delete
+            System.out.println("=== ALT MODE ENABLED ===");
             operator.trigLSTK.whenPressed(() -> {
-                if(operator.getLY() > 0) {
+                if (operator.getLY() > 0) {
                     Robot.climber.disengageBrake();
-                    Robot.climber.setSpeedWinch(.3);
-                } else if(operator.getLY() < 0) {
+                    Robot.climber.setSpeedWinch(0.3); // TODO Test value
+                } else if (operator.getLY() < 0) {
                     Robot.climber.disengageBrake();
-                    Robot.climber.setSpeedWinch(.3);
+                    Robot.climber.setSpeedWinch(-0.3);
                 } else {
                     Robot.climber.stopWinch();
                     Robot.climber.engageBrake();
                 }
-                
             });
-            operator.dN.whenReleased(() -> {
-                Robot.climber.stopWinch();
-                Robot.climber.engageBrake();
+            operator.trigRSTK.whenPressed(() -> {
+                if (operator.getRY() > 0) {
+                    Robot.climber.setSpeedArm(0.1);
+                } else if (operator.getRY() < 0) {
+                    Robot.climber.setSpeedArm(-0.1);
+                } else {
+                    Robot.climber.setSpeedArm(0);
+                }
             });
-            operator.dS.whenPressed(() -> {
-                Robot.climber.disengageBrake();
-                Robot.climber.setSpeedWinch(-.3);
+            operator.dN.whenPressed(() -> {
+                Robot.climber.moveArmUp(0.1);
             });
             operator.dS.whenReleased(() -> {
-                Robot.climber.stopWinch();
-                Robot.climber.engageBrake();
+                Robot.climber.moveArmDown(-0.1);
+                Robot.climber.activateWinch();
             });
+            // operator.dN.whenPressed(() -> {
+            //     Robot.climber.disengageBrake();
+            //     Robot.climber.setSpeedWinch(0.3);
+            // });
+            // operator.dN.whenReleased(() -> {
+            //     Robot.climber.stopWinch();
+            //     Robot.climber.engageBrake();
+            // });
+            // operator.dS.whenPressed(() -> {
+            //     Robot.climber.disengageBrake();
+            //     Robot.climber.setSpeedWinch(-0.3);
+            // });
+            // operator.dS.whenReleased(() -> {
+            //     Robot.climber.stopWinch();
+            //     Robot.climber.engageBrake();
+            // });
         } else {
             // turret
             operator.bRB.whileHeld(Robot.turret::trackVision);
@@ -96,20 +127,17 @@ public class OI {
             // intake
             operator.bY.whenPressed(Robot.intake::toggle);
 
-            Robot.intake.setSpeed(
-                    Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
-
             operator.bRT.whileHeld(() -> {
                 Robot.hopper.update();
                 Robot.intake.setSpeed(1);
             });
-            operator.bLT.whileHeld(() -> {
-                Robot.hopper.reverse(.6);
-                Robot.intake.setSpeed(-1);
-            });
             operator.bRT.whenReleased(() -> {
                 Robot.hopper.stop();
                 Robot.intake.setSpeed(0);
+            });
+            operator.bLT.whileHeld(() -> {
+                Robot.hopper.reverse(.6);
+                Robot.intake.setSpeed(-1);
             });
             operator.bLT.whenReleased(() -> {
                 Robot.hopper.stop();
@@ -132,35 +160,6 @@ public class OI {
         // climber
         // operator.bX.whileHeld(() -> Robot.climber.testWinch());
         // operator.bX.whenReleased(() -> Robot.climber.testWinch());
-
-        //only for testing - pt 1
-        //driver.bX.whenPressed(() -> Robot.climber.engageBrake());
-        //driver.bY.whenPressed(() -> Robot.climber.disengageBrake());
-        
-        // pt 2 testing
-        // driver.bA.whileHeld(() -> {
-        //     Robot.climber.disengageBrake();
-        //     Robot.climber.testWinch();
-        // });
-        // driver.bA.whenReleased(() -> {
-        //     Robot.climber.engageBrake();
-        // });
-
-        // driver.bLB.whileHeld(() -> {
-
-        //     Robot.climber.disengageBrake();
-
-        // });
-
-        // //pt 3 testing
-        // driver.bA.whenPressed(() -> {
-        //     Robot.climber.disengageBrake();
-        //     Robot.climber.moveArmUp(0, 0); //TODO: set parameters
-        //     Robot.climber.engageBrake();
-        // });
-
-
-
 
         updateSD();
     }
