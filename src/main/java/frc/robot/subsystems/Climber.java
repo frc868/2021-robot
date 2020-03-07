@@ -168,15 +168,26 @@ public class Climber {
      * Climbs based on joystick inputs with no closed-loop control.
      * @param holdPower the power to hold the motor at
      */
-    public void manualClimb(double holdPower) {
-        if (OI.driver.getLY() > holdPower) {
+    public void manualClimb(double power) {
+        if (OI.operator.getLY() > .5) {
             disengageBrake();
-            primary_winch.set(OI.driver.getLY());
-        } if (OI.driver.getLY() < -.05) {
+            primary_winch.set(power);
+        } else if (OI.driver.getLY() < -.5) {
             disengageBrake();
-            primary_winch.set(OI.driver.getLY() + holdPower);
+            primary_winch.set(-power);
         } else {
            engageBrake(); 
+           stopWinch();
+        }
+    }
+
+    public void manualArm(double armPower) {
+        if (OI.operator.getRY() > 0) {
+            setSpeedArm(armPower);
+        } else if (OI.operator.getLY() < 0) {
+            setSpeedArm(-armPower);
+        } else {
+           setSpeedArm(0);
         }
     }
 
