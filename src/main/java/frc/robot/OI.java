@@ -27,7 +27,10 @@ public class OI {
         // HUGE MEGA TODO: figure out controls with driver and operator
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.drivetrain.arcadeDrive(1);
-        //TODO: change manual turret to joystick
+        // TODO: change manual turret to joystick
+        // TESTING TODO: delete these after they're tested
+        operator.bLB.whenPressed(() -> Robot.turret.safeZone());
+        // -----------------------------------------------
 
         // DRIVER CONTROLS
 
