@@ -22,45 +22,90 @@ public class OI {
 
     public static void update() {
         // GENERAL CONTROLS/CONTROL METHODS
-        Robot.drivetrain.arcadeDrive(1);
         Robot.turret.manualTurret();
 
         // DRIVER CONTROLS
-        driver.bMENU.whenPressed(operator::toggleAltMode);
-
-        // turret
-        driver.bRB.whileHeld(Robot.turret::trackVision);
-        driver.bRB.whenReleased(Robot.turret::stop);
-
-        // only for testing - pt 1
-        driver.bX.whenPressed(Robot.climber::engageBrake);
-        driver.bY.whenPressed(Robot.climber::disengageBrake);
-        driver.bA.whileHeld(Robot.climber::testWinch);
-
-        // pt 2 testing
-        driver.bA.whileHeld(() -> {
-            Robot.climber.setEngaged(false);
-            Robot.climber.testWinch();
-
+        driver.bMENU.whenPressed(() -> {
+            driver.toggleAltMode();
+            operator.toggleAltMode();
         });
-        driver.bA.whenReleased(() -> {
-            Robot.climber.setEngaged(true);
-            Robot.climber.disengageBrake();
-        });
-
-        // pt 3 testing
-        driver.bB.whenPressed(() -> {
-            Robot.climber.disengageBrake();
-            Robot.climber.moveArmUp(0, 0); //TODO: set parameters
+        driver.bMENU.whenReleased(() -> {
+            Robot.climber.stopWinch();
             Robot.climber.engageBrake();
         });
 
+        if (driver.isAltMode()) {
+            Robot.drivetrain.arcadeDrive(0.4);
+        } else {
+            Robot.drivetrain.arcadeDrive(1);
+        }
+
+        // turret
+        driver.bRB.whileHeld(Robot.turret::trackVision);
+        driver.bRB.whenReleased(Robot.turret::stop);        
+
+        driver.bY.whenPressed(() -> Robot.climber.setSpeedArm(0.1));
+        driver.bY.whenReleased(Robot.climber::stopArm);
+        driver.bA.whenPressed(() -> Robot.climber.setSpeedArm(-0.1));
+        driver.bA.whenReleased(Robot.climber::stopArm);
+
         // OPERATOR CONTROLS
         // set the operator mode state
-        operator.bMENU.whenPressed(operator::toggleAltMode);
+        operator.bMENU.whenPressed(() -> {
+            driver.toggleAltMode();
+            operator.toggleAltMode();
+        });
+        operator.bMENU.whenReleased(() -> {
+            Robot.climber.stopWinch();
+            Robot.climber.engageBrake();
+        });
 
         if (operator.isAltMode()) {
-            // TODO: set these controls
+            System.out.println("=== ALT MODE ENABLED ===");
+            operator.trigLSTK.whenPressed(() -> {
+                if (operator.getLY() > 0) {
+                    Robot.climber.disengageBrake();
+                    Robot.climber.setSpeedWinch(0.3); // TODO Test value
+                } else if (operator.getLY() < 0) {
+                    Robot.climber.disengageBrake();
+                    Robot.climber.setSpeedWinch(-0.3);
+                } else {
+                    Robot.climber.stopWinch();
+                    Robot.climber.engageBrake();
+                }
+            });
+            operator.trigRSTK.whenPressed(() -> {
+                if (operator.getRY() > 0) {
+                    Robot.climber.setSpeedArm(0.1);
+                } else if (operator.getRY() < 0) {
+                    Robot.climber.setSpeedArm(-0.1);
+                } else {
+                    Robot.climber.setSpeedArm(0);
+                }
+            });
+            operator.dN.whenPressed(() -> {
+                Robot.climber.moveArmUp(0.1);
+            });
+            operator.dS.whenPressed(() -> {
+                Robot.climber.moveArmDown(-0.1);
+                Robot.climber.activateWinch();
+            });
+            // operator.dN.whenPressed(() -> {
+            //     Robot.climber.disengageBrake();
+            //     Robot.climber.setSpeedWinch(0.3);
+            // });
+            // operator.dN.whenReleased(() -> {
+            //     Robot.climber.stopWinch();
+            //     Robot.climber.engageBrake();
+            // });
+            // operator.dS.whenPressed(() -> {
+            //     Robot.climber.disengageBrake();
+            //     Robot.climber.setSpeedWinch(-0.3);
+            // });
+            // operator.dS.whenReleased(() -> {
+            //     Robot.climber.stopWinch();
+            //     Robot.climber.engageBrake();
+            // });
         } else {
             // turret
             operator.bRB.whileHeld(Robot.turret::trackVision);
@@ -75,20 +120,17 @@ public class OI {
             // intake
             operator.bY.whenPressed(Robot.intake::toggle);
 
-            Robot.intake.setSpeed(
-                    Helper.analogToDigital(operator.getRT(), .1, 1) - Helper.analogToDigital(operator.getLT(), .1, 1));
-
             operator.bRT.whileHeld(() -> {
                 Robot.hopper.update();
                 Robot.intake.setSpeed(1);
             });
-            operator.bLT.whileHeld(() -> {
-                Robot.hopper.reverse(.6);
-                Robot.intake.setSpeed(-1);
-            });
             operator.bRT.whenReleased(() -> {
                 Robot.hopper.stop();
                 Robot.intake.setSpeed(0);
+            });
+            operator.bLT.whileHeld(() -> {
+                Robot.hopper.reverse(.6);
+                Robot.intake.setSpeed(-1);
             });
             operator.bLT.whenReleased(() -> {
                 Robot.hopper.stop();
@@ -108,6 +150,10 @@ public class OI {
         driver.updateStates();
         operator.updateStates();
 
+        // climber
+        // operator.bX.whileHeld(() -> Robot.climber.testWinch());
+        // operator.bX.whenReleased(() -> Robot.climber.testWinch());
+
         updateSD();
     }
 
@@ -115,19 +161,19 @@ public class OI {
     }
 
     public static void updateSD() {
-        SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
-        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
-        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
-        SmartDashboard.putNumber("CL_deploy", Robot.climber.getArmPosition());
-        SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
+        // SmartDashboard.putString("WoF Color", Robot.wheel.toString());
+        // SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        // SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        // SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+        SmartDashboard.putNumber("CL_Winch", Robot.climber.getWinchPosition());
+        SmartDashboard.putNumber("CL_Arm", Robot.climber.getArmPosition());
+        SmartDashboard.putBoolean("CL_Sensor", Robot.climber.getArmDeploy());
+        // SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
 
-        SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
-        SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
+        // SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
+        // SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
 
-        SmartDashboard.putNumber("Left trigger", operator.getLT());
-        SmartDashboard.putNumber("Right trigger", operator.getRT());
-
-        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
+        // SmartDashboard.putNumber("Left trigger", operator.getLT());
+        // SmartDashboard.putNumber("Right trigger", operator.getRT());
     }
 }
