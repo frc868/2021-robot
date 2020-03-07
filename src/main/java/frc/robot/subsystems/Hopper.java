@@ -15,7 +15,8 @@ import frc.robot.RobotMap;
 public class Hopper {
     private static Hopper instance;
 
-    private DigitalInput botSensor;
+    private DigitalInput botSensorL;
+    private DigitalInput botSensorR;
     private DigitalInput midLeftLim;
     private DigitalInput topLeftLim;
 
@@ -35,7 +36,9 @@ public class Hopper {
     private boolean isCompBot = true;
 
     private Hopper(boolean compBot) {
-        botSensor = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT);
+        botSensorL = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT_LEFT);
+        botSensorR = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT_RIGHT);
+        
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
 
@@ -197,7 +200,7 @@ public class Hopper {
      * @author igc
      */
     public boolean getBotSensor() {
-        return !botSensor.get();
+        return !botSensorL.get() || !botSensorR.get();
     }
 
     /**
