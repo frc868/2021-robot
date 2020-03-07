@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.helpers.Helper;
 
 /**
  * The shooter subsystem consists of the two-neo shooter mounted on the robot's
@@ -106,6 +107,17 @@ public class Shooter {
     }
 
     /**
+     * Checks whether the shooter is within a range of its target RPM.
+     * @return is shooter at target
+     */
+    public boolean atTarget() {
+        return Helper.tolerance(
+            primary.getEncoder().getVelocity(),
+            SmartDashboard.getNumber("Setpoint", 0),
+            0.01);
+    }
+
+    /**
      * Manually sets the speed of the motors.
      * @param speed the speed from -1 to 1
      */
@@ -136,7 +148,7 @@ public class Shooter {
      * @author hrl
      */
     public void shootUntilClear(double rpm) {
-        Robot.hopper.forward();
+        Robot.hopper.forward(this.atTarget());
         this.setpoint = rpm;
         this.update();
     }

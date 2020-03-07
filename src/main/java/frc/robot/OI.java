@@ -44,17 +44,10 @@ public class OI {
         driver.bRB.whileHeld(Robot.turret::trackVision);
         driver.bRB.whenReleased(Robot.turret::stop);        
 
-        driver.bY.whenPressed(() -> Robot.climber.manualArm(0.1));
+        driver.bY.whenPressed(() -> Robot.climber.setSpeedArm(0.1));
         driver.bY.whenReleased(Robot.climber::stopArm);
-        driver.bA.whenPressed(() -> Robot.climber.manualArm(-0.1));
+        driver.bA.whenPressed(() -> Robot.climber.setSpeedArm(-0.1));
         driver.bA.whenReleased(Robot.climber::stopArm);
-
-        // pt 3 testing
-        driver.bB.whenPressed(() -> {
-            Robot.climber.disengageBrake();
-            Robot.climber.moveArmUp(0, 0); //TODO: set parameters
-            Robot.climber.engageBrake();
-        });
 
         // OPERATOR CONTROLS
         // set the operator mode state
@@ -93,7 +86,7 @@ public class OI {
             operator.dN.whenPressed(() -> {
                 Robot.climber.moveArmUp(0.1);
             });
-            operator.dS.whenReleased(() -> {
+            operator.dS.whenPressed(() -> {
                 Robot.climber.moveArmDown(-0.1);
                 Robot.climber.activateWinch();
             });
@@ -121,7 +114,7 @@ public class OI {
             // shoot
             operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
             operator.bA.whenReleased(Robot.shooter::stop);
-            operator.bSTART.whileHeld(Robot.hopper::forward);
+            operator.bSTART.whileHeld(() -> Robot.hopper.forward(true));
             operator.bSTART.whenReleased(Robot.hopper::stop);
 
             // intake

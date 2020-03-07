@@ -116,7 +116,7 @@ public class HeadOn extends AutonPath {
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
                 Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-                Robot.hopper.forward();
+                Robot.hopper.forward(true);
                 // Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
             }
 
