@@ -60,7 +60,7 @@ public class ControllerWrapper {
         bRT = new ButtonWrapper(this.controller, RobotMap.Controllers.RT, true);
         bLT = new ButtonWrapper(this.controller, RobotMap.Controllers.LT, true);
 
-        //stick Y axis to buttons
+        // stick Y axis to buttons
         trigLSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.LY, true);
         trigRSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.RY, true);
 
