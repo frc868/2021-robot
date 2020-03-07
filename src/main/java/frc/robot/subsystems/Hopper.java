@@ -121,9 +121,8 @@ public class Hopper {
             } else {
                 feeder.set(1);
             }
-        }
-        else {
-
+        } else {
+            this.stop();
         }
     }
 

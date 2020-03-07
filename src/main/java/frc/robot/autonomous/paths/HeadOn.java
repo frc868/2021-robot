@@ -19,13 +19,11 @@ import frc.robot.autonomous.AutonPath;
  */
 public class HeadOn extends AutonPath {
     private static double currentDistance = 0;
-    private static double currentVelocity = 0;
     private static Timer shootDelay = new Timer();
     private static double setpoint = AutonMap.HeadOn.SHOOTER_RPM;
     private static double startPower = AutonMap.HeadOn.START_POWER;
     private HeadOnState currentState = HeadOnState.ToShootPosition;
 
-    // TODO: refactor this to not do dead reckoning at bloomington
     private enum HeadOnState {
         ToShootPosition {
             @Override
@@ -34,12 +32,13 @@ public class HeadOn extends AutonPath {
                 if (currentDistance < AutonMap.HeadOn.DISTANCE - 1) {
                     return this;
                 }
-                return ReadyToReady;
+                // return ReadyToReady;
+                return Readying;
             }
 
             @Override
             public void run() {
-                Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE, AutonMap.HeadOn.START_POWER,
+                Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE, startPower,
                         AutonMap.HeadOn.END_POWER);
                 shootDelay.start();
             }
@@ -49,27 +48,27 @@ public class HeadOn extends AutonPath {
                 return "Moving";
             }
         },
-        ReadyToReady {
-            @Override
-            public HeadOnState nextState() {
-                return Readying;
-            }
+        // ReadyToReady {
+        //     @Override
+        //     public HeadOnState nextState() {
+        //         return Readying;
+        //     }
 
-            @Override
-            public void run() {
-                shootDelay.start();
-            }
+        //     @Override
+        //     public void run() {
+        //         shootDelay.start();
+        //     }
 
-            @Override
-            public String toString() {
-                return "Setting timer";
-            }
-        },
+        //     @Override
+        //     public String toString() {
+        //         return "Setting timer";
+        //     }
+        // },
         Readying {
             @Override
             public HeadOnState nextState() {
-                // TODO: this should check velocity of shooter
-                if (shootDelay.get() < 3) {
+                // if (shootDelay.get() < 3) {
+                if (!Robot.shooter.atTarget()) {
                     return this;
                 }
                 return ReadyToShoot;
@@ -78,8 +77,8 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-                // Robot.shooter.update(setpoint);
+                // Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
+                Robot.shooter.update(setpoint);
             }
 
             @Override
@@ -115,9 +114,9 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-                Robot.hopper.forward(true);
-                // Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
+                // Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
+                // Robot.hopper.forward(true);
+                Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
             }
 
             @Override
@@ -173,7 +172,6 @@ public class HeadOn extends AutonPath {
     public void run() {
         // update state variables
         currentDistance = Robot.drivetrain.getCurrentDistance();
-        currentVelocity = Robot.shooter.getRPM();
 
         SmartDashboard.putString("Auton state", this.currentState.toString());
         this.currentState.run();

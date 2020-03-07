@@ -113,7 +113,7 @@ public class Shooter {
     public boolean atTarget() {
         return Helper.tolerance(
             primary.getEncoder().getVelocity(),
-            SmartDashboard.getNumber("Setpoint", 0),
+            this.setpoint,
             0.01);
     }
 
