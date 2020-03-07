@@ -46,12 +46,12 @@ public class Shooter {
         
         pid = primary.getPIDController();
 
-        SmartDashboard.putNumber("kP", 0);
-        SmartDashboard.putNumber("kI", 0);
-        SmartDashboard.putNumber("kD", 0);
-        SmartDashboard.putNumber("kFF", 0);
-        SmartDashboard.putNumber("kIa", 0);
-        SmartDashboard.putNumber("Setpoint", 0);
+        // SmartDashboard.putNumber("kP", 0);
+        // SmartDashboard.putNumber("kI", 0);
+        // SmartDashboard.putNumber("kD", 0);
+        // SmartDashboard.putNumber("kFF", 0);
+        // SmartDashboard.putNumber("kIa", 0);
+        // SmartDashboard.putNumber("Setpoint", 0);
     }
 
     /**
@@ -69,18 +69,24 @@ public class Shooter {
      * Sets the PID gains and setpoint for the PID controller.
      */
     public void init() {
-        kP = SmartDashboard.getNumber("kP", 0);
-        kI = SmartDashboard.getNumber("kI", 0);
-        kD = SmartDashboard.getNumber("kD", 0);
-        kFF = SmartDashboard.getNumber("kFF", 0);
-        kIa = SmartDashboard.getNumber("kIa", 0);
-        setpoint = SmartDashboard.getNumber("Setpoint", RobotMap.Shooter.SHOOTER_DEFAULT_SPEED);
+        // kP = SmartDashboard.getNumber("kP", 0);
+        // kI = SmartDashboard.getNumber("kI", 0);
+        // kD = SmartDashboard.getNumber("kD", 0);
+        // kFF = SmartDashboard.getNumber("kFF", 0);
+        // kIa = SmartDashboard.getNumber("kIa", 0);
+        // setpoint = SmartDashboard.getNumber("Setpoint", RobotMap.Shooter.SHOOTER_DEFAULT_SPEED);
 
-        pid.setP(kP/1000);
-        pid.setI(kI/1000);
-        pid.setD(kD/1000);
-        pid.setFF(kFF/1000);
-        pid.setIMaxAccum(kIa, 0);
+        // pid.setP(kP/1000);
+        // pid.setI(kI/1000);
+        // pid.setD(kD/1000);
+        // pid.setFF(kFF/1000);
+        // pid.setIMaxAccum(kIa, 0);
+
+        kP = 0.2/1000;
+        kI = 0.00001/1000;
+        kD = 0.03/1000;
+        kFF = 0.175/1000;
+        kIa = 2;
 
         if (this.kI == 0) {
             pid.setIAccum(0);
