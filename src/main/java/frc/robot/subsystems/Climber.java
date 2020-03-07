@@ -184,7 +184,7 @@ public class Climber {
 
     public void manualArm(/*double armPower*/) {
         // if (OI.operator.getRY() > .5) {
-            if(OI.operator.isAltMode()) {
+            if (OI.operator.isAltMode()) {
                 setSpeedArm(0.5*(-OI.operator.getRY()));
             }
         // } else if (OI.operator.getRY() < -.5) {
