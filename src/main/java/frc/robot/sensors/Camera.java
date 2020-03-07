@@ -72,6 +72,13 @@ public class Camera {
     //     return RobotMap.Camera.AREA_MULTIPLIER_INCHES * Math.sqrt(getArea()); // TODO: implement after data collection
     // }
 
+    // public double getCalculatedRPM() {
+    //     dist = getCalculatedDistance();
+    //     speed = 0.3205*Math.pow(dist,6) - 11.175*Math.pow(dist,5) + 160.74*Math.pow(dist,4) - 1223.4*Math.pow(dist,3) + 5214.3*Math.pow(dist,2) - 11609*dist + 14241;
+    // }
+
+
+
     /**
      * Get the x-position of the target, if detected.
      * @return 0.0 if no target, x-position otherwise

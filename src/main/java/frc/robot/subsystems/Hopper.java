@@ -200,7 +200,15 @@ public class Hopper {
      * @author igc
      */
     public boolean getBotSensor() {
-        return !botSensorL.get() || !botSensorR.get();
+        return getBotLeftSensor() || getBotRightSensor();
+    }
+
+    public boolean getBotLeftSensor() {
+        return !botSensorL.get();
+    }
+
+    public boolean getBotRightSensor() {
+        return !botSensorR.get();
     }
 
     /**

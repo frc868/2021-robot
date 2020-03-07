@@ -88,6 +88,12 @@ public class Shooter {
         kFF = 0.175/1000;
         kIa = 2;
 
+        pid.setP(kP);
+        pid.setI(kI);
+        pid.setD(kD);
+        pid.setFF(kFF);
+        pid.setIAccum(kIa);
+
         if (this.kI == 0) {
             pid.setIAccum(0);
         }

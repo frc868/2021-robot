@@ -46,7 +46,7 @@ public class OI {
         operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
         operator.bA.whenReleased(() -> Robot.shooter.stop());
         operator.bSTART.whileHeld(() -> {
-            Robot.shooter.update();
+            Robot.shooter.update(3400);
             // Robot.shooter.update(Robot.turret.getCalculatedDistance()); // TODO: needs testing
             Robot.hopper.forward(Robot.shooter.atTarget());
         });
@@ -111,7 +111,9 @@ public class OI {
 
     public static void updateSD() {
         SmartDashboard.putString("WoF Color", Robot.wheel.toString());
-        SmartDashboard.putBoolean("Bot Sensor", Robot.hopper.getBotSensor());
+        SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
+        SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
+
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
         SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
