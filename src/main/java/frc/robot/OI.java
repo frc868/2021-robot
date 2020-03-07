@@ -42,9 +42,9 @@ public class OI {
         driver.bRB.whileHeld(Robot.turret::trackVision);
         driver.bRB.whenReleased(Robot.turret::stop);
 
-        driver.bY.whenPressed(() -> Robot.climber.manualArm(0.1));
-        driver.bY.whenReleased(Robot.climber::stopArm);
-        driver.bA.whenPressed(() -> Robot.climber.manualArm(-0.1));
+        operator.bY.whileHeld(() -> Robot.climber.manualArm(0.1));
+        operator.bY.whenReleased(Robot.climber::stopArm);
+        driver.bA.whileHeld(() -> Robot.climber.manualArm(-0.1));
         driver.bA.whenReleased(Robot.climber::stopArm);
 
         // pt 3 testing
@@ -67,27 +67,35 @@ public class OI {
 
         if (operator.isAltMode()) {
             System.out.println("=== ALT MODE ENABLED ===");
-            operator.trigLSTK.whenPressed(() -> {
-                if (operator.getLY() > 0) {
-                    Robot.climber.disengageBrake();
-                    Robot.climber.setSpeedWinch(0.3); // TODO Test value
-                } else if (operator.getLY() < 0) {
-                    Robot.climber.disengageBrake();
-                    Robot.climber.setSpeedWinch(-0.3);
-                } else {
-                    Robot.climber.stopWinch();
-                    Robot.climber.engageBrake();
-                }
+            operator.trigLSTK.whileHeld(() -> {
+                Robot.climber.manualClimb(RobotMap.Climber.HOLD_POWER);
             });
-            operator.trigRSTK.whenPressed(() -> {
-                if (operator.getRY() > 0) {
-                    Robot.climber.setSpeedArm(0.1);
-                } else if (operator.getRY() < 0) {
-                    Robot.climber.setSpeedArm(-0.1);
-                } else {
-                    Robot.climber.setSpeedArm(0);
-                }
+            operator.trigRSTK.whileHeld(() -> {
+                Robot.climber.setSpeedArm(RobotMap.Climber.ARM_POWER);
             });
+
+            // operator.trigLSTK.whenPressed(() -> {
+            //     if (operator.getLY() > 0) {
+            //         Robot.climber.disengageBrake();
+            //         Robot.climber.setSpeedWinch(0.3); // TODO Test value
+            //     } else if (operator.getLY() < 0) {
+            //         Robot.climber.disengageBrake();
+            //         Robot.climber.setSpeedWinch(-0.3);
+            //     } else {
+            //         Robot.climber.stopWinch();
+            //         Robot.climber.engageBrake();
+            //     }
+            // });
+            // operator.trigRSTK.whenPressed(() -> {
+            //     if (operator.getRY() > 0) {
+            //         Robot.climber.setSpeedArm(0.1);
+            //     } else if (operator.getRY() < 0) {
+            //         Robot.climber.setSpeedArm(-0.1);
+            //     } else {
+            //         Robot.climber.setSpeedArm(0);
+            //     }
+            // });
+            // TODO: check these 2020-03-07
             operator.dN.whenPressed(() -> {
                 Robot.climber.moveArmUp(0.1);
             });
