@@ -17,10 +17,6 @@ public class RobotMap {
         public static final double AREA_MULTIPLIER_INCHES = 0; // TODO: untested
     }
 
-    public static class Climber {
-
-    }
-
     public static class Drivetrain {
         public static final int LEFT_PRIMARY = 12;
         public static final int LEFT_SECONDARY = 13;
@@ -171,6 +167,28 @@ public class RobotMap {
         public static final double[] YELLOW_VALUES = {0.361, 0.524, 0.113};
         public static final double[] BLANK = {0, 0, 0};
 
+    }
+
+    public static class Climber {
+        public static final int PRIMARY_WINCH = 5; // TODO: untested
+        public static final int SECONDARY_WINCH = 6; // TODO: untested
+        public static final boolean PRIMARY_WINCH_IS_INVERTED = true;
+
+        public static final int ARM = 9; // TODO: untested
+        public static final boolean ARM_IS_INVERTED = true;
+
+        public static final int ACTUATOR1 = 1; // TODO: untested
+        public static final int ACTUATOR2 = 6; // TODO: untested
+
+        public static final double ARM_SETPOINT = 0; //TODO: untested
+        public static final double WINCH_SETPOINT = 0; // TODO: untested
+        public static final double ARM_DOWNPOINT = 0; // dont think we need to test this as this is reseting the arm to the down postion
+        
+        public static final int ARM_DEPLOY_SENSOR = 9;
+        public static final boolean ARM_LAST_STATE_VALUE = true; // TODO: untested
+
+        public static final double HOLD_POWER = 0.3;
+        public static final double ARM_POWER = 0.1;
     }
 
     public static class Sensors {

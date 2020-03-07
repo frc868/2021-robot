@@ -63,8 +63,7 @@ public class ButtonWrapper extends Trigger {
             return this.controller.getPOV(this.id) == this.angle;
         }
         else if (isTrigger) {
-
-            return Math.abs(this.controller.getRawAxis(this.id)) > 0.5;
+            return this.controller.getRawAxis(this.id) > 0.5 || this.controller.getRawAxis(this.id) < -0.5;
         }
         return this.controller.getRawButton(this.id);
     }

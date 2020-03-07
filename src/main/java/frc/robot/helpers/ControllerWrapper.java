@@ -27,11 +27,13 @@ import frc.robot.RobotMap;
 public class ControllerWrapper {
     private XboxController controller;
     public ButtonWrapper bA, bB, bX, bY, bRB, bLB, bRSTK, bLSTK, bSTART, bMENU; // read: "button Menu"
-    public ButtonWrapper bRT, bLT;
+    public ButtonWrapper bRT, bLT, trigLSTK, trigRSTK;
     public ButtonWrapper dN, dE, dS, dW, dNE, dNW, dSE, dSW; // read: "d-pad North"
 
     private final double RUMBLE_DELAY = 0.3;
     private final boolean DEADZONE_ENABLED;
+
+    private boolean isAltMode = false;
 
     private Timer timer; // used for rumble timing
     private double deadzone = 0.1;
@@ -51,12 +53,17 @@ public class ControllerWrapper {
         // misc buttons
         bRB = new ButtonWrapper(this.controller, RobotMap.Controllers.RB);
         bLB = new ButtonWrapper(this.controller, RobotMap.Controllers.LB);
-        bRSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.RSTK);
-        bLSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.LSTK);
+        bRSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.RSTK, true);
+        bLSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.LSTK, true);
 
         // triggers to buttons
         bRT = new ButtonWrapper(this.controller, RobotMap.Controllers.RT, true);
         bLT = new ButtonWrapper(this.controller, RobotMap.Controllers.LT, true);
+
+        // stick Y axis to buttons
+        trigLSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.LY, true);
+        trigRSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.RY, true);
+
         // d-pad/"POV" buttons
         // reads angle value of the combined d-pad
         dN = new ButtonWrapper(this.controller, 0, RobotMap.Controllers.POV);
@@ -92,6 +99,9 @@ public class ControllerWrapper {
         bLB.updateState();
         bRSTK.updateState();
         bLSTK.updateState();
+
+        trigRSTK.updateState();
+        trigLSTK.updateState();
 
         dN.updateState();
         dNE.updateState();
@@ -178,6 +188,20 @@ public class ControllerWrapper {
      */
     public double getDeadzone() {
         return this.deadzone;
+    }
+
+    /**
+     * Sets the given controller to the alternate mode.
+     */
+    public void toggleAltMode() {
+        this.isAltMode = !this.isAltMode;
+    }
+
+    /**
+     * Retrieves as to whether the controller is in the alternate mode.
+     */
+    public boolean isAltMode() {
+        return this.isAltMode;
     }
 
     /**
