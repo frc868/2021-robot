@@ -60,91 +60,97 @@ public class OI {
             Robot.climber.engageBrake();
         });
 
-        if (operator.isAltMode()) {
-            System.out.println("=== ALT MODE ENABLED ===");
-            operator.trigLSTK.whenPressed(() -> {
-                if (operator.getLY() > 0) {
-                    Robot.climber.disengageBrake();
-                    Robot.climber.setSpeedWinch(0.3); // TODO Test value
-                } else if (operator.getLY() < 0) {
-                    Robot.climber.disengageBrake();
-                    Robot.climber.setSpeedWinch(-0.3);
-                } else {
-                    Robot.climber.stopWinch();
-                    Robot.climber.engageBrake();
-                }
-            });
-            operator.trigRSTK.whenPressed(() -> {
-                if (operator.getRY() > 0) {
-                    Robot.climber.setSpeedArm(0.1);
-                } else if (operator.getRY() < 0) {
-                    Robot.climber.setSpeedArm(-0.1);
-                } else {
-                    Robot.climber.setSpeedArm(0);
-                }
-            });
-            operator.dN.whenPressed(() -> {
-                Robot.climber.moveArmUp(0.1);
-            });
-            operator.dS.whenPressed(() -> {
-                Robot.climber.moveArmDown(-0.1);
-                Robot.climber.activateWinch();
-            });
-            // operator.dN.whenPressed(() -> {
-            //     Robot.climber.disengageBrake();
-            //     Robot.climber.setSpeedWinch(0.3);
+        // if (operator.isAltMode()) {
+        //     System.out.println("=== ALT MODE ENABLED ===");
+            // operator.trigLSTK.whileHeld(() -> {
+            //     if (operator.getLY() > 0) {
+            //         Robot.climber.disengageBrake();
+            //         Robot.climber.setSpeedWinch(0.3); // TODO Test value
+            //     } else if (operator.getLY() < 0) {
+            //         Robot.climber.disengageBrake();
+            //         Robot.climber.setSpeedWinch(-0.3);
+            //     } else {
+            //         Robot.climber.stopWinch();
+            //         Robot.climber.engageBrake();
+            //     }
             // });
-            // operator.dN.whenReleased(() -> {
-            //     Robot.climber.stopWinch();
-            //     Robot.climber.engageBrake();
+            // operator.trigLSTK.whenReleased(() -> Robot.climber.stopWinch());
+
+            // operator.trigRSTK.whileHeld(() -> {
+            //     if (operator.getRY() > 0) {
+            //         Robot.climber.setSpeedArm(0.1);
+            //     } else if (operator.getRY() < 0) {
+            //         Robot.climber.setSpeedArm(-0.1);
+            //     } else {
+            //         Robot.climber.setSpeedArm(0);
+            //     }
+            // });
+            // operator.trigRSTK.whenReleased(() -> Robot.climber.stopArm());
+
+            // operator.dN.whenPressed(() -> {
+            //     Robot.climber.moveArmUp(0.1);
             // });
             // operator.dS.whenPressed(() -> {
-            //     Robot.climber.disengageBrake();
-            //     Robot.climber.setSpeedWinch(-0.3);
+            //     Robot.climber.moveArmDown(-0.1);
+            //     Robot.climber.activateWinch();
             // });
-            // operator.dS.whenReleased(() -> {
-            //     Robot.climber.stopWinch();
-            //     Robot.climber.engageBrake();
-            // });
-        } else {
-            // turret
-            operator.bRB.whileHeld(Robot.turret::trackVision);
-            operator.bRB.whenReleased(Robot.turret::stop);
-
-            // shoot
-            operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
-            operator.bA.whenReleased(Robot.shooter::stop);
-            operator.bSTART.whileHeld(() -> Robot.hopper.forward(true));
-            operator.bSTART.whenReleased(Robot.hopper::stop);
-
-            // intake
-            operator.bY.whenPressed(Robot.intake::toggle);
-
-            operator.bRT.whileHeld(() -> {
-                Robot.hopper.update();
-                Robot.intake.setSpeed(1);
+            operator.dN.whenPressed(() -> {
+                Robot.climber.disengageBrake();
+                Robot.climber.setSpeedWinch(0.3);
             });
-            operator.bRT.whenReleased(() -> {
-                Robot.hopper.stop();
-                Robot.intake.setSpeed(0);
+            operator.dN.whenReleased(() -> {
+                Robot.climber.stopWinch();
+                Robot.climber.engageBrake();
             });
-            operator.bLT.whileHeld(() -> {
-                Robot.hopper.reverse(.6);
-                Robot.intake.setSpeed(-1);
+            operator.dS.whenPressed(() -> {
+                Robot.climber.disengageBrake();
+                Robot.climber.setSpeedWinch(-0.3);
             });
-            operator.bLT.whenReleased(() -> {
-                Robot.hopper.stop();
-                Robot.intake.setSpeed(0);
+            operator.dS.whenReleased(() -> {
+                Robot.climber.stopWinch();
+                Robot.climber.engageBrake();
             });
+        // } else {
+        //     // turret
+        //     operator.bRB.whileHeld(Robot.turret::trackVision);
+        //     operator.bRB.whenReleased(Robot.turret::stop);
 
-            // hopper
-            operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
-            operator.bB.whenReleased(Robot.hopper::stop);
+        //     // shoot
+        //     operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
+        //     operator.bA.whenReleased(Robot.shooter::stop);
+        //     operator.bSTART.whileHeld(() -> Robot.hopper.forward(true));
+        //     operator.bSTART.whenReleased(Robot.hopper::stop);
 
-            // WOF
-            operator.dN.whenPressed(Robot.wheel::actuatorUp);
-            operator.dS.whenPressed(Robot.wheel::actuatorDown);
-        }
+        //     // intake
+        //     operator.bY.whenPressed(Robot.intake::toggle);
+
+        //     operator.bRT.whileHeld(() -> {
+        //         Robot.hopper.update();
+        //         Robot.intake.setSpeed(1);
+        //     });
+        //     operator.bRT.whenReleased(() -> {
+        //         Robot.hopper.stop();
+        //         Robot.intake.setSpeed(0);
+        //     });
+        //     operator.bLT.whileHeld(() -> {
+        //         Robot.hopper.reverse(.6);
+        //         Robot.intake.setSpeed(-1);
+        //     });
+        //     operator.bLT.whenReleased(() -> {
+        //         Robot.hopper.stop();
+        //         Robot.intake.setSpeed(0);
+        //     });
+
+        //     // hopper
+        operator.bB.whenPressed(()-> Robot.shooter.update());
+        operator.bB.whenReleased(() -> Robot.shooter.stop());
+        //     operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+        //     operator.bB.whenReleased(Robot.hopper::stop);
+
+        //     // WOF
+        //     operator.dN.whenPressed(Robot.wheel::actuatorUp);
+        //     operator.dS.whenPressed(Robot.wheel::actuatorDown);
+        // }
 
         // if it hasn't already been handled...
         driver.updateStates();
