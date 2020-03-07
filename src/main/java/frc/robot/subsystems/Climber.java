@@ -182,24 +182,26 @@ public class Climber {
         }
     }
 
-    public void manualArm(double armPower) {
-        if (OI.operator.getRY() > 0) {
-            setSpeedArm(armPower);
-        } else if (OI.operator.getLY() < 0) {
-            setSpeedArm(-armPower);
-        } else {
-           setSpeedArm(0);
-        }
+    public void manualArm(/*double armPower*/) {
+        // if (OI.operator.getRY() > .5) {
+            if(OI.operator.isAltMode()) {
+                setSpeedArm(0.5*(-OI.operator.getRY()));
+            }
+        // } else if (OI.operator.getRY() < -.5) {
+        //     setSpeedArm(-armPower);
+        // } else {
+        //    setSpeedArm(0);
+        // }
     }
 
     public void setSpeedArm(double speed) {
-        if (getArmDeployToggled()) {
-            arm.set(Helper.boundValue(speed, -1, 0));
-        } else if (getArmPosition() == 0) {
-            arm.set(Helper.boundValue(speed, 0, 1));
-        } else {
+        // /*if (getArmDeployToggled()) {
+        //     arm.set(Helper.boundValue(speed, -1, 0));
+        // } else*/ if (getArmPosition() == 0) {
+        //     arm.set(Helper.boundValue(speed, 0, 1));
+        // } else {
             arm.set(speed);
-        }
+        //}
     }
 
     public void stopArm() {

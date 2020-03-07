@@ -21,6 +21,7 @@ public class OI {
     public static void update() {
         // GENERAL CONTROLS/CONTROL METHODS
         Robot.turret.manualTurret();
+        Robot.climber.manualArm();
 
         // DRIVER CONTROLS
         driver.bMENU.whenPressed(() -> {
@@ -58,13 +59,8 @@ public class OI {
         driver.bRB.whileHeld(Robot.turret::trackVision);
         driver.bRB.whenReleased(Robot.turret::stop);
 
-        // working manual arm
-//         driver.bA.whileHeld(() -> Robot.climber.manualArm(-0.1));
-//         driver.bA.whenReleased(Robot.climber::stopArm);
-// // ===========================================================
-//         // working manual arm
-//         operator.bY.whileHeld(() -> Robot.climber.manualArm(0.1));
-//         operator.bY.whenReleased(Robot.climber::stopArm);
+        //working manual arm
+       
         
 
         // OPERATOR CONTROLS
@@ -80,14 +76,27 @@ public class OI {
 
         if (operator.isAltMode()) {
             System.out.println("=== ALT MODE ENABLED ===");
-
+            // operator.bA.whileHeld(() -> Robot.climber.manualArm(-0.3));
+            // operator.bA.whenReleased(Robot.climber::stopArm);
+    // ===========================================================
+            // working manual arm
+            // operator.bY.whileHeld(() -> Robot.climber.manualArm(0.3));
+            // operator.bY.whenReleased(Robot.climber::stopArm);
             //
-            operator.trigLSTK.whileHeld(() -> {
-                Robot.climber.manualClimb(RobotMap.Climber.HOLD_POWER);
-            });
-            operator.trigRSTK.whileHeld(() -> {
-                Robot.climber.setSpeedArm(RobotMap.Climber.ARM_POWER);
-            });
+            // operator.trigLSTK.whileHeld(() -> {
+            //     Robot.climber.manualClimb(RobotMap.Climber.HOLD_POWER);
+            // });
+            // operator.trigRSTK.whileHeld(() -> {
+            //     Robot.climber.setSpeedArm(RobotMap.Climber.ARM_POWER);
+            // });
+
+            // operator.trigRSTK.whenReleased(() -> {
+            //     Robot.climber.stopArm();
+            // });
+            // operator.trigLSTK.whenReleased(() -> {
+            //     Robot.climber.stopWinch();
+            // });
+
 
             // operator.trigLSTK.whenPressed(() -> {
             //     if (operator.getLY() > 0) {
@@ -113,31 +122,31 @@ public class OI {
             // TODO: check these 2020-03-07
             
             //auto mode
-            operator.dN.whenPressed(() -> {
-                Robot.climber.moveArmUp(0.1);
-            });
-            operator.dS.whenReleased(() -> {
-                Robot.climber.moveArmDown(-0.1);
-                Robot.climber.activateWinch();
-            });
-
-            //working winch
             // operator.dN.whenPressed(() -> {
-            //     Robot.climber.disengageBrake();
-            //     Robot.climber.setSpeedWinch(0.3);
-            // });
-            // operator.dN.whenReleased(() -> {
-            //     Robot.climber.stopWinch();
-            //     Robot.climber.engageBrake();
-            // });
-            // operator.dS.whenPressed(() -> {
-            //     Robot.climber.disengageBrake();
-            //     Robot.climber.setSpeedWinch(-0.3);
+            //     Robot.climber.moveArmUp(0.1);
             // });
             // operator.dS.whenReleased(() -> {
-            //     Robot.climber.stopWinch();
-            //     Robot.climber.engageBrake();
+            //     Robot.climber.moveArmDown(-0.1);
+            //     Robot.climber.activateWinch();
             // });
+
+            //working winch
+            operator.dN.whenPressed(() -> {
+                Robot.climber.disengageBrake();
+                Robot.climber.setSpeedWinch(0.3);
+            });
+            operator.dN.whenReleased(() -> {
+                Robot.climber.stopWinch();
+                Robot.climber.engageBrake();
+            });
+            operator.dS.whenPressed(() -> {
+                Robot.climber.disengageBrake();
+                Robot.climber.setSpeedWinch(-0.3);
+            });
+            operator.dS.whenReleased(() -> {
+                Robot.climber.stopWinch();
+                Robot.climber.engageBrake();
+            });
         } else {
             // turret
             operator.bRB.whileHeld(Robot.turret::trackVision);
