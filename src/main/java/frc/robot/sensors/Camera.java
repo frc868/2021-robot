@@ -10,8 +10,7 @@ package frc.robot.sensors;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
-import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Controls the Limelight camera connected to the robot over NetworkTables.
@@ -50,6 +49,7 @@ public class Camera {
         tArea = table.getEntry("ta"); // target area
         tXpos = table.getEntry("tx"); // target x-position (y unused)
         tAngle = table.getEntry("ts"); // target angle/"skew"
+        // tDist = table.getEntry()
     }
 
     /**
@@ -68,13 +68,23 @@ public class Camera {
         return tArea.getDouble(0.0);
     }
 
-    // public double getCalculatedDistance() {
-    //     return RobotMap.Camera.AREA_MULTIPLIER_INCHES * Math.sqrt(getArea()); // TODO: implement after data collection
-    // }
+    public double getCalculatedDistance() {
+        // return RobotMap.Camera.AREA_MULTIPLIER_INCHES * Math.sqrt(getArea()); // TODO: implement after data collection
+        double dist =  258 - 74.5 * getArea() + 3.04 * Math.pow(getArea(), 2);
+        dist = dist/39.37;
+        System.out.println(dist);
+        return dist;
+    }
 
-    // public double getCalculatedRPM() {
-    //     dist = getCalculatedDistance();
-    //     speed = 0.3205*Math.pow(dist,6) - 11.175*Math.pow(dist,5) + 160.74*Math.pow(dist,4) - 1223.4*Math.pow(dist,3) + 5214.3*Math.pow(dist,2) - 11609*dist + 14241;
+    public double getCalculatedRPM() {
+        double dist = getCalculatedDistance();
+        double speed = 0.3205*Math.pow(dist,6) - 11.175*Math.pow(dist,5) + 160.74*Math.pow(dist,4) - 1223.4*Math.pow(dist,3) + 5214.3*Math.pow(dist,2) - 11609*dist + 14241;
+        SmartDashboard.putNumber("Speed!!!", speed);
+        return speed;
+    }
+
+    // public double getCalculatedVisionOffset() {
+    //     return getCalculatedDistance() * RobotMap.Camera.OFFSET_SCALE;
     // }
 
 
