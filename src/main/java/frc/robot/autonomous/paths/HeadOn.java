@@ -40,7 +40,6 @@ public class HeadOn extends AutonPath {
             public void run() {
                 Robot.drivetrain.driveStraight(AutonMap.HeadOn.DISTANCE, startPower,
                         AutonMap.HeadOn.END_POWER);
-                shootDelay.start();
             }
 
             @Override
@@ -78,7 +77,7 @@ public class HeadOn extends AutonPath {
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
                 // Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-                Robot.shooter.update(setpoint);
+                Robot.shooter.update(AutonMap.HeadOn.SHOOTER_RPM);
             }
 
             @Override
@@ -94,7 +93,7 @@ public class HeadOn extends AutonPath {
 
             @Override
             public void run() {
-                shootDelay.reset();
+                shootDelay.start();
             }
 
             @Override
@@ -162,7 +161,8 @@ public class HeadOn extends AutonPath {
     }
 
     public HeadOn() {
-        // NOTE: intentionally a stub
+        startPower = AutonMap.HeadOn.START_POWER;
+        setpoint = AutonMap.HeadOn.SHOOTER_RPM;
     }
 
     /**
