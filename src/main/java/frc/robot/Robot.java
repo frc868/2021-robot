@@ -20,7 +20,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.WheelOfFortune;
 
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
@@ -38,7 +37,6 @@ public class Robot extends TimedRobot {
     public static Hopper hopper = Hopper.getInstance(true);
     public static Shooter shooter = Shooter.getInstance();
     public static Turret turret = Turret.getInstance(true);
-    public static WheelOfFortune wheel = WheelOfFortune.getInstance();
 
     @Override
     public void disabledInit() {
@@ -55,7 +53,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         camera.update();
         leds.colorInventory();
-        System.out.println(camera.toString());
+        // System.out.println(camera.toString());
     }
 
     @Override
@@ -63,14 +61,13 @@ public class Robot extends TimedRobot {
         drivetrain.resetInitialDistance();
         drivetrain.resetEncoderPositions();
         gyro.reset();
-
-        wheel.actuatorDown();
     }
 
     @Override
     public void autonomousPeriodic() {
         auton.runSelectedPath();
         turret.trackVision();
+        OI.updateSD();
         Scheduler.getInstance().run();
     }
 
