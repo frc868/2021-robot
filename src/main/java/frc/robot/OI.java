@@ -62,8 +62,14 @@ public class OI {
         operator.bRB.whenReleased(() -> Robot.turret.stop());
 
         // shoot
-        operator.bSTART.whileHeld(() -> Robot.shooter.setSpeed(0.6));
-        operator.bSTART.whenReleased(() -> Robot.shooter.stop());
+        operator.bSTART.whileHeld(() -> {
+            Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD);
+            Robot.hopper.forward(Robot.shooter.atTarget());
+        });
+        operator.bSTART.whenReleased(() -> {
+            Robot.shooter.stop();
+            Robot.hopper.stop();
+        });
         
         driver.bRB.whileHeld(Robot.turret::trackVision);
         driver.bRB.whenReleased(Robot.turret::stop);
