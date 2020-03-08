@@ -41,7 +41,7 @@ public class Turret {
     private double kPv, kIv, kDv;
     // for goal-centric gyro-based positioning
     private double kP, kI, kD;
-    private final double VISION_OFFSET = 4.85; // the offset for the vision target
+    private final double VISION_OFFSET = 0; // the offset for the vision target
     private final double MAX_POS = 30; // maximum angle for x-position
 
     private boolean isCompBot = true;
@@ -152,7 +152,7 @@ public class Turret {
     public void trackVision() {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
             double pidOutput = pidVision.calculate(Robot.camera.getPosition(), VISION_OFFSET);
-            this.setSpeed(pidOutput);
+            this.setSpeed(Helper.boundValue(pidOutput, -0.75, 0.75));
             SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
             SmartDashboard.putNumber("PID output", pidOutput);
             System.out.println(pidOutput);
