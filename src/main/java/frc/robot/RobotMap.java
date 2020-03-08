@@ -15,6 +15,7 @@ public class RobotMap {
     public static class Camera {
         public static final double PIPELINE = 0.0;
         public static final double AREA_MULTIPLIER_INCHES = 0; // TODO: untested
+        public static final double OFFSET_SCALE = -0.05285;
     }
 
     public static class Drivetrain {
@@ -135,9 +136,9 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kPv = 0.015; // TODO: untested
-                public static final double kIv = 0; // TODO: untested
-                public static final double kDv = 0.0001; // TODO: untested
+                public static final double kPv = 0.8; // TODO: untested
+                public static final double kIv = 0.08; // TODO: untested
+                public static final double kDv = 0.001; // TODO: untested
 
                 public static final double kP = 0; // TODO: untested
                 public static final double kI = 0; // TODO: untested
@@ -156,8 +157,6 @@ public class RobotMap {
 
     public static class WheelOfFortune {
         public static final int MOTOR = 4; // TODO: untested
-        public static final int ACTUATOR1 = 2;
-        public static final int ACTUATOR2 = 5;
         public static final boolean ACTUATOR_ENABLED_STATE = false; // TODO: untested
 
         public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; // TODO: untested
@@ -179,8 +178,11 @@ public class RobotMap {
 
         public static final int ACTUATOR1 = 1; // TODO: untested
         public static final int ACTUATOR2 = 6; // TODO: untested
+        public static final int HOOK_ACTUATOR = 5;
+        public static final int HOOK_ACTUATOR_UNUSED = 2;
 
-        public static final double ARM_SETPOINT = 0; //TODO: untested
+
+        public static final double ARM_SETPOINT = -58.429; //TODO: untested
         public static final double WINCH_SETPOINT = 0; // TODO: untested
         public static final double ARM_DOWNPOINT = 0; // dont think we need to test this as this is reseting the arm to the down postion
         
