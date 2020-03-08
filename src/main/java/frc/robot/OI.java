@@ -11,6 +11,7 @@ import frc.robot.helpers.ControllerWrapper;
  * @author hrl
  */
 public class OI {
+
     public static ControllerWrapper driver = new ControllerWrapper(RobotMap.Controllers.DRIVER_PORT, true);
     public static ControllerWrapper operator = new ControllerWrapper(RobotMap.Controllers.OPERATOR_PORT, true);
 
@@ -20,48 +21,59 @@ public class OI {
     }
 
     public static void update() {
-        // GENERAL CONTROLS/CONTROL METHODS
-        Robot.drivetrain.arcadeDrive(1);
-        // TODO: change manual turret to joystick
-        // TESTING TODO: delete these after they're tested
-        // operator.bLB.whenPressed(() -> Robot.turret.safeZone());
-        // -----------------------------------------------
-        Robot.turret.manualTurret();
-        // Robot.climber.manualArm();
 
-        // DRIVER CONTROLS
+        // GENERAL CONTROLS/CONTROL METHODS
+        if (driver.isAltMode()) {
+            Robot.drivetrain.arcadeDrive(0.4); // driver LY and RX
+        } else {
+            Robot.drivetrain.arcadeDrive(1);
+        }
+        Robot.turret.manualTurret(); // operator LY
+        // ----------------------------------------------------------------------------------------
+
+        // ALT MODE TOGGLES
         driver.bMENU.whenPressed(() -> {
             driver.toggleAltMode();
             operator.toggleAltMode();
         });
+
+        // disable alt mode on operator controller
+        // operator.bMENU.whenPressed(() -> {
+        //     driver.toggleAltMode();
+        //     operator.toggleAltMode();
+        // });
+        // ----------------------------------------------------------------------------------------
+
+
+
+        // ============ EVERY MODE CONTROLS ===============
+
+        // CLIMBER
         driver.bMENU.whenReleased(() -> {
             Robot.climber.stopWinch();
             Robot.climber.engageBrake();
         });
+        operator.bMENU.whenReleased(() -> {
+            Robot.climber.stopWinch();
+            Robot.climber.engageBrake();
+        });        
+        
 
-        // shoot
-        driver.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
-        driver.bA.whenReleased(Robot.shooter::stop);
-        driver.bSTART.whileHeld(() -> Robot.hopper.forward(Robot.shooter.atTarget()));
-        driver.bSTART.whenReleased(Robot.hopper::stop);
-
-        // hopper
+        // HOPPER
         driver.bB.whileHeld(() -> Robot.hopper.reverse(.6));
         driver.bB.whenReleased(Robot.hopper::stop);
+        
+        // TURRET
+        // TODO: check if we want this back in
+        operator.bLB.whileHeld(Robot.turret::manualTurret); // operator LX
+        operator.bLB.whenReleased(Robot.turret::stop);
 
-        if (driver.isAltMode()) {
-            Robot.drivetrain.arcadeDrive(0.4);
-        } else {
-            Robot.drivetrain.arcadeDrive(1);
-        }
+        operator.bRB.whileHeld(Robot.turret::trackVision);
+        operator.bRB.whenReleased(Robot.turret::stop);
+        driver.bRB.whileHeld(Robot.turret::trackVision);
+        driver.bRB.whenReleased(Robot.turret::stop);
 
-        // turret
-        /* operator.bLB.whileHeld(() -> */ Robot.turret.manualTurret();/* ); */
-        // operator.bLB.whenReleased(() -> {});
-        operator.bRB.whileHeld(() -> Robot.turret.trackVision());
-        operator.bRB.whenReleased(() -> Robot.turret.stop());
-
-        // shoot
+        // SHOOTER
         operator.bSTART.whileHeld(() -> {
             Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD);
             Robot.hopper.forward(Robot.shooter.atTarget());
@@ -70,33 +82,57 @@ public class OI {
             Robot.shooter.stop();
             Robot.hopper.stop();
         });
+
+        driver.bSTART.whileHeld(() -> {
+            Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD);
+            Robot.hopper.forward(Robot.shooter.atTarget());
+        });
+        driver.bSTART.whenReleased(() -> {
+            Robot.shooter.stop();
+            Robot.hopper.stop();
+        });
         
-        driver.bRB.whileHeld(Robot.turret::trackVision);
-        driver.bRB.whenReleased(Robot.turret::stop);
+        // ----------------------------------------------------------------------------------------
 
-        // working manual arm
 
-        // OPERATOR CONTROLS
-        // set the operator mode state
-        operator.bMENU.whenPressed(() -> {
-            driver.toggleAltMode();
-            operator.toggleAltMode();
-        });
-        operator.bMENU.whenReleased(() -> {
-            Robot.climber.stopWinch();
-            Robot.climber.engageBrake();
-        });
-        operator.bY.whenPressed(() -> Robot.climber.deployHook());
-        operator.bY.whenReleased(() -> Robot.climber.stopArm());
+        // ==================== ALT MODE CONTROLS ======================
 
+        // OPERATOR
 
         if (operator.isAltMode()) {
-            System.out.println("=== ALT MODE ENABLED ===");
+
+            // ======= CLIMBER ========
+
+            // ARM DEPLOY        
+            operator.bY.whenPressed(() -> Robot.climber.deployHook());
+            operator.bY.whenReleased(() -> Robot.climber.stopArm());
+
             operator.bA.whenPressed(() -> {
-                // Robot.climber.disengageBrake();
                 Robot.climber.setSpeedArm(-0.3);
             });
             operator.bA.whenReleased(() -> Robot.climber.stopArm());
+
+            // WINCHING
+            operator.dN.whenPressed(() -> {
+                Robot.climber.disengageBrake();
+                Robot.climber.setSpeedWinch(0.5);
+            });
+            operator.dN.whenReleased(() -> {
+                Robot.climber.stopWinch();
+                Robot.climber.engageBrake();
+            });
+            operator.dS.whenPressed(() -> {
+                Robot.climber.disengageBrake();
+                Robot.climber.setSpeedWinch(-0.5);
+            });
+            operator.dS.whenReleased(() -> {
+                Robot.climber.stopWinch();
+                Robot.climber.engageBrake();
+            });
+
+            // TURRET
+            Robot.turret.stop();
+
             // operator.bA.whileHeld(() -> Robot.climber.manualArm(-0.3));
             // operator.bA.whenReleased(Robot.climber::stopArm);
             // ===========================================================
@@ -149,43 +185,15 @@ public class OI {
             // Robot.climber.moveArmDown(-0.1);
             // Robot.climber.activateWinch();
             // });
-
-            // working winch
-            operator.dN.whenPressed(() -> {
-                Robot.climber.disengageBrake();
-                Robot.climber.setSpeedWinch(0.5);
-            });
-            operator.dN.whenReleased(() -> {
-                Robot.climber.stopWinch();
-                Robot.climber.engageBrake();
-            });
-            operator.dS.whenPressed(() -> {
-                Robot.climber.disengageBrake();
-                Robot.climber.setSpeedWinch(-0.5);
-            });
-            operator.dS.whenReleased(() -> {
-                Robot.climber.stopWinch();
-                Robot.climber.engageBrake();
-            });
-
-            Robot.turret.stop();
         } else {
-            // turret
-            operator.bRB.whileHeld(Robot.turret::trackVision);
-            operator.bRB.whenReleased(Robot.turret::stop);
 
-            // // shoot
-            // operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
-            // operator.bA.whenReleased(Robot.shooter::stop);
-            // operator.bSTART.whileHeld(() ->
-            // Robot.hopper.forward(Robot.shooter.atTarget()));
-            // operator.bSTART.whenReleased(Robot.hopper::stop);
+            // INTAKE
+            operator.bY.whenPressed(Robot.intake::toggle);
+            // -------------
 
-            // intake
-            // operator.bY.whenPressed(Robot.intake::toggle);
+            // SHOOTER
             operator.bA.whileHeld(() -> {
-                // Robot.shooter.update(4300);
-                Robot.shooter.update(Robot.camera.getCalculatedRPM()); // TODO: needs testing
+                Robot.shooter.update(Robot.camera.getCalculatedRPM());
                 Robot.hopper.forward(Robot.shooter.atTarget());
             });
             operator.bA.whenReleased(() -> {
@@ -193,6 +201,7 @@ public class OI {
                 Robot.hopper.stop();
             });
 
+            // INTAKE/HOPPER
             operator.bRT.whileHeld(() -> {
                 Robot.hopper.update();
                 Robot.intake.setSpeed(1);
@@ -210,9 +219,22 @@ public class OI {
                 Robot.intake.setSpeed(0);
             });
 
-            // hopper
             operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
             operator.bB.whenReleased(Robot.hopper::stop);
+            // ---------------------------
+
+            //TODO: TO DELETE!!!!!!!!!!!
+
+            // operator.bRB.whileHeld(Robot.turret::trackVision);
+            // operator.bRB.whenReleased(Robot.turret::stop);
+
+            // // shoot
+            // operator.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
+            // operator.bA.whenReleased(Robot.shooter::stop);
+            // operator.bSTART.whileHeld(() ->
+            // Robot.hopper.forward(Robot.shooter.atTarget()));
+            // operator.bSTART.whenReleased(Robot.hopper::stop);
+            // -----------------------------------------------------------------------------------            
         }
 
         // if it hasn't already been handled...
@@ -227,32 +249,52 @@ public class OI {
     }
 
     public static void initSD() {
+        SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
+        SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
+        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+
+        SmartDashboard.putBoolean("Shooter running?", Robot.shooter.getRPM() > 0);
+        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
+
+        SmartDashboard.putBoolean("Alt Mode", operator.isAltMode());
+
+        SmartDashboard.putNumber("Shooter RPM", Robot.shooter.getRPM());
+
     }
 
     public static void updateSD() {
         SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
         SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
-
         SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
         SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
-        SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
+
+        SmartDashboard.putBoolean("Shooter running?", Robot.shooter.getRPM() > 0);
+        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
+
+        SmartDashboard.putBoolean("Alt Mode", operator.isAltMode());
+
+        SmartDashboard.putNumber("Shooter RPM", Robot.shooter.getRPM());
+
+        // =======================TROUBLESHOOTING========================
+        
+        // SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
 
         SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
         SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
 
         SmartDashboard.putNumber("Turret Speed", Robot.turret.getSpeed());
-        SmartDashboard.putNumber("Limelight Stuff ????", Robot.camera.getPosition());
+        // SmartDashboard.putNumber("Limelight X Pos", Robot.camera.getPosition());
+        SmartDashboard.putNumber("Calculated RPM", Robot.camera.getCalculatedRPM());
 
-        SmartDashboard.putNumber("Left trigger", operator.getLT());
-        SmartDashboard.putNumber("Right trigger", operator.getRT());
-
-        SmartDashboard.putBoolean("Shooter running?", Robot.shooter.getRPM() > 0);
-        SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
 
         SmartDashboard.putNumber("CL_Winch", Robot.climber.getWinchPosition());
         SmartDashboard.putNumber("CL_Arm", Robot.climber.getArmPosition());
         SmartDashboard.putBoolean("CL_Sensor", Robot.climber.getArmDeploy());
 
-        SmartDashboard.putNumber("DT Left Enc", Robot.drivetrain.getLeftPosition());
+
+        
+        SmartDashboard.putBoolean("Operator Alt Mode", operator.isAltMode());
+
     }
 }
