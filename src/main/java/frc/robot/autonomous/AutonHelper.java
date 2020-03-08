@@ -19,8 +19,6 @@ public class AutonHelper {
         this.addPath("Nothing", new DoNothing());
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
-        this.addPath("Head-On Left", new HeadOn(true)); // TODO: have these take setpoints
-        this.addPath("Head-On Right", new HeadOn(true));
 
         chooser.setDefaultOption("Nothing", new DoNothing());
     }
