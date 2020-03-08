@@ -64,6 +64,15 @@ public class Turret {
             kIv = RobotMap.Turret.CompBot.PID.kIv;
             kDv = RobotMap.Turret.CompBot.PID.kDv;
 
+            // SmartDashboard.putNumber("Turret kPv", 0);
+            // SmartDashboard.putNumber("Turret kIv", 0);
+            // SmartDashboard.putNumber("Turret kDv", 0);
+
+            // kPv = SmartDashboard.getNumber("Turret kPv", 0.025);
+            // kIv = SmartDashboard.getNumber("Turret kIv", 0.007);
+            // kDv = SmartDashboard.getNumber("Turret kDv", 0.0005);
+
+
             kP = RobotMap.Turret.CompBot.PID.kP;
             kI = RobotMap.Turret.CompBot.PID.kI;
             kD = RobotMap.Turret.CompBot.PID.kD;
@@ -153,13 +162,9 @@ public class Turret {
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
             double pidOutput = pidVision.calculate(Robot.camera.getPosition(), VISION_OFFSET);
             this.setSpeed(Helper.boundValue(pidOutput, -0.75, 0.75));
-            SmartDashboard.putNumber("Camera pos", Robot.camera.getPosition());
-            SmartDashboard.putNumber("PID output", pidOutput);
-            System.out.println(pidOutput);
         } else {
             this.stop();
         }
-        SmartDashboard.putData(this.pidVision);
     }
 
     /**
