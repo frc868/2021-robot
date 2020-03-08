@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -27,11 +28,13 @@ public class Climber {
     private double kP, kI, kD, kFF, kIa;
     // global PID constants
     private double kMaxOutput, kMinOutput;
+    private double initialArmPos;
 
     private DigitalInput isDeployed;
     private double initialPosition;
     private boolean lastArmState;
     private DoubleSolenoid actuator;
+    private DoubleSolenoid hook_deploy;
 
     private Climber() {
         primary_winch = new CANSparkMax(RobotMap.Climber.PRIMARY_WINCH, MotorType.kBrushless);
@@ -41,8 +44,10 @@ public class Climber {
         
         arm = new CANSparkMax(RobotMap.Climber.ARM, MotorType.kBrushless);
         arm.setInverted(RobotMap.Climber.ARM_IS_INVERTED);
+        arm.setIdleMode(IdleMode.kCoast);
 
         actuator = new DoubleSolenoid(RobotMap.Climber.ACTUATOR1, RobotMap.Climber.ACTUATOR2);
+        hook_deploy = new DoubleSolenoid(RobotMap.Climber.HOOK_ACTUATOR, RobotMap.Climber.HOOK_ACTUATOR_UNUSED);
         isDeployed = new DigitalInput(RobotMap.Climber.ARM_DEPLOY_SENSOR);
 
         pidController = primary_winch.getPIDController();
@@ -68,8 +73,10 @@ public class Climber {
             pidController.setIAccum(0);
         }
 
-        resetArmPosition();
+        // resetArmPosition();
         resetWinchPosition();
+
+        initialArmPos = getArmPosition();
     }
 
     /**
@@ -148,6 +155,23 @@ public class Climber {
         primary_winch.set(0);
     }
 
+    public void activateArm() {
+        double p_gain = 0.005; // from 58 ish to .2
+        double error = RobotMap.Climber.ARM_SETPOINT - getArmPosition();
+
+        arm.set(Helper.boundValue(error * p_gain, -0.5, 0));
+        System.out.println(Helper.boundValue(error * p_gain, -0.5, 0));
+
+        if (Helper.tolerance(error, RobotMap.Climber.ARM_SETPOINT, 0.02)) {
+            deployHook();
+        }
+    }
+
+    public void deployHook() {
+        arm.setIdleMode(IdleMode.kCoast);
+        hook_deploy.set(Value.kForward);
+    }
+
     /**
      * Engages the brake.
      * @author igc
@@ -200,7 +224,8 @@ public class Climber {
         // } else*/ if (getArmPosition() == 0) {
         //     arm.set(Helper.boundValue(speed, 0, 1));
         // } else {
-            arm.set(speed);
+        arm.setIdleMode(IdleMode.kBrake);
+        arm.set(speed);
         //}
     }
 
