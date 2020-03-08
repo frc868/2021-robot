@@ -10,7 +10,6 @@ package frc.robot.sensors;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Controls the Limelight camera connected to the robot over NetworkTables.
@@ -68,26 +67,26 @@ public class Camera {
         return tArea.getDouble(0.0);
     }
 
+    /**
+     * Scales limelight area to distance based on regression calculated from setpoints.
+     * Accounts for angle away from center of the goal and scales RPM accordingly. Using trig to
+     * solve for the "hypotenuse" of the triangle, treating distance output as the leg of the
+     * triangle.
+     * @return calculated distance
+     */
     public double getCalculatedDistance() {
-        // return RobotMap.Camera.AREA_MULTIPLIER_INCHES * Math.sqrt(getArea()); // TODO: implement after data collection
-        double dist =  258 - 74.5 * getArea() + 3.04 * Math.pow(getArea(), 2);
-        dist = dist/39.37;
-        System.out.println(dist);
+        double dist =  258 - 74.5 * this.getArea() + 3.04 * Math.pow(this.getArea(), 2); // regression based on 3 datapoints
+        dist = dist/Math.cos(Math.toRadians(this.getAngle()));
+        dist = dist/39.37; // conversion from inches to meters, since that's what the regression is
         return dist;
     }
 
     public double getCalculatedRPM() {
         double dist = getCalculatedDistance();
+        // DO NOT change this, don't question it, and don't try to understand it cause you won't
         double speed = 0.3205*Math.pow(dist,6) - 11.175*Math.pow(dist,5) + 160.74*Math.pow(dist,4) - 1223.4*Math.pow(dist,3) + 5214.3*Math.pow(dist,2) - 11609*dist + 14241;
-        SmartDashboard.putNumber("Speed!!!", speed);
         return speed;
     }
-
-    // public double getCalculatedVisionOffset() {
-    //     return getCalculatedDistance() * RobotMap.Camera.OFFSET_SCALE;
-    // }
-
-
 
     /**
      * Get the x-position of the target, if detected.
