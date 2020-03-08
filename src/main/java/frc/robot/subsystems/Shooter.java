@@ -32,7 +32,7 @@ public class Shooter {
 
     private double kP, kD, kFF, kI, kIa;
 
-    private double setpoint = RobotMap.Shooter.SHOOTER_DEFAULT_SPEED;
+    private double setpoint = RobotMap.Shooter.TRENCH_FRONT_SPD;
 
     private Shooter() {
         primary = new CANSparkMax(RobotMap.Shooter.PRIMARY, MotorType.kBrushless);
