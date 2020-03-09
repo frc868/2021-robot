@@ -12,7 +12,6 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
@@ -65,7 +64,7 @@ public class Shooter {
         kP = 0.2/1000;
         kI = 0.00001/1000;
         kD = 0.03/1000;
-        kFF = 0.175/1000;
+        kFF = 0.185/1000;
         kIa = 2;
 
         pid.setP(kP);
@@ -87,8 +86,6 @@ public class Shooter {
     public void update(double rpm) {
         this.setpoint = rpm;
         pid.setReference(setpoint, ControlType.kVelocity);
-        SmartDashboard.putNumber("Output", primary.getEncoder().getVelocity());
-        SmartDashboard.putNumber("Motor output", primary.get());
     }
 
     /**
@@ -106,7 +103,7 @@ public class Shooter {
         return Helper.tolerance(
             primary.getEncoder().getVelocity(),
             this.setpoint,
-            0.01);
+            0.04);
     }
 
     /**
