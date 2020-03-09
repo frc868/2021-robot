@@ -61,10 +61,10 @@ public class Shooter {
      * Sets the PID gains and setpoint for the PID controller.
      */
     public void init() {
-        kP = 0.2/1000;
+        kP = 0.3/1000;
         kI = 0.00001/1000;
         kD = 0.03/1000;
-        kFF = 0.185/1000;
+        kFF = 0.190/1000;
         kIa = 2;
 
         pid.setP(kP);
