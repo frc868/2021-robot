@@ -20,7 +20,7 @@ public class AutonMap {
         // the distance to drive from the baseline
         public static final double DISTANCE = 10.0;
         // the power to start driving with
-        public static final double START_POWER = -0.5;
+        public static final double START_POWER = 0.5;
         // the power to end driving with
         public static final double END_POWER = 0;
     }
