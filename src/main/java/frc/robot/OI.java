@@ -195,6 +195,7 @@ public class OI {
             operator.bA.whileHeld(() -> {
                 Robot.shooter.update(Robot.camera.getCalculatedRPM());
                 Robot.hopper.forward(Robot.shooter.atTarget());
+                // Robot.hopper.forwardShot(Robot.shooter.atTarget());
             });
             operator.bA.whenReleased(() -> {
                 Robot.shooter.stop();
@@ -284,6 +285,7 @@ public class OI {
         SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
 
         SmartDashboard.putNumber("Turret Speed", Robot.turret.getSpeed());
+        SmartDashboard.putNumber("Turret position", Robot.turret.getCompEncPosition());
         // SmartDashboard.putNumber("Limelight X Pos", Robot.camera.getPosition());
         SmartDashboard.putNumber("Calculated RPM", Robot.camera.getCalculatedRPM());
 

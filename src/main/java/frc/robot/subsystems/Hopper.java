@@ -129,6 +129,22 @@ public class Hopper {
         }
     }
 
+    //IDEA
+    public void forwardShot(boolean atTarget) {
+        if (atTarget) {
+            if (getMidLimitToggled() || !getMidLimit()) {
+                belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
+                feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
+                blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
+            } else {
+                feeder.set(1);
+            }
+        } else {
+            this.stop();
+        }
+    }
+    //IDEA
+
     /**
      * Runs the hopper without logic. <i>Avoid using this.</i>
      */
