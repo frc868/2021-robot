@@ -20,7 +20,7 @@ public class AutonHelper {
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
 
-        chooser.setDefaultOption("Nothing", new DoNothing());
+        chooser.setDefaultOption("Head-On", new HeadOn());
     }
 
     /**
