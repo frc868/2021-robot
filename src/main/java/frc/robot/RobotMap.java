@@ -107,9 +107,11 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kPv = 0.0155;
-                public static final double kIv = 0;
-                public static final double kDv = 0.0001;
+                public static final double kPv = 0.025;
+                public static final double kIv = 0.007;
+                public static final double kDv = 0.0008;
+
+                public static final double VISION_OFFSET_SCALE = 0.093143;
 
                 public static final double kP = 0; // TODO: untested
                 public static final double kI = 0; // TODO: untested
