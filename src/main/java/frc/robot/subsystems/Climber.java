@@ -155,18 +155,6 @@ public class Climber {
         primary_winch.set(0);
     }
 
-    public void activateArm() {
-        double p_gain = 0.005; // from 58 ish to .2
-        double error = RobotMap.Climber.ARM_SETPOINT - getArmPosition();
-
-        arm.set(Helper.boundValue(error * p_gain, -0.5, 0));
-        System.out.println(Helper.boundValue(error * p_gain, -0.5, 0));
-
-        if (Helper.tolerance(error, RobotMap.Climber.ARM_SETPOINT, 0.02)) {
-            deployHook();
-        }
-    }
-
     public void deployHook() {
         arm.setIdleMode(IdleMode.kCoast);
         hook_deploy.set(Value.kForward);
