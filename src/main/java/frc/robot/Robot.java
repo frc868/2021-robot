@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        OI.updateSD();
         camera.update();
         leds.colorInventory();
         // System.out.println(camera.toString());
@@ -65,9 +66,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        OI.updateSD();
+
         auton.runSelectedPath();
         turret.trackVision();
-        OI.updateSD();
         Scheduler.getInstance().run();
     }
 
@@ -78,6 +80,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        OI.updateSD();
+
         OI.update();
         Scheduler.getInstance().run();
     }
