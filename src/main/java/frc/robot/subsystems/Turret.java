@@ -41,7 +41,6 @@ public class Turret {
     private double kPv, kIv, kDv;
     // for goal-centric gyro-based positioning
     private double kP, kI, kD;
-    private final double VISION_OFFSET = 0; // the offset for the vision target
     private final double MAX_POS = 30; // maximum angle for x-position
 
     private boolean isCompBot = true;
@@ -63,6 +62,8 @@ public class Turret {
             kPv = RobotMap.Turret.CompBot.PID.kPv;
             kIv = RobotMap.Turret.CompBot.PID.kIv;
             kDv = RobotMap.Turret.CompBot.PID.kDv;
+
+            // kOffset = 
 
             // SmartDashboard.putNumber("Turret kPv", 0);
             // SmartDashboard.putNumber("Turret kIv", 0);
@@ -159,8 +160,9 @@ public class Turret {
      * Tracks the current shooting target.
      */
     public void trackVision() {
+        double visionOffset = Robot.camera.getCalculatedDistance() * RobotMap.Turret.CompBot.PID.VISION_OFFSET_SCALE;
         if (Robot.camera.hasTarget() && (Math.abs(Robot.camera.getPosition()) < MAX_POS)) {
-            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), VISION_OFFSET);
+            double pidOutput = pidVision.calculate(Robot.camera.getPosition(), visionOffset);
             this.setSpeed(Helper.boundValue(pidOutput, -0.75, 0.75));
         } else {
             this.stop();
@@ -185,7 +187,7 @@ public class Turret {
      * Limits speed to 0.25 at most. <i>Do not change this.</i>
      */
     public void manualTurret() {
-        setSpeed(0.25*(OI.operator.getLX()));
+        setSpeed(0.4*(OI.operator.getLX()));
     }
 
     /**
