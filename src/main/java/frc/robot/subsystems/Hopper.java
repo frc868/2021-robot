@@ -129,7 +129,11 @@ public class Hopper {
         }
     }
 
-    //IDEA
+    /**
+     * An experimental shooting method which ignores top sensor logic as an attempt to increase
+     * indexing speed. TODO: needs testing.
+     * @param atTarget whether the shooter is at its target
+     */
     public void forwardShot(boolean atTarget) {
         if (atTarget) {
             if (getMidLimitToggled() || !getMidLimit()) {
@@ -143,7 +147,6 @@ public class Hopper {
             this.stop();
         }
     }
-    //IDEA
 
     /**
      * Runs the hopper without logic. <i>Avoid using this.</i>
@@ -212,13 +215,17 @@ public class Hopper {
     }
 
     /**
-     * Returns true if the beam break senses something.
-     * @author igc
+     * Returns true if one of the bottom sensors is toggled.
+     * @return value of bottom sensors
      */
     public boolean getBotSensor() {
         return getBotLeftSensor() || getBotRightSensor();
     }
 
+    /**
+     * Returns true if the bottom left sensor is toggled.
+     * @return value 
+     */
     public boolean getBotLeftSensor() {
         return !botSensorL.get();
     }
