@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -62,17 +62,6 @@ public class Turret {
             kPv = RobotMap.Turret.CompBot.PID.kPv;
             kIv = RobotMap.Turret.CompBot.PID.kIv;
             kDv = RobotMap.Turret.CompBot.PID.kDv;
-
-            // kOffset = 
-
-            // SmartDashboard.putNumber("Turret kPv", 0);
-            // SmartDashboard.putNumber("Turret kIv", 0);
-            // SmartDashboard.putNumber("Turret kDv", 0);
-
-            // kPv = SmartDashboard.getNumber("Turret kPv", 0.025);
-            // kIv = SmartDashboard.getNumber("Turret kIv", 0.007);
-            // kDv = SmartDashboard.getNumber("Turret kDv", 0.0005);
-
 
             kP = RobotMap.Turret.CompBot.PID.kP;
             kI = RobotMap.Turret.CompBot.PID.kI;
