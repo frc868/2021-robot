@@ -115,7 +115,7 @@ public class OI {
             // WINCHING
             operator.dN.whenPressed(() -> {
                 Robot.climber.disengageBrake();
-                Robot.climber.setSpeedWinch(0.5);
+                Robot.climber.setSpeedWinch(RobotMap.Climber.WINCH_HOLD_POWER);
             });
             operator.dN.whenReleased(() -> {
                 Robot.climber.stopWinch();
@@ -123,7 +123,7 @@ public class OI {
             });
             operator.dS.whenPressed(() -> {
                 Robot.climber.disengageBrake();
-                Robot.climber.setSpeedWinch(-0.5);
+                Robot.climber.setSpeedWinch(-RobotMap.Climber.WINCH_HOLD_POWER);
             });
             operator.dS.whenReleased(() -> {
                 Robot.climber.stopWinch();
