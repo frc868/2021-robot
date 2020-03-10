@@ -14,8 +14,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 public class RobotMap {
     public static class Camera {
         public static final double PIPELINE = 0.0;
-        public static final double AREA_MULTIPLIER_INCHES = 0; // TODO: untested
-        public static final double OFFSET_SCALE = -0.05285;
+        public static final double OFFSET_SCALE = -0.05285; // TODO: tune this with more datapoints
     }
 
     public static class Drivetrain {
@@ -138,8 +137,8 @@ public class RobotMap {
             }
 
             public static class PID {
-                public static final double kPv = 0.8; // TODO: untested
-                public static final double kIv = 0.08; // TODO: untested
+                public static final double kPv = 0.015; // TODO: untested
+                public static final double kIv = 0; // TODO: untested
                 public static final double kDv = 0.001; // TODO: untested
 
                 public static final double kP = 0; // TODO: untested
@@ -160,6 +159,9 @@ public class RobotMap {
     public static class WheelOfFortune {
         public static final int MOTOR = 4; // TODO: untested
         public static final boolean ACTUATOR_ENABLED_STATE = false; // TODO: untested
+
+        /* NOTE: pneumatic solenoids for this subsystem have been moved to the climber as of the
+        Bloomington competition. This may change depending on design decisions in the future */
 
         public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP; // TODO: untested
         public static final double[] RED_VALUES = {0.487, 0.360, 0.152};
@@ -183,15 +185,12 @@ public class RobotMap {
         public static final int HOOK_ACTUATOR = 5;
         public static final int HOOK_ACTUATOR_UNUSED = 2;
 
-
-        public static final double ARM_SETPOINT = -58.429; //TODO: untested
         public static final double WINCH_SETPOINT = 0; // TODO: untested
-        public static final double ARM_DOWNPOINT = 0; // dont think we need to test this as this is reseting the arm to the down postion
         
         public static final int ARM_DEPLOY_SENSOR = 9;
         public static final boolean ARM_LAST_STATE_VALUE = true; // TODO: untested
 
-        public static final double HOLD_POWER = 0.3;
+        public static final double WINCH_HOLD_POWER = 0.5;
         public static final double ARM_POWER = 0.1;
     }
 
