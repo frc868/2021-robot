@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import frc.robot.OI;
 import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
@@ -28,7 +27,6 @@ public class Climber {
     private double kP, kI, kD, kFF, kIa;
     // global PID constants
     private double kMaxOutput, kMinOutput;
-    private double initialArmPos;
 
     private DigitalInput isDeployed;
     private double initialPosition;
@@ -75,12 +73,10 @@ public class Climber {
 
         // resetArmPosition();
         resetWinchPosition();
-
-        initialArmPos = getArmPosition();
     }
 
     /**
-     * checks to see if an instance of climber exists, and if not then it makes one
+     * Checks to see if an instance of climber exists, and if not then it makes one.
      * @return an instance of climber
      */
     public static Climber getInstance() {
@@ -91,7 +87,7 @@ public class Climber {
     }
 
     /**
-     * retrieves the position of the arm
+     * Retrieves the position of the arm motor.
      * @return the arm position in ticks
      */
     public double getArmPosition(){
@@ -99,7 +95,7 @@ public class Climber {
     }
 
     /**
-     * retrieves the position of the winch
+     * Retrieves the position of the winch motors.
      * @return the winch position in ticks
      */
     public double getWinchPosition(){
@@ -107,7 +103,7 @@ public class Climber {
     }
 
     /**
-     * resets the winch position
+     * Resets the winch position.
      */
     public void resetWinchPosition(){
         primary_winch.getEncoder().setPosition(0);
@@ -115,36 +111,16 @@ public class Climber {
     }
 
     /**
-     * resets the arm position
+     * Resets the arm position.
      */
     public void resetArmPosition() {
         arm.getEncoder().setPosition(0);
     }
 
     /**
-     * Moves the arm-hook apparatus up to a given setpoint up.
-     * @author dri
+     * Moves the winch to its target setpoint.
      */
-    public void moveArmUp(double power) {
-        if (getArmDeployToggled()) {
-            arm.set(0);
-        } else {
-            arm.set(power);
-        }
-    }
-
-    public void moveArmDown(double power) {
-        if (getArmPosition() <= 1) {
-            arm.set(0);
-        } else {
-            arm.set(power);
-        }
-    }
-
-    /**
-     * moves the winch to its target setpoint.
-     */
-    public void activateWinch() {
+    public void automaticWinch() {
         pidController.setReference(RobotMap.Climber.WINCH_SETPOINT, ControlType.kPosition);
     }
 
@@ -155,6 +131,9 @@ public class Climber {
         primary_winch.set(0);
     }
 
+    /**
+     * Releases the hook on the arm to go to its maximum height.
+     */
     public void deployHook() {
         arm.setIdleMode(IdleMode.kCoast);
         hook_deploy.set(Value.kForward);
@@ -166,7 +145,6 @@ public class Climber {
      */
     public void engageBrake() {
         actuator.set(Value.kForward);
-
     }
 
     /**
@@ -178,65 +156,37 @@ public class Climber {
     }
 
     /**
-     * Climbs based on joystick inputs with no closed-loop control.
-     * @param holdPower the power to hold the motor at
+     * Sets the arm motor to a given speed. Note: this motor should only be run at a negative
+     * speed, since the arm's hook is pneumatically deployed upwards.
+     * @param speed the speed to run the arm at
      */
-    public void manualClimb(double power) {
-        if (OI.operator.getLY() > .5) {
-            disengageBrake();
-            primary_winch.set(power);
-        } else if (OI.driver.getLY() < -.5) {
-            disengageBrake();
-            primary_winch.set(-power);
-        } else {
-           engageBrake(); 
-           stopWinch();
-        }
-    }
-
-    public void manualArm(/*double armPower*/) {
-        // if (OI.operator.getRY() > .5) {
-            if (OI.operator.isAltMode()) {
-                setSpeedArm(0.5*(-OI.operator.getRY()));
-            }
-        // } else if (OI.operator.getRY() < -.5) {
-        //     setSpeedArm(-armPower);
-        // } else {
-        //    setSpeedArm(0);
-        // }
-    }
-
     public void setSpeedArm(double speed) {
-        // /*if (getArmDeployToggled()) {
-        //     arm.set(Helper.boundValue(speed, -1, 0));
-        // } else*/ if (getArmPosition() == 0) {
-        //     arm.set(Helper.boundValue(speed, 0, 1));
-        // } else {
-        arm.setIdleMode(IdleMode.kBrake);
+        arm.setIdleMode(IdleMode.kBrake); // brake mode to slow descent
         arm.set(speed);
-        //}
     }
 
+    /**
+     * Stops the arm
+     */
     public void stopArm() {
         arm.set(0);
     }
 
+    /**
+     * Sets the speed of the winch. Positive speeds correspond to winching up, and negative speeds
+     * correspond to lowering.
+     * @param speed the speed to run winch motors at
+     */
     public void setSpeedWinch(double speed) {
         primary_winch.set(speed);
         
     }
 
+    /**
+     * Get whether the arm has been deployed.
+     * @return deployment state of the arm
+     */
     public boolean getArmDeploy() {
         return isDeployed.get();
-    }
-
-    private boolean getArmDeployToggled() {
-        if (getArmDeploy() != lastArmState) {
-            lastArmState = getArmDeploy();
-            if (lastArmState == RobotMap.Climber.ARM_LAST_STATE_VALUE) {
-                return true;
-            }
-        }
-        return false;
     }
 }
