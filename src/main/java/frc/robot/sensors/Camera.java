@@ -48,7 +48,6 @@ public class Camera {
         tArea = table.getEntry("ta"); // target area
         tXpos = table.getEntry("tx"); // target x-position (y unused)
         tAngle = table.getEntry("ts"); // target angle/"skew"
-        // tDist = table.getEntry()
     }
 
     /**
@@ -75,16 +74,38 @@ public class Camera {
      * @return calculated distance
      */
     public double getCalculatedDistance() {
-        double dist =  258 - 74.5 * this.getArea() + 3.04 * Math.pow(this.getArea(), 2); // regression based on 3 datapoints
-        dist = dist/Math.cos(Math.toRadians(this.getAngle()));
+        // actual equation:
+        // 258 - 74.5x + 3.04x^2
+        double dist =  258
+                    - 74.5 * this.getArea()
+                    + 3.04 * Math.pow(this.getArea(), 2); // regression based on 3 datapoints
+
+        dist = dist/Math.cos(Math.toRadians(this.getAngle())); // account for angle offset
         dist = dist/39.37; // conversion from inches to meters, since that's what the regression is
+        System.out.println(dist);
         return dist;
     }
 
+    /**
+     * Gets the calculated RPM for the calculated distance away from the goal. This is based on a
+     * bunch of physics equations which output a 6th-degree polynomial to use. Don't try to
+     * understand this or change anything.
+     * @return the desired RPM based on distance from target
+     */
     public double getCalculatedRPM() {
         double dist = getCalculatedDistance();
         // DO NOT change this, don't question it, and don't try to understand it cause you won't
-        double speed = 0.3205*Math.pow(dist,6) - 11.175*Math.pow(dist,5) + 160.74*Math.pow(dist,4) - 1223.4*Math.pow(dist,3) + 5214.3*Math.pow(dist,2) - 11609*dist + 14241;
+
+        // actual equation:
+        // y = 0.3205x^6 - 11.175x^5 + 160.74x^4 - 1223.4x^3 + 5214.3x^2 - 11609x + 14241
+
+        double speed = 0.3205*Math.pow(dist,6)
+                     - 11.175*Math.pow(dist,5)
+                     + 160.74*Math.pow(dist,4)
+                     - 1223.4*Math.pow(dist,3)
+                     + 5214.3*Math.pow(dist,2)
+                     - 11609*dist
+                     + 14241;
         return speed;
     }
 
