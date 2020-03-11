@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         shooter.init();
+        turret.resetEncoders();
     }
 
     @Override
