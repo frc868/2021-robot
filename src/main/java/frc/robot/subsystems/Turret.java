@@ -20,9 +20,7 @@ import frc.robot.RobotMap;
 import frc.robot.helpers.Helper;
 
 /**
- * The turret being used to possibly position the shooter. This is nothing more 
- * than a prototype as it currently stands, and may need major refactoring or 
- * complete deletion for the final robot.
+ * The turret being used to position the shooter.
  * 
  * @author hrl, dri
  */
