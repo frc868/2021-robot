@@ -32,7 +32,6 @@ public class HeadOn extends AutonPath {
                 if (currentDistance < AutonMap.HeadOn.DISTANCE - 1) {
                     return this;
                 }
-                // return ReadyToReady;
                 return Readying;
             }
 
@@ -66,7 +65,6 @@ public class HeadOn extends AutonPath {
         Readying {
             @Override
             public HeadOnState nextState() {
-                // if (shootDelay.get() < 3) {
                 if (!Robot.shooter.atTarget()) {
                     return this;
                 }
@@ -76,7 +74,6 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                // Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
                 Robot.shooter.update(AutonMap.HeadOn.SHOOTER_RPM);
             }
 
@@ -113,8 +110,6 @@ public class HeadOn extends AutonPath {
             @Override
             public void run() {
                 Robot.drivetrain.setSpeed(0, 0);
-                // Robot.shooter.setSpeed(AutonMap.HeadOn.SHOOTER_POWER);
-                // Robot.hopper.forward(true);
                 Robot.shooter.shootUntilClear(AutonMap.HeadOn.SHOOTER_RPM);
             }
 

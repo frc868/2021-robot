@@ -27,7 +27,7 @@ import frc.robot.RobotMap;
 public class ControllerWrapper {
     private XboxController controller;
     public ButtonWrapper bA, bB, bX, bY, bRB, bLB, bRSTK, bLSTK, bSTART, bMENU; // read: "button Menu"
-    public ButtonWrapper bRT, bLT, trigLSTK, trigRSTK;
+    public ButtonWrapper bRT, bLT, bLY, bRY;
     public ButtonWrapper dN, dE, dS, dW, dNE, dNW, dSE, dSW; // read: "d-pad North"
 
     private final double RUMBLE_DELAY = 0.3;
@@ -61,8 +61,8 @@ public class ControllerWrapper {
         bLT = new ButtonWrapper(this.controller, RobotMap.Controllers.LT, true);
 
         // stick Y axis to buttons
-        trigLSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.LY, true);
-        trigRSTK = new ButtonWrapper(this.controller, RobotMap.Controllers.RY, true);
+        bLY = new ButtonWrapper(this.controller, RobotMap.Controllers.LY, true);
+        bRY = new ButtonWrapper(this.controller, RobotMap.Controllers.RY, true);
 
         // d-pad/"POV" buttons
         // reads angle value of the combined d-pad
@@ -100,8 +100,8 @@ public class ControllerWrapper {
         bRSTK.updateState();
         bLSTK.updateState();
 
-        trigRSTK.updateState();
-        trigLSTK.updateState();
+        bRY.updateState();
+        bLY.updateState();
 
         dN.updateState();
         dNE.updateState();

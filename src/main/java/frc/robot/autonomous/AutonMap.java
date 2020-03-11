@@ -35,7 +35,7 @@ public class AutonMap {
         public static final double END_POWER = 0;
 
         // the backup (not PID) dead-reckoned power to run the shooter at
-        public static final double SHOOTER_POWER = 0.73; // TODO: this should not be used
+        public static final double BACKUP_SHOOTER_POWER = 0.73; // TODO: this should not be used
         // the power to run the shooter at
         public static final double SHOOTER_RPM = 4000; // TODO: tune
     }

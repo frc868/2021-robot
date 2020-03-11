@@ -25,7 +25,7 @@ public class Climber {
 
     // winch PID constants
     private double kP, kI, kD, kFF, kIa;
-    // global PID constants
+
     private double kMaxOutput, kMinOutput;
 
     private DigitalInput isDeployed;
