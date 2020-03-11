@@ -160,6 +160,9 @@ public class RobotMap {
         public static final int MOTOR = 4; // TODO: untested
         public static final boolean ACTUATOR_ENABLED_STATE = false; // TODO: untested
 
+        public static final int ACTUATOR1 = 0; // TODO: untested
+        public static final int ACTUATOR2 = 4; // TODO: untested
+
         /* NOTE: pneumatic solenoids for this subsystem have been moved to the climber as of the
         Bloomington competition. This may change depending on design decisions in the future */
 
