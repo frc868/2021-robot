@@ -12,7 +12,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
- * Controls the Limelight camera connected to the robot over NetworkTables.
+ * Controls the Limelight camera connected to the robot over NetworkTables. 
+ * The data which generated the RPM equation is stored in the doc directory of this code.
  * 
  * @author hrl
  */
@@ -79,6 +80,8 @@ public class Camera {
         double dist =  258
                     - 74.5 * this.getArea()
                     + 3.04 * Math.pow(this.getArea(), 2); // regression based on 3 datapoints
+
+        // TODO: generate a better regression after shooter PID is tuned
 
         dist = dist/Math.cos(Math.toRadians(this.getAngle())); // account for angle offset
         dist = dist/39.37; // conversion from inches to meters, since that's what the regression is
