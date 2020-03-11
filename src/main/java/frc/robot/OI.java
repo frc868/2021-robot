@@ -26,7 +26,7 @@ public class OI {
         if (driver.isAltMode()) {
             Robot.drivetrain.arcadeDrive(0.4); // driver LY and RX
         } else {
-            Robot.drivetrain.arcadeDrive(1);
+            Robot.drivetrain.arcadeDrive(1); //TODO: edit method and try different controls like cubing
         }
         Robot.turret.manualTurret(); // operator LY
         // ----------------------------------------------------------------------------------------
