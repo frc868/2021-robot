@@ -65,7 +65,8 @@ public class OI {
 
         // SHOOTER
         operator.bSTART.whileHeld(() -> {
-            Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD);
+            Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD); //TODO: test if this works
+```
             Robot.hopper.forward(Robot.shooter.atTarget());
         });
         operator.bSTART.whenReleased(() -> {
