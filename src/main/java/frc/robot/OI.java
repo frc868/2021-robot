@@ -166,7 +166,8 @@ public class OI {
         driver.updateStates();
         operator.updateStates();
 
-        updateSD();
+        // updateSD();
+        updateSDTesting();
     }
 
     public static void initSD() {
@@ -205,7 +206,7 @@ public class OI {
     /**
      * Used for updating the SmartDashboard during testing/troubleshooting.
      */
-    public void updateSDTesting() {
+    public static void updateSDTesting() {
         SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
 
         SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
