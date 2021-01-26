@@ -19,9 +19,10 @@ public class Hopper {
     private DigitalInput botSensorR;
     private DigitalInput midLeftLim;
     private DigitalInput topLeftLim;
+    private DigitalInput beamBreak;
 
-    private WPI_TalonSRX belt;
-    private WPI_TalonSRX feeder;
+    private WPI_TalonSRX floor;
+    private WPI_TalonSRX upToShooter;
     private WPI_TalonSRX blueWheels;
 
     // a state variable to control the number of balls currently in the hopper
@@ -42,13 +43,15 @@ public class Hopper {
         midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
         topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
 
-        belt = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
-        feeder = new WPI_TalonSRX(RobotMap.Hopper.Motor.FEEDER);
-        blueWheels = new WPI_TalonSRX(RobotMap.Hopper.Motor.BLUE_WHEELS);
-        belt.setInverted(RobotMap.Hopper.Motor.HOPPER_FLOOR_IS_INVERTED);
-        feeder.setInverted(RobotMap.Hopper.Motor.FEEDER_IS_INVERTED);
+        beamBreak = new DigitalInput(RobotMap.Hopper.Sensors.HOPPER_BEAM_BREAK);
 
-        feeder.setNeutralMode(NeutralMode.Brake);
+        floor = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
+        upToShooter = new WPI_TalonSRX(RobotMap.Hopper.Motor.UP_TO_SHOOTER);
+        blueWheels = new WPI_TalonSRX(RobotMap.Hopper.Motor.BLUE_WHEELS);
+        floor.setInverted(RobotMap.Hopper.Motor.HOPPER_FLOOR_IS_INVERTED);
+        upToShooter.setInverted(RobotMap.Hopper.Motor.UP_TO_SHOOTER_IS_INVERTED);
+
+        upToShooter.setNeutralMode(NeutralMode.Brake);
 
         lastBotState = getBotSensor();
         lastMidState = getMidLimit();
@@ -70,11 +73,11 @@ public class Hopper {
     // ============ ACTUATION ============
 
     /**
-     * Stops the belt and feeder motors.
+     * Stops the floor and upToShooter motors.
      */
     public void stop() {
-        belt.set(0);
-        feeder.set(0);
+        floor.set(0);
+        upToShooter.set(0);
         blueWheels.set(0);
     }
 
@@ -85,28 +88,29 @@ public class Hopper {
      */
     public void update() {
         count();
-        if (!getTopLimit() && (!getMidLimit() || getBotSensor())) {
-            if (isCompBot) {
-                belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
-                feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
-                blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
-            } else {
-                belt.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BELT_SPEED);
-                feeder.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FEEDER_SPEED);
-                blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
+        if (isCompBot) {
+            while(beamBreak.get()) {
+                blueWheels.set(0);
+                floor.set(0);
             }
+
+            floor.set(RobotMap.Hopper.Speeds.CompBot.Update.FLOOR_SPEED);
+            upToShooter.set(RobotMap.Hopper.Speeds.CompBot.Update.UP_TO_SHOOTER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
         } else {
-            stop();
+            floor.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FLOOR_SPEED);
+            upToShooter.set(RobotMap.Hopper.Speeds.PracticeBot.Update.UP_TO_SHOOTER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
         }
     }
 
     /**
      * called when the driver is ready to shoot (pushing the button on the
-     * controller) sets the belt speed to the tested value necessary to feed
+     * controller) sets the floor speed to the tested value necessary to feed
      */
     public void reverse(double speed) {
-        belt.set(-speed);
-        feeder.set(-speed);
+        floor.set(-speed);
+        upToShooter.set(-speed);
         blueWheels.set(-speed);
     }
 
@@ -118,11 +122,11 @@ public class Hopper {
     public void forward(boolean atTarget) {
         if (atTarget) {
             if (getMidLimitToggled() || (!getTopLimit() && !getMidLimit())) {
-                belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
-                feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
+                floor.set(RobotMap.Hopper.Speeds.Forward.FLOOR_SPEED);
+                upToShooter.set(RobotMap.Hopper.Speeds.Forward.UP_TO_SHOOTER_SPEED);
                 blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
             } else {
-                feeder.set(1);
+                upToShooter.set(1);
             }
         } else {
             this.stop();
@@ -137,11 +141,11 @@ public class Hopper {
     public void forwardShot(boolean atTarget) {
         if (atTarget) {
             if (getMidLimitToggled() || !getMidLimit()) {
-                belt.set(RobotMap.Hopper.Speeds.Forward.BELT_SPEED);
-                feeder.set(RobotMap.Hopper.Speeds.Forward.FEEDER_SPEED);
+                floor.set(RobotMap.Hopper.Speeds.Forward.FLOOR_SPEED);
+                upToShooter.set(RobotMap.Hopper.Speeds.Forward.UP_TO_SHOOTER_SPEED);
                 blueWheels.set(RobotMap.Hopper.Speeds.Forward.BLUE_SPEED);
             } else {
-                feeder.set(1);
+                upToShooter.set(1);
             }
         } else {
             this.stop();
@@ -153,12 +157,12 @@ public class Hopper {
      */
     public void shootNoLogic() {
         if (isCompBot) {
-            belt.set(RobotMap.Hopper.Speeds.CompBot.Update.BELT_SPEED);
-            feeder.set(RobotMap.Hopper.Speeds.CompBot.Update.FEEDER_SPEED);
+            floor.set(RobotMap.Hopper.Speeds.CompBot.Update.FLOOR_SPEED);
+            upToShooter.set(RobotMap.Hopper.Speeds.CompBot.Update.UP_TO_SHOOTER_SPEED);
             blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
         } else {
-            belt.set(0);
-            feeder.set(0);
+            floor.set(0);
+            upToShooter.set(0);
             blueWheels.set(0);
         }
     }
