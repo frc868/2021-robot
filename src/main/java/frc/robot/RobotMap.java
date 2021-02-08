@@ -31,21 +31,21 @@ public class RobotMap {
         public static class Speeds {
             public static class CompBot {
                 public static class Update {
-                    public static final double BELT_SPEED = 0.5;
-                    public static final double FEEDER_SPEED = 0.8;
+                    public static final double FLOOR_SPEED = 0.5;
+                    public static final double UP_TO_SHOOTER_SPEED = 0.8;
                     public static final double BLUE_SPEED = 0.6;
                 }
             }            
             public static class PracticeBot {
                 public static class Update {
-                    public static final double BELT_SPEED = 0.5;
-                    public static final double FEEDER_SPEED = 0.8;
+                    public static final double FLOOR_SPEED = 0.5;
+                    public static final double UP_TO_SHOOTER_SPEED = 0.8;
                     public static final double BLUE_SPEED = 0.6;
                 }
             }
             public static class Forward {
-                public static final double BELT_SPEED = 0.6;
-                public static final double FEEDER_SPEED = 1;
+                public static final double FLOOR_SPEED = 0.6;
+                public static final double UP_TO_SHOOTER_SPEED = 1;
                 public static final double BLUE_SPEED = 0.7;
             }
         }
@@ -53,6 +53,7 @@ public class RobotMap {
         public static class Sensors {
             public static final int BOT_SENSOR_PORT_LEFT = 5;
             public static final int BOT_SENSOR_PORT_RIGHT = 4;
+            public static final int HOPPER_BEAM_BREAK = 2; // TODO: untested
             public static final int MID_LEFT = 3; // TODO: untested
             public static final int TOP_LEFT = 2; // TODO: untested
 
@@ -64,9 +65,9 @@ public class RobotMap {
         public static class Motor {
             public static final int HOPPER_FLOOR = 10; // TODO: untested
             public static final int BLUE_WHEELS = 11; // TODO: untested
-            public static final int FEEDER = 3; // TODO: untested
+            public static final int UP_TO_SHOOTER = 3; // TODO: untested
             public static final boolean HOPPER_FLOOR_IS_INVERTED = true; // TODO: untested
-            public static final boolean FEEDER_IS_INVERTED = true; // TODO: untested
+            public static final boolean UP_TO_SHOOTER_IS_INVERTED = true; // TODO: untested
         }
     }
 

@@ -23,63 +23,67 @@ public class OI {
     public static void update() {
 
         // GENERAL CONTROLS/CONTROL METHODS
-        if (driver.isAltMode()) {
-            Robot.drivetrain.arcadeDrive(0.4); // driver LY and RX
-        } else {
-            Robot.drivetrain.arcadeDrive(1); // TODO: edit method and try different controls like cubing
-        }
-        Robot.turret.manualTurret(); // operator LY
-        // ----------------------------------------------------------------------------------------
+        // if (driver.isAltMode()) {
+        //     Robot.drivetrain.arcadeDrive(0.4); // driver LY and RX
+        // } else {
+        //     Robot.drivetrain.arcadeDrive(1); // TODO: edit method and try different controls like cubing
+        // }
+        // Robot.turret.manualTurret(); // operator LY
+        // // ----------------------------------------------------------------------------------------
 
-        // ALT MODE TOGGLES
-        driver.bMENU.whenPressed(() -> {
-            driver.toggleAltMode();
-            operator.toggleAltMode();
-        });
+        // // ALT MODE TOGGLES
+        // driver.bMENU.whenPressed(() -> {
+        //     driver.toggleAltMode();
+        //     operator.toggleAltMode();
+        // });
 
-        // ============ EVERY MODE CONTROLS ===============
+        // // ============ EVERY MODE CONTROLS ===============
 
-        // CLIMBER
-        driver.bMENU.whenReleased(() -> {
-            Robot.climber.stopWinch();
-            Robot.climber.engageBrake();
-        });
-        operator.bMENU.whenReleased(() -> {
-            Robot.climber.stopWinch();
-            Robot.climber.engageBrake();
-        });
+        // // CLIMBER
+        // driver.bMENU.whenReleased(() -> {
+        //     Robot.climber.stopWinch();
+        //     Robot.climber.engageBrake();
+        // });
+        // operator.bMENU.whenReleased(() -> {
+        //     Robot.climber.stopWinch();
+        //     Robot.climber.engageBrake();
+        // });
 
         // HOPPER
-        driver.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+        driver.bB.whileHeld(() -> Robot.hopper.reverse(-0.6, -0.8));
         driver.bB.whenReleased(Robot.hopper::stop);
+        driver.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
+        driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
+        driver.bX.whileHeld(() -> Robot.intake.setSpeed(0.6));
+        driver.bX.whenReleased(() -> Robot.intake.setSpeed(0));
 
-        // TURRET
-        // TODO: check if we want this back in
-        operator.bLB.whileHeld(Robot.turret::manualTurret); // operator LX
-        operator.bLB.whenReleased(Robot.turret::stop);
+        // // TURRET
+        // // TODO: check if we want this back in
+        // operator.bLB.whileHeld(Robot.turret::manualTurret); // operator LX
+        // operator.bLB.whenReleased(Robot.turret::stop);
 
-        operator.bRB.whileHeld(Robot.turret::trackVision);
-        operator.bRB.whenReleased(Robot.turret::stop);
-        driver.bRB.whileHeld(Robot.turret::trackVision);
-        driver.bRB.whenReleased(Robot.turret::stop);
+        // operator.bRB.whileHeld(Robot.turret::trackVision);
+        // operator.bRB.whenReleased(Robot.turret::stop);
+        // driver.bRB.whileHeld(Robot.turret::trackVision);
+        // driver.bRB.whenReleased(Robot.turret::stop);
 
         // SHOOTER
-        operator.bSTART.whileHeld(() -> {
-            Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD); //TODO: test if this works
-            Robot.hopper.forward(Robot.shooter.atTarget());
-        });
-        operator.bSTART.whenReleased(() -> {
-            Robot.shooter.stop();
-            Robot.hopper.stop();
-        });
+        // operator.bSTART.whileHeld(() -> {
+        //     Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD); //TODO: test if this works
+        //     Robot.hopper.forward(Robot.shooter.atTarget());
+        // });
+        // operator.bSTART.whenReleased(() -> {
+        //     Robot.shooter.stop();
+        //     Robot.hopper.stop();
+        // });
 
-        driver.bSTART.whileHeld(() -> {
-            Robot.shooter.update(RobotMap.Shooter.TRENCH_FRONT_SPD);
-            Robot.hopper.forward(Robot.shooter.atTarget());
+        driver.bRT.whileHeld(() -> {
+            Robot.shooter.update(4824.6);
+            // Robot.hopper.forward(Robot.shooter.atTarget());
         });
-        driver.bSTART.whenReleased(() -> {
+        driver.bRT.whenReleased(() -> {
             Robot.shooter.stop();
-            Robot.hopper.stop();
+            // Robot.hopper.stop();
         });
 
         // ----------------------------------------------------------------------------------------
@@ -131,7 +135,7 @@ public class OI {
             // SHOOTER
             operator.bA.whileHeld(() -> {
                 Robot.shooter.update(Robot.camera.getCalculatedRPM());
-                Robot.hopper.forward(Robot.shooter.atTarget());
+                // Robot.hopper.forward(Robot.shooter.atTarget());
                 // Robot.hopper.forwardShot(Robot.shooter.atTarget()); // TODO: test this method
             });
             operator.bA.whenReleased(() -> {
@@ -149,7 +153,7 @@ public class OI {
                 Robot.intake.setSpeed(0);
             });
             operator.bLT.whileHeld(() -> {
-                Robot.hopper.reverse(.6);
+                // Robot.hopper.reverse(.6);
                 Robot.intake.setSpeed(-1);
             });
             operator.bLT.whenReleased(() -> {
@@ -157,7 +161,7 @@ public class OI {
                 Robot.intake.setSpeed(0);
             });
 
-            operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
+            // operator.bB.whileHeld(() -> Robot.hopper.reverse(.6));
             operator.bB.whenReleased(Robot.hopper::stop);
             // ---------------------------
         }
@@ -171,10 +175,10 @@ public class OI {
     }
 
     public static void initSD() {
-        SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
-        SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
-        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
-        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+        // SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
+        // SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
+        // SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        // SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
 
         SmartDashboard.putBoolean("Shooter running?", Robot.shooter.getRPM() > 0);
         SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
@@ -189,10 +193,10 @@ public class OI {
      * Used for updating the SmartDashboard during the match.
      */
     public static void updateSD() {
-        SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
-        SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
-        SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
-        SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
+        // SmartDashboard.putBoolean("Bot Left Sensor", Robot.hopper.getBotLeftSensor());
+        // SmartDashboard.putBoolean("Bot Right Sensor", Robot.hopper.getBotRightSensor());
+        // SmartDashboard.putBoolean("Mid Sensor", Robot.hopper.getMidLimit());
+        // SmartDashboard.putBoolean("Top Sensor", Robot.hopper.getTopLimit());
 
         SmartDashboard.putBoolean("Shooter running?", Robot.shooter.getRPM() > 0);
         SmartDashboard.putBoolean("At target", Robot.shooter.atTarget());
@@ -207,20 +211,21 @@ public class OI {
      * Used for updating the SmartDashboard during testing/troubleshooting.
      */
     public static void updateSDTesting() {
-        SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
+        // SmartDashboard.putNumber("Hopper count", Robot.hopper.getBallCount());
 
-        SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
-        SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
+        // SmartDashboard.putBoolean("Turret left", Robot.turret.getLeftLimit());
+        // SmartDashboard.putBoolean("Turret right", Robot.turret.getRightLimit());
 
         SmartDashboard.putNumber("Turret Speed", Robot.turret.getSpeed());
-        SmartDashboard.putNumber("Turret position", Robot.turret.getCompEncPosition());
-        SmartDashboard.putNumber("Limelight X Pos", Robot.camera.getPosition());
+        // SmartDashboard.putNumber("Turret position", Robot.turret.getCompEncPosition());
+        // SmartDashboard.putNumber("Limelight X Pos", Robot.camera.getPosition());
         SmartDashboard.putNumber("Calculated RPM", Robot.camera.getCalculatedRPM());
 
-        SmartDashboard.putNumber("CL_Winch", Robot.climber.getWinchPosition());
-        SmartDashboard.putNumber("CL_Arm", Robot.climber.getArmPosition());
-        SmartDashboard.putBoolean("CL_Sensor", Robot.climber.getArmDeploy());
+        // SmartDashboard.putNumber("CL_Winch", Robot.climber.getWinchPosition());
+        // SmartDashboard.putNumber("CL_Arm", Robot.climber.getArmPosition());
+        // SmartDashboard.putBoolean("CL_Sensor", Robot.climber.getArmDeploy());
 
-        SmartDashboard.putBoolean("Operator Alt Mode", operator.isAltMode());
+        // SmartDashboard.putBoolean("Operator Alt Mode", operator.isAltMode());
+        // SmartDashboard.putNumber("IAccum", Robot.drivetrain);
     }
 }

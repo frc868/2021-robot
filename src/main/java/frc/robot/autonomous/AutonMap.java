@@ -39,4 +39,9 @@ public class AutonMap {
         // the power to run the shooter at
         public static final double SHOOTER_RPM = 4000; // TODO: tune
     }
+    public static class Test{
+        public static final double DISTANCE = 100.0;
+        public static final double START_POWER = 1;
+        public static final double END_POWER = 0;
+    }
 }
