@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.SensorUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -73,11 +74,16 @@ public class Shooter {
         // kD = 0.03;
         // kFF = 0.190;
         // kIa = 2;
+        SmartDashboard.putNumber("kP", kP);
+        SmartDashboard.putNumber("kI", kI);
+        SmartDashboard.putNumber("kD", kD);
+        SmartDashboard.putNumber("kFF", kFF);
+        SmartDashboard.putNumber("kIa", kIa);
 
-        pid.setP(SmartDashboard.getNumber("kP", kP));
-        pid.setI(SmartDashboard.getNumber("kI", kI));
-        pid.setD(SmartDashboard.getNumber("kD", kD));
-        pid.setFF(SmartDashboard.getNumber("kFF", kFF));
+        // pid.setP(SmartDashboard.getNumber("kP", kP));
+        // pid.setI(SmartDashboard.getNumber("kI", kI));
+        // pid.setD(SmartDashboard.getNumber("kD", kD));
+        // pid.setFF(SmartDashboard.getNumber("kFF", kFF));
         pid.setIMaxAccum(kIa, 0);
 
         if (this.kI == 0) {
@@ -96,6 +102,8 @@ public class Shooter {
         pid.setP(SmartDashboard.getNumber("kP", kP)/1000);
         pid.setI(SmartDashboard.getNumber("kI", kI)/1000);
         pid.setD(SmartDashboard.getNumber("kD", kD)/1000);
+        System.out.println("p is: " + pid.getP());
+        System.out.println("d is: " + pid.getD());
         pid.setFF(SmartDashboard.getNumber("kFF", kFF)/1000);
         pid.setIMaxAccum(SmartDashboard.getNumber("kIa", kIa), 0);
 
@@ -151,7 +159,7 @@ public class Shooter {
      * @author hrl
      */
     public void shootUntilClear(double rpm) {
-        Robot.hopper.forward(this.atTarget());
+        // Robot.hopper.forward(this.atTarget());
         this.setpoint = rpm;
         this.update();
     }

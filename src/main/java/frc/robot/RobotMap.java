@@ -53,7 +53,7 @@ public class RobotMap {
         public static class Sensors {
             public static final int BOT_SENSOR_PORT_LEFT = 5;
             public static final int BOT_SENSOR_PORT_RIGHT = 4;
-            public static final int HOPPER_BEAM_BREAK = 3; // TODO: untested
+            public static final int HOPPER_BEAM_BREAK = 2; // TODO: untested
             public static final int MID_LEFT = 3; // TODO: untested
             public static final int TOP_LEFT = 2; // TODO: untested
 

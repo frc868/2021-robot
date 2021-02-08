@@ -168,7 +168,7 @@ public class HeadOn extends AutonPath {
         // update state variables
         currentDistance = Robot.drivetrain.getCurrentDistance();
 
-        SmartDashboard.putString("Auton state", this.currentState.toString());
+        // SmartDashboard.putString("Auton state", this.currentState.toString());
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }

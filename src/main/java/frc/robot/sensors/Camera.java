@@ -85,7 +85,7 @@ public class Camera {
 
         dist = dist/Math.cos(Math.toRadians(this.getAngle())); // account for angle offset
         dist = dist/39.37; // conversion from inches to meters, since that's what the regression is
-        System.out.println(dist);
+        // System.out.println(dist);
         return dist;
     }
 
