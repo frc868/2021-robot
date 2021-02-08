@@ -15,12 +15,6 @@ import frc.robot.RobotMap;
 public class Hopper {
     private static Hopper instance;
 
-    private DigitalInput botSensorL;
-    private DigitalInput botSensorR;
-    private DigitalInput midLeftLim;
-    private DigitalInput topLeftLim;
-    private DigitalInput beamBreak;
-
     private WPI_TalonSRX floor;
     private WPI_TalonSRX upToShooter;
     private WPI_TalonSRX blueWheels;
@@ -28,23 +22,9 @@ public class Hopper {
     // a state variable to control the number of balls currently in the hopper
     private int count = 3;
 
-    // store the last value of the limit switches to see if they have been triggered
-    // after
-    private boolean lastBotState;
-    private boolean lastMidState;
-    private boolean lastTopState;
-
     private boolean isCompBot = true;
 
     private Hopper(boolean compBot) {
-        // botSensorL = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT_LEFT);
-        // botSensorR = new DigitalInput(RobotMap.Hopper.Sensors.BOT_SENSOR_PORT_RIGHT);
-        
-        // midLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.MID_LEFT);
-        // topLeftLim = new DigitalInput(RobotMap.Hopper.Sensors.TOP_LEFT);
-
-        beamBreak = new DigitalInput(RobotMap.Hopper.Sensors.HOPPER_BEAM_BREAK);
-
         floor = new WPI_TalonSRX(RobotMap.Hopper.Motor.HOPPER_FLOOR);
         upToShooter = new WPI_TalonSRX(RobotMap.Hopper.Motor.UP_TO_SHOOTER);
         blueWheels = new WPI_TalonSRX(RobotMap.Hopper.Motor.BLUE_WHEELS);
@@ -52,10 +32,6 @@ public class Hopper {
         upToShooter.setInverted(RobotMap.Hopper.Motor.UP_TO_SHOOTER_IS_INVERTED);
 
         upToShooter.setNeutralMode(NeutralMode.Brake);
-
-        // lastBotState = getBotSensor();
-        // lastMidState = getMidLimit();
-        // lastTopState = getTopLimit();
 
         this.isCompBot = compBot;
     }
@@ -87,26 +63,15 @@ public class Hopper {
      * @author igc
      */
     public void update() {
-        // count();
-        // if (isCompBot) {
-            while(!beamBreak.get()) {
-                // System.out.println(beamBreak.get());
-                blueWheels.set(0);
-                upToShooter.set(1);
-                floor.set(0);
-            }
-
-            floor.set(-0.6);
-            upToShooter.set(1);
-            blueWheels.set(-0.6);
-            // floor.set(RobotMap.Hopper.Speeds.CompBot.Update.FLOOR_SPEED);
-            // upToShooter.set(RobotMap.Hopper.Speeds.CompBot.Update.UP_TO_SHOOTER_SPEED);
-            // blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
-        // } else {
-        //     floor.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FLOOR_SPEED);
-        //     upToShooter.set(RobotMap.Hopper.Speeds.PracticeBot.Update.UP_TO_SHOOTER_SPEED);
-        //     blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
-        // }
+        if (isCompBot) {
+            floor.set(RobotMap.Hopper.Speeds.CompBot.Update.FLOOR_SPEED);
+            upToShooter.set(RobotMap.Hopper.Speeds.CompBot.Update.UP_TO_SHOOTER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.CompBot.Update.BLUE_SPEED);
+        } else {
+            floor.set(RobotMap.Hopper.Speeds.PracticeBot.Update.FLOOR_SPEED);
+            upToShooter.set(RobotMap.Hopper.Speeds.PracticeBot.Update.UP_TO_SHOOTER_SPEED);
+            blueWheels.set(RobotMap.Hopper.Speeds.PracticeBot.Update.BLUE_SPEED);
+        }
     }
 
     /**
@@ -169,30 +134,6 @@ public class Hopper {
         }
     }
 
-    // ========================================================
-
-    // ============ UTILITIES ============
-
-    // /**
-    //  * Determine whether we are in a state where shooting is possible.
-    //  */
-    // public boolean readyToShoot() {
-    //     return getTopLimit();
-    // }
-
-    // /**
-    //  * Increments count variable for number of balls stored in the hopper.
-    //  */
-    // private void count() {
-    //     if (getTopLimitToggled()) {
-    //         count--;
-    //     }
-
-    //     if (getMidLimitToggled()) {
-    //         count++;
-    //     }
-    // }
-
     /**
      * returns count of how many balls are currently held in the hopper     * 
      * @return count
@@ -200,80 +141,6 @@ public class Hopper {
     public int getBallCount() {
         return count;
     }
-
-    // ========================================================
-
-
-    // ============ SENSORS ============
-
-    /**
-    //  * Returns the state of the top limits.
-    //  */
-    // public boolean getTopLimit() {
-    //     return !topLeftLim.get();
-    // }
-
-    // /**
-    //  * Returns the state of the mid limit.
-    //  */
-    // public boolean getMidLimit() {
-    //     return !midLeftLim.get();
-    // }
-
-    // /**
-    //  * Returns true if one of the bottom sensors is toggled.
-    //  * @return value of bottom sensors
-    //  */
-    // public boolean getBotSensor() {
-    //     return getBotLeftSensor() || getBotRightSensor();
-    // }
-
-    // /**
-    //  * Returns true if the bottom left sensor is toggled.
-    //  * @return value 
-    //  */
-    // public boolean getBotLeftSensor() {
-    //     return !botSensorL.get();
-    // }
-
-    // public boolean getBotRightSensor() {
-    //     return !botSensorR.get();
-    // }
-
-    // /**
-    //  * returns true if bottom limit switches are toggled from true to false
-    //  * (unsimplified expression: current left state is false and last state is true,
-    //  * or current right state is false and last state is true)
-    //  * 
-    //  * @return toggled
-    //  */
-    // private boolean getMidLimitToggled() {
-    //     if (getMidLimit() != lastMidState) {
-    //         lastMidState = getMidLimit();
-    //         if (lastMidState == RobotMap.Hopper.Sensors.MID_LAST_STATE_VALUE) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-
-    // }
-
-    // /**
-    //  * returns true if top limit switches are toggled from true to false
-    //  * (unsimplified expression: current left state is false and last state is true,
-    //  * or current right state is false and last state is true)
-    //  * 
-    //  * @return toggled
-    //  */
-    // private boolean getTopLimitToggled() {
-    //     if (getTopLimit() != lastBotState) {
-    //         lastTopState = getTopLimit();
-    //         if (lastTopState == RobotMap.Hopper.Sensors.TOP_LAST_STATE_VALUE) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
 
     @Override
     public String toString() {
