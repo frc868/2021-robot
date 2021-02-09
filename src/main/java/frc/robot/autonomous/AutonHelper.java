@@ -19,7 +19,7 @@ public class AutonHelper {
         this.addPath("Head-On", new HeadOn());
         this.addPath("Test", new Test());
 
-        chooser.setDefaultOption("Head-On", new HeadOn());
+        chooser.setDefaultOption("Test", new Test());
     }
 
     /**
@@ -53,6 +53,7 @@ public class AutonHelper {
      * Runs whatever path is selected on the sendable chooser.
      */
     public void runSelectedPath() {
+        System.out.println(this.getCurrentPath().toString());
         this.getCurrentPath().run();
     }
 

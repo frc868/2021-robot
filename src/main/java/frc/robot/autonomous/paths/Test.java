@@ -24,7 +24,7 @@ public class Test extends AutonPath{
 
             @Override
             public String toString() {
-                return "Done";
+                return "ToPosition";
             }
         },
         RightTurn {
@@ -43,7 +43,7 @@ public class Test extends AutonPath{
 
             @Override
             public String toString() {
-                return "Done";
+                return "RightTurn";
             }
         },
         End {

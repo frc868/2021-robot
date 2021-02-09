@@ -40,8 +40,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        // auton.initSD();
-        // auton.resetSelectedPath();
+        auton.initSD();
+        auton.resetSelectedPath();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
         OI.updateSD();
 
         auton.runSelectedPath();
-        turret.trackVision();
+        // turret.trackVision();
         Scheduler.getInstance().run();
     }
 
