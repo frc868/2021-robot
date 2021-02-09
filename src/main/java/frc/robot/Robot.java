@@ -60,9 +60,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        // drivetrain.resetInitialDistance();
-        // drivetrain.resetEncoderPositions();
-        // gyro.reset();
+        drivetrain.resetInitialDistance();
+        drivetrain.resetEncoderPositions();
+        gyro.reset();
     }
 
     @Override

@@ -18,7 +18,7 @@ package frc.robot.autonomous;
 public class AutonMap {
     public static class Baseline {
         // the distance to drive from the baseline
-        public static final double DISTANCE = 10.0;
+        public static final double DISTANCE = 100.0;
         // the power to start driving with
         public static final double START_POWER = 0.5;
         // the power to end driving with
@@ -40,7 +40,7 @@ public class AutonMap {
         public static final double SHOOTER_RPM = 4000; // TODO: tune
     }
     public static class Test{
-        public static final double DISTANCE = 10000.0;
+        public static final double DISTANCE = 5.0;
         public static final double START_POWER = 1;
         public static final double END_POWER = 0;
     }

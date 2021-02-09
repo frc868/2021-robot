@@ -1,4 +1,5 @@
 package frc.robot.autonomous.paths;
+
 import frc.robot.Robot;
 import frc.robot.autonomous.AutonMap;
 import frc.robot.autonomous.AutonPath;
@@ -11,7 +12,7 @@ public class Test extends AutonPath{
         ToPosition {
             @Override
             public TestState nextState() {
-                if(Robot.drivetrain.getRightPosition() == AutonMap.Test.DISTANCE){
+                if(total_distance < AutonMap.Test.DISTANCE){
                     return this;
                 }
                 return RightTurn;
@@ -27,10 +28,29 @@ public class Test extends AutonPath{
                 return "ToPosition";
             }
         },
+        // Stop {
+        //     @Override
+        //     public TestState nextState() {
+        //         if(total_distance < AutonMap.Test.DISTANCE){
+        //             return this;
+        //         }
+        //         return RightTurn;
+        //     }
+
+        //     @Override
+        //     public void run() {
+        //         Robot.drivetrain.setSpeed(0, 0);
+        //     }
+
+        //     @Override
+        //     public String toString() {
+        //         return "ToPosition";
+        //     }
+        // },
         RightTurn {
             @Override
             public TestState nextState() {
-                 if(Robot.gyro.getAngle() == 90) {
+                 if(Robot.gyro.getAngle() <= 180) {
                     return this;
                  }
                  return End;
@@ -38,7 +58,7 @@ public class Test extends AutonPath{
 
             @Override
             public void run(){
-                Robot.drivetrain.setSpeed(.5, 0);
+                Robot.drivetrain.setSpeed(1, -1);
             }
 
             @Override
@@ -69,6 +89,8 @@ public class Test extends AutonPath{
 
     @Override
     public void run(){
+        total_distance = Robot.drivetrain.getCurrentDistance();
+
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }
