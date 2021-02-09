@@ -2,9 +2,7 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.autonomous.paths.DoNothing;
-import frc.robot.autonomous.paths.Baseline;
-import frc.robot.autonomous.paths.HeadOn;
+import frc.robot.autonomous.paths.*;
 
 /**
  * Adds and selects autonomous paths by a SendableChooser.
@@ -19,6 +17,7 @@ public class AutonHelper {
         this.addPath("Nothing", new DoNothing());
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
+        this.addPath("Test", new Test());
 
         chooser.setDefaultOption("Head-On", new HeadOn());
     }
