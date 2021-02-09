@@ -5,8 +5,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.OI;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
+
 
 /**
  * This is the code for the robot drivetrain. It initializes motor controllers and has methods
@@ -18,6 +21,10 @@ public class Drivetrain {
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
+    private PIDController leftPID;
+    private double klP = 0.0;
+    private double klI = 0.0;
+    private double klD = 0.0;
 
     private double initialDistance = 0; // used for driveStraight()
 
@@ -31,7 +38,7 @@ public class Drivetrain {
 
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
         rightSpeedControl = new SpeedControllerGroup(r_primary, r_secondary);
-
+        leftPID = new PIDController(klP, klI, klD);
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
 
@@ -211,5 +218,12 @@ public class Drivetrain {
     @Override
     public String toString() {
         return "" + getAveragePosition();
+    }
+    public void turnLeft(){
+        Robot.drivetrain.resetEncoderPositions();
+        if(Robot.gyro.getAngle() < 90){
+            double pidOut = leftPID.calculate(Robot.drivetrain.getCurrentDistance(), 0);
+            Robot.drivetrain.setRightSpeed(pidOut);
+        }
     }
 }
