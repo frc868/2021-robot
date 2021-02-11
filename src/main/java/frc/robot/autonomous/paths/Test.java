@@ -50,7 +50,7 @@ public class Test extends AutonPath{
         RightTurn {
             @Override
             public TestState nextState() {
-                 if(Robot.gyro.getAngle() <= 180) {
+                 if(Robot.gyro.getAngle() < 90) {
                     return this;
                  }
                  return End;
@@ -58,7 +58,7 @@ public class Test extends AutonPath{
 
             @Override
             public void run(){
-                Robot.drivetrain.setSpeed(1, -1);
+                Robot.drivetrain.turnLeft();
             }
 
             @Override
