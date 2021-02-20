@@ -20,6 +20,14 @@ public class TurnToAngleGyro {
     private static final double kP = 0.0039, kI = 0, kD = 0; // TODO: untested
     private final double tolerance = 1; // TODO: untested
     private PIDController pid;
+    private static TurnToAngleGyro instance;
+
+    public static TurnToAngleGyro getInstance(){
+        if(instance == null){
+            return new TurnToAngleGyro();
+        }
+        return instance;
+    }
 
     private double initialAngle;
 
@@ -27,7 +35,7 @@ public class TurnToAngleGyro {
      * Creates a new TurnToAngleGyro object, to be run with TurnToAngleGyro.run().
      * @param angle the angle to turn to, from -180 to +180
      */
-    public TurnToAngleGyro() {
+    private TurnToAngleGyro() {
         // initialize sources
         pid = new PIDController(kP, kI, kD);
 
@@ -44,7 +52,7 @@ public class TurnToAngleGyro {
     /**
      * Turns the robot to the specified angle (in degrees).
      */
-    public void run(int angle) {
+    public void run(double angle) {
         double currentAngle = Robot.gyro.getAngle() - initialAngle;
 
         if (angle > 0 && angle <= 180) {

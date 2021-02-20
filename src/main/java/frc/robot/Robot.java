@@ -20,6 +20,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.autonomous.TurnToAngleGyro;
 
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
     public static Hopper hopper = Hopper.getInstance(true);
     public static Shooter shooter = Shooter.getInstance();
     public static Turret turret = Turret.getInstance(true);
+    public static TurnToAngleGyro turn = TurnToAngleGyro.getInstance();
 
     @Override
     public void disabledInit() {

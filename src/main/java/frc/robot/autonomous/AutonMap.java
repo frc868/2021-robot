@@ -44,4 +44,30 @@ public class AutonMap {
         public static final double START_POWER = 1;
         public static final double END_POWER = 0;
     }
+    public static class AutonPathAB{
+        public static final double START_POWER = 0.6;
+        public static final double END_POWER = 0.0;
+        public static class Angles{
+            public static final double ANGLE_B3 = 90.0;
+            public static final double ANGLE_C3 = -63.43;
+            public static final double ANGLE_D5 = 18.43;
+            public static final double ANGLE_E6 = -45.0;
+            public static final double ANGLE_A6 = 45.0;
+            public static final double ANGLE_B7 = -45.0;
+            public static final double ANGLE_B8 = 45.0;
+            public static final double ANGLE_D10 = -45.0;
+        }
+        public static class Distances{
+            public static final double DISTANCE_B3 = 0.0; //untested
+            public static final double DISTANCE_C3 = 0.0; //untested
+            public static final double DISTANCE_D5 = 0.0; //untested
+            public static final double DISTANCE_E6 = 0.0; //untested
+            public static final double DISTANCE_A6 = 0.0; //untested
+            public static final double DISTANCE_B7 = 0.0; //untested
+            public static final double DISTANCE_B8 = 0.0; //untested
+            public static final double DISTANCE_D10 = 0.0; //untested
+            public static final double DISTANCE_D11 = 0.0; //untested
+            
+        }
+    }
 }
