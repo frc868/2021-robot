@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        drivetrain.resetEncoderPositions();
         shooter.init();
         turret.resetEncoders();
     }
@@ -85,6 +86,8 @@ public class Robot extends TimedRobot {
 
         OI.update();
         Scheduler.getInstance().run();
+        System.out.println(drivetrain.getLeftPosition());
+        System.out.println(drivetrain.getRightPosition());
     }
 
     @Override

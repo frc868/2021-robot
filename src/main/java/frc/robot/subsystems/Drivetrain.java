@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -20,8 +21,9 @@ public class Drivetrain {
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
-    private PIDController leftPID;
+    // private PIDController leftPID;
     private double initialDistance = 0; // used for driveStraight()
+    private PIDController leftPID, rightPID;
     private double kP = 0;
     private double kI = 0;
     private double kD = 0;
@@ -39,10 +41,12 @@ public class Drivetrain {
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
         leftPID = new PIDController(kP, kI, kD);
-        l_primary.getEncoder()
-            .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
-        r_primary.getEncoder()
-            .setPositionConversionFactor(INCHES_PER_TICK);
+        rightPID = new PIDController(kP, kI, kD);
+        // leftPID = new PIDController(kP, kI, kD);
+        // l_primary.getEncoder();
+            // .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
+        // r_primary.getEncoder();
+            // .setPositionConversionFactor(INCHES_PER_TICK);
     }
 
     /**
@@ -102,17 +106,32 @@ public class Drivetrain {
      * @author hrl
      */
     public void driveStraight(double targetDist, double startPower, double endPower) {
+        double targetSpeed;
+        
         if (this.initialDistance == 0) {
             this.initialDistance = Math.abs(getLeftPosition());
         }
 
-        double pGain = 0.5; // TODO: untested
-        double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        double distance = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
 
-        double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
-        setSpeed(targetSpeed, targetSpeed);
+        // double pGain = 0.5; // TODO: untested
+        double distanceToTarget = distance;
+        
+        while(distanceToTarget > distance/2){
+            targetSpeed = startPower * (1 - ((distanceToTarget-distance/2)/distance/2));
+            setSpeed(targetSpeed, targetSpeed);
+            distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        }
 
-        distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        while(distanceToTarget < distance/2){
+            targetSpeed = startPower * ((distanceToTarget-distance/2)/distance/2) + endPower;
+            setSpeed(targetSpeed, targetSpeed);
+            distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        }
+        // double targetSpeed = leftPID.calculate(l_primary.getEncoder().getVelocity(), endPower);
+        // setSpeed(targetSpeed, targetSpeed);
+
+        
     }
 
     /**
@@ -215,12 +234,5 @@ public class Drivetrain {
     @Override
     public String toString() {
         return "" + getAveragePosition();
-    }
-    public void turnLeft(){
-        Robot.drivetrain.resetEncoderPositions();
-        if(Robot.gyro.getAngle() < 90){
-            double pidOUT = leftPID.calculate(Robot.drivetrain.getCurrentDistance(), 0);
-            Robot.drivetrain.setRightSpeed(pidOUT);
-    }
     }
 }
