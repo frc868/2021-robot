@@ -40,9 +40,11 @@ public class Drivetrain {
 
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
         rightSpeedControl = new SpeedControllerGroup(r_primary, r_secondary);
-        leftPID = new PIDController(klP, klI, klD);
+        // leftPID = new PIDController(klP, klI, klD);
+
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
+
         leftPID = new PIDController(kP, kI, kD);
         rightPID = new PIDController(kP, kI, kD);
         // leftPID = new PIDController(kP, kI, kD);
@@ -121,13 +123,13 @@ public class Drivetrain {
         double distanceToTarget = distance;
         
         while(distanceToTarget > distance/2){
-            targetSpeed = startPower * (1 - ((distanceToTarget-distance/2)/distance/2));
+            targetSpeed = leftPID.calculate(startPower, l_primary.getEncoder().getVelocity());
             setSpeed(targetSpeed, targetSpeed);
             distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
         }
 
         while(distanceToTarget < distance/2){
-            targetSpeed = startPower * ((distanceToTarget-distance/2)/distance/2) + endPower;
+            targetSpeed = leftPID.calculate(endPower, l_primary.getEncoder().getVelocity());
             setSpeed(targetSpeed, targetSpeed);
             distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
         }
