@@ -18,6 +18,7 @@ public class AutonPathAB extends AutonPath {
             }
             public void run(){
                 Robot.drivetrain.setSpeed(0, 0);
+                System.out.println("Start");
             }
         },
         ToB3{
@@ -32,6 +33,7 @@ public class AutonPathAB extends AutonPath {
             public void run(){
                 resetCurrentDistance();
                 Robot.drivetrain.driveStraight(AutonMap.AutonPathAB.Distances.DISTANCE_B3, AutonMap.AutonPathAB.START_POWER, AutonMap.AutonPathAB.END_POWER);
+                System.out.println("ToB3");
             }
         },
         TurnB3{
@@ -46,6 +48,7 @@ public class AutonPathAB extends AutonPath {
             public void run(){
                 Robot.gyro.reset();
                 Robot.turn.run(AutonMap.AutonPathAB.Angles.ANGLE_B3);
+                System.out.println("TurnB3");
 
             }
 
@@ -221,6 +224,7 @@ public class AutonPathAB extends AutonPath {
             }
             @Override
             public void run(){
+                System.out.println("Finished");
 
             }
 
@@ -229,6 +233,7 @@ public class AutonPathAB extends AutonPath {
 
         public abstract PathABState nextState();
         public abstract void run();
+       
         public void stop(){
 
         }
