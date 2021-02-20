@@ -53,20 +53,19 @@ public class TurnToAngleGyro {
      * Turns the robot to the specified angle (in degrees).
      */
     public void run(double angle) {
-        double currentAngle = Robot.gyro.getAngle() - initialAngle;
+       Robot.gyro.reset();
+       double currentAngle = Robot.gyro.getAngle();
+       //turns the robot to the right
+       if(angle > 0.0 && angle <= 180.0){
+            if(currentAngle < angle){
+                Robot.drivetrain.setSpeed(pid.calculate(currentAngle, angle), -pid.calculate(currentAngle, angle));
+            }
+       }
+       //turns the robot to the left
+       if(angle < 0.0 && angle >= -180.0){
+           if(currentAngle > angle){
+                Robot.drivetrain.setSpeed(-pid.calculate(currentAngle, angle), pid.calculate(currentAngle, angle));
+           }
 
-        if (angle > 0 && angle <= 180) {
-            if (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                double speed = pid.calculate(currentAngle, angle);
-                Robot.drivetrain.setSpeed(speed, -speed);
-            }
-        } else if (angle < 0 && angle >= -180) { // turn backwards
-            if (currentAngle < angle - tolerance || currentAngle > angle + tolerance) {
-                double speed = pid.calculate(currentAngle, angle);
-                Robot.drivetrain.setSpeed(speed, -speed);
-            }
-        } else {
-            System.out.println("TTAG: out of range");
-        }
-    }
+       }
 }
