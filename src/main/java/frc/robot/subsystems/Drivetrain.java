@@ -11,6 +11,7 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
+
 /**
  * This is the code for the robot drivetrain. It initializes motor controllers and has methods
  * for various functions of the drivetrain.
@@ -21,7 +22,9 @@ public class Drivetrain {
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
-    // private PIDController leftPID;
+    private double klP = 0.0;
+    private double klI = 0.0;
+    private double klD = 0.0;
     private double initialDistance = 0; // used for driveStraight()
     private PIDController leftPID, rightPID;
     private double kP = 0;
@@ -37,7 +40,7 @@ public class Drivetrain {
 
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
         rightSpeedControl = new SpeedControllerGroup(r_primary, r_secondary);
-
+        leftPID = new PIDController(klP, klI, klD);
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
         leftPID = new PIDController(kP, kI, kD);

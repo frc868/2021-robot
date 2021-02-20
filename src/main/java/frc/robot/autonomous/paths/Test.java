@@ -15,7 +15,7 @@ public class Test extends AutonPath{
                 if(total_distance < AutonMap.Test.DISTANCE){
                     return this;
                 }
-                return RightTurn;
+                return LeftTurn;
             }
 
             @Override
@@ -28,26 +28,7 @@ public class Test extends AutonPath{
                 return "ToPosition";
             }
         },
-        // Stop {
-        //     @Override
-        //     public TestState nextState() {
-        //         if(total_distance < AutonMap.Test.DISTANCE){
-        //             return this;
-        //         }
-        //         return RightTurn;
-        //     }
-
-        //     @Override
-        //     public void run() {
-        //         Robot.drivetrain.setSpeed(0, 0);
-        //     }
-
-        //     @Override
-        //     public String toString() {
-        //         return "ToPosition";
-        //     }
-        // },
-        RightTurn {
+        LeftTurn {
             @Override
             public TestState nextState() {
                  if(Robot.gyro.getAngle() < 90) {
@@ -63,7 +44,7 @@ public class Test extends AutonPath{
 
             @Override
             public String toString() {
-                return "RightTurn";
+                return "LeftTurn";
             }
         },
         End {
@@ -90,7 +71,6 @@ public class Test extends AutonPath{
     @Override
     public void run(){
         total_distance = Robot.drivetrain.getCurrentDistance();
-
         this.currentState.run();
         this.currentState = this.currentState.nextState();
     }

@@ -18,8 +18,9 @@ public class AutonHelper {
         this.addPath("Baseline", new Baseline());
         this.addPath("Head-On", new HeadOn());
         this.addPath("Test", new Test());
+        this.addPath("AutonPathAB", new AutonPathAB());
 
-        chooser.setDefaultOption("Test", new Test());
+        chooser.setDefaultOption("AutonPathAB", new AutonPathAB());
     }
 
     /**
