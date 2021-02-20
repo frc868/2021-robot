@@ -27,7 +27,9 @@ public class Drivetrain {
     private double klD = 0.0;
 
     private double initialDistance = 0; // used for driveStraight()
-
+    private double kP = 0;
+    private double kI = 0;
+    private double kD = 0;
     private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
 
     private Drivetrain() {
@@ -41,7 +43,7 @@ public class Drivetrain {
         leftPID = new PIDController(klP, klI, klD);
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
-
+        leftPID = new PIDController(kP, kI, kD);
         l_primary.getEncoder()
             .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
         r_primary.getEncoder()
@@ -222,8 +224,8 @@ public class Drivetrain {
     public void turnLeft(){
         Robot.drivetrain.resetEncoderPositions();
         if(Robot.gyro.getAngle() < 90){
-            double pidOut = leftPID.calculate(Robot.drivetrain.getCurrentDistance(), 0);
-            Robot.drivetrain.setRightSpeed(pidOut);
-        }
+            double pidOUT = leftPID.calculate(Robot.drivetrain.getCurrentDistance(), 0);
+            Robot.drivetrain.setRightSpeed(pidOUT);
+    }
     }
 }
