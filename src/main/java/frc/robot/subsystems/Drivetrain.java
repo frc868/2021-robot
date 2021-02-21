@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -22,6 +23,7 @@ public class Drivetrain {
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
+    private CANEncoder lEncoder, rEncoder;
     private double klP = 0.0;
     private double klI = 0.0;
     private double klD = 0.0;
@@ -31,6 +33,7 @@ public class Drivetrain {
     private double kI = 0;
     private double kD = 0;
     private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
+    private final double maxVelocity = 5676; // TODO: entirely untested! measured in RPM
 
     private Drivetrain() {
         l_primary = new CANSparkMax(RobotMap.Drivetrain.LEFT_PRIMARY, MotorType.kBrushless);
@@ -40,11 +43,16 @@ public class Drivetrain {
 
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
         rightSpeedControl = new SpeedControllerGroup(r_primary, r_secondary);
-        leftPID = new PIDController(klP, klI, klD);
+        // leftPID = new PIDController(klP, klI, klD);
+
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
+
         leftPID = new PIDController(kP, kI, kD);
         rightPID = new PIDController(kP, kI, kD);
+
+        lEncoder = l_primary.getEncoder();
+        rEncoder = r_primary.getEncoder();
         // leftPID = new PIDController(kP, kI, kD);
         // l_primary.getEncoder();
             // .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
