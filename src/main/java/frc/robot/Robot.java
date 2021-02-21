@@ -88,8 +88,8 @@ public class Robot extends TimedRobot {
 
         OI.update();
         Scheduler.getInstance().run();
-        System.out.println(drivetrain.getLeftPosition());
-        System.out.println(drivetrain.getRightPosition());
+        // System.out.println(drivetrain.getLeftPosition());
+        // System.out.println(drivetrain.getRightPosition());
     }
 
     @Override

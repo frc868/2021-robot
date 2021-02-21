@@ -56,7 +56,7 @@ public class OI {
         // driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
         // driver.bX.whileHeld(() -> Robot.intake.setSpeed(0.6));
         // driver.bX.whenReleased(() -> Robot.intake.setSpeed(0)); 
-        driver.bY.whenPressed(() -> Robot.drivetrain.driveStraight(10, 0.5, 0));
+        driver.bY.whenPressed(() -> Robot.drivetrain.driveStraight(80, 0.1, 0));
         driver.bB.whenPressed(() -> Robot.shooter.setSpeed(0));
 
         // // TURRET
