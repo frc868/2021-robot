@@ -117,7 +117,7 @@ public class Drivetrain {
      * @author hrl
      */
     public void driveStraight(double targetDist, double maxSpeed, double endPower) {
-        double targetSpeed;
+        double targetSpeed = 0;
         
         if (this.initialDistance == 0) {
             this.initialDistance = Math.abs(getLeftPosition());
@@ -134,14 +134,16 @@ public class Drivetrain {
             targetSpeed = 0.1 + (1 - ((distanceToTarget-distance/2) / (distance / 2)));
             setSpeed(maxSpeed * targetSpeed, maxSpeed * targetSpeed);
             distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition()) - this.initialDistance;
+            // System.out.println(distanceToTarget);
         }
         
         System.out.println("Midpoint reached: " + distanceToTarget);
 
-        while (distanceToTarget <= distance / 2) {
-            targetSpeed = ((distanceToTarget-distance/2)/distance/2);
+        while (distanceToTarget < distance / 2) {
+            targetSpeed = distanceToTarget / (distance / 2);
             setSpeed(maxSpeed * targetSpeed, maxSpeed * targetSpeed);
             distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition()) - this.initialDistance;
+            System.out.println(distanceToTarget);
             // System.out.println("Distance is: " + distanceToTarget);
             // System.out.println("TargetSpeed: " + targetSpeed);
             // System.out.println("Left Encoder Position: " + getLeftPosition());
