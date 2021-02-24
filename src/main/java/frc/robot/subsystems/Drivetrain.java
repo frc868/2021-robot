@@ -32,7 +32,7 @@ public class Drivetrain {
     private double kP = 0;
     private double kI = 0;
     private double kD = 0;
-    private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
+    private final double INCHES_PER_TICK = 1/ 18.064; // TODO: entirely untested!
     private final double maxVelocity = 5676; // TODO: entirely untested! measured in RPM
 
     private Drivetrain() {
@@ -51,13 +51,13 @@ public class Drivetrain {
         leftPID = new PIDController(kP, kI, kD);
         rightPID = new PIDController(kP, kI, kD);
 
-        lEncoder = l_primary.getEncoder();
-        rEncoder = r_primary.getEncoder();
+        // lEncoder = l_primary.getEncoder();
+        // rEncoder = r_primary.getEncoder();
         // leftPID = new PIDController(kP, kI, kD);
-        // l_primary.getEncoder();
-            // .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
-        // r_primary.getEncoder();
-            // .setPositionConversionFactor(INCHES_PER_TICK);
+        // l_primary.getEncoder()
+        //     .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
+        // r_primary.getEncoder()
+        //     .setPositionConversionFactor(INCHES_PER_TICK);
     }
 
     /**
@@ -116,35 +116,36 @@ public class Drivetrain {
      * @param endPower the ending power
      * @author hrl
      */
-    public void driveStraight(double targetDist, double startPower, double endPower) {
+    public void driveStraight(double targetDist, double maxSpeed, double endPower) {
         double targetSpeed;
         
         if (this.initialDistance == 0) {
             this.initialDistance = Math.abs(getLeftPosition());
         }
 
-        double distance = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        double distance = targetDist;
+        // Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
         System.out.println(distance);
 
-        // double pGain = 0.5; // TODO: untested
         double distanceToTarget = distance;
+        System.out.println(distance);
         
-        while (distanceToTarget > distance / 2) {
-            targetSpeed = 0.1 + (0.9 - ((distanceToTarget-distance/2) / (distance / 2)));
-            setSpeed(targetSpeed, targetSpeed);
+        while (distanceToTarget >= distance / 2) {
+            targetSpeed = 0.1 + (1 - ((distanceToTarget-distance/2) / (distance / 2)));
+            setSpeed(maxSpeed * targetSpeed, maxSpeed * targetSpeed);
             distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition()) - this.initialDistance;
-            System.out.println("Distance is: " + distanceToTarget);
-            System.out.println("Left Encoder Position: " + getLeftPosition());
         }
+        
+        System.out.println("Midpoint reached: " + distanceToTarget);
 
-        while (distanceToTarget < distance / 2) {
+        while (distanceToTarget <= distance / 2) {
             targetSpeed = ((distanceToTarget-distance/2)/distance/2);
-            setSpeed(targetSpeed, targetSpeed);
+            setSpeed(maxSpeed * targetSpeed, maxSpeed * targetSpeed);
             distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition()) - this.initialDistance;
-            System.out.println("down the triangle");
+            // System.out.println("Distance is: " + distanceToTarget);
+            // System.out.println("TargetSpeed: " + targetSpeed);
+            // System.out.println("Left Encoder Position: " + getLeftPosition());
         }
-        // double targetSpeed = leftPID.calculate(l_primary.getEncoder().getVelocity(), endPower);
-        // setSpeed(targetSpeed, targetSpeed);
     }
 
     /**

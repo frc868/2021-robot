@@ -23,11 +23,11 @@ public class OI {
     public static void update() {
 
         // GENERAL CONTROLS/CONTROL METHODS
-        // if (driver.isAltMode()) {
-        //     Robot.drivetrain.arcadeDrive(0.4); // driver LY and RX
-        // } else {
-        //     Robot.drivetrain.arcadeDrive(0.4); // TODO: edit method and try different controls like cubing
-        // }
+        if (driver.isAltMode()) {
+            Robot.drivetrain.arcadeDrive(0.05); // driver LY and RX
+        } else {
+            Robot.drivetrain.arcadeDrive(0.05); // TODO: edit method and try different controls like cubing
+        }
         // Robot.turret.manualTurret(); // operator LY
         // // ----------------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ public class OI {
         // driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
         // driver.bX.whileHeld(() -> Robot.intake.setSpeed(0.6));
         // driver.bX.whenReleased(() -> Robot.intake.setSpeed(0)); 
-        driver.bY.whenPressed(() -> Robot.drivetrain.driveStraight(80, 0.1, 0));
+        driver.bY.whenPressed(() -> Robot.drivetrain.driveStraight(2, 0.4, 0));
         driver.bB.whenPressed(() -> Robot.shooter.setSpeed(0));
 
         // // TURRET
