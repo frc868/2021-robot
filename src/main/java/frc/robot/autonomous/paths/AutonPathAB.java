@@ -47,7 +47,7 @@ public class AutonPathAB extends AutonPath {
             @Override
             public void run(){
                 Robot.gyro.reset();
-                Robot.turn.run(AutonMap.AutonPathAB.Angles.ANGLE_B3);
+                // Robot.turn.run(AutonMap.AutonPathAB.Angles.ANGLE_B3);
                 System.out.println("TurnB3");
 
             }

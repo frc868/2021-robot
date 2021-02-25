@@ -46,27 +46,58 @@ public class TurnToAngleGyro {
      * Resets the initial angle to wherever the robot currently is.
      */
     public void reset() {
-        this.initialAngle = Robot.gyro.getAngle();
+        // this.initialAngle = Robot.gyro.getAngle();
+        Robot.gyro.reset();
+        System.out.println(Robot.gyro.getAngle());
     }
 
     /**
      * Turns the robot to the specified angle (in degrees).
      */
-    public void run(double angle) {
-       Robot.gyro.reset();
-       double currentAngle = Robot.gyro.getAngle();
-       //turns the robot to the right
-       if(angle > 0.0 && angle <= 180.0){
-            if(currentAngle < angle){
-                Robot.drivetrain.setSpeed(pid.calculate(currentAngle, angle), -pid.calculate(currentAngle, angle));
-            }
-       }
-       //turns the robot to the left
-       if(angle < 0.0 && angle >= -180.0){
-           if(currentAngle > angle){
-                Robot.drivetrain.setSpeed(-pid.calculate(currentAngle, angle), pid.calculate(currentAngle, angle));
-           }
+    public void run(double angle, double maxSpeed) {
+        double targetSpeed = 0;
+        Robot.gyro.reset();
+        double currentAngle = Robot.gyro.getAngle();
+        System.out.println(currentAngle);
 
-       }
-}
+        while (currentAngle != angle) {
+            // turns the robot to the right
+            if (angle > 0.0 && angle <= 180.0) {
+                while (currentAngle < angle / 2) {
+                    targetSpeed = 0.1 + (currentAngle / (angle / 2));
+                    Robot.drivetrain.setSpeed(maxSpeed * targetSpeed, -maxSpeed * targetSpeed);
+                    currentAngle = Robot.gyro.getAngle();
+                }
+                
+                System.out.println("Midpoint reached: " + currentAngle);
+                // System.out.println();
+        
+                while (currentAngle >= angle / 2) {
+                    targetSpeed = 1 - ((currentAngle-angle/2) / (angle / 2));
+                    Robot.drivetrain.setSpeed(maxSpeed * targetSpeed, -maxSpeed * targetSpeed);
+                    currentAngle = Robot.gyro.getAngle();
+                    System.out.println(currentAngle);
+                }
+            }
+
+            // turns the robot to the left
+            if (angle < 0.0 && angle >= -180.0) {
+                while (currentAngle < angle / 2) {
+                    targetSpeed = 0.1 + (currentAngle / (angle / 2));
+                    Robot.drivetrain.setSpeed(-maxSpeed * targetSpeed, maxSpeed * targetSpeed);
+                    currentAngle = Robot.gyro.getAngle();
+                }
+                
+                System.out.println("Midpoint reached: " + currentAngle);
+                // System.out.println();
+        
+                while (currentAngle >= angle / 2) {
+                    targetSpeed = 1 - ((currentAngle-angle/2) / (angle / 2));
+                    Robot.drivetrain.setSpeed(-maxSpeed * targetSpeed, maxSpeed * targetSpeed);
+                    currentAngle = Robot.gyro.getAngle();
+                    System.out.println(currentAngle);
+                }
+            }
+        }
+    }
 }
