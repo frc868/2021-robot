@@ -14,13 +14,10 @@ public class AutonHelper {
     private SendableChooser<AutonPath> chooser = new SendableChooser<>();
 
     private AutonHelper() {
-        this.addPath("Nothing", new DoNothing());
-        this.addPath("Baseline", new Baseline());
-        this.addPath("Head-On", new HeadOn());
-        this.addPath("Test", new Test());
-        this.addPath("AutonPathAB", new AutonPathAB());
+        
+        this.addPath("Baseling", new Baseline());
 
-        chooser.setDefaultOption("AutonPathAB", new AutonPathAB());
+        chooser.setDefaultOption("Baseline", new Baseline());
     }
 
     /**

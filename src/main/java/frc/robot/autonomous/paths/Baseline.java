@@ -15,8 +15,9 @@ public class Baseline extends AutonPath {
     private enum BaselineState {
         ToBaseline {
             @Override
+            
             public BaselineState nextState() {
-                if (currentDistance < AutonMap.Baseline.DISTANCE) {
+                if (currentDistance < 1000) {
                     return this;
                 }
                 return Done;
@@ -24,8 +25,8 @@ public class Baseline extends AutonPath {
 
             @Override
             public void run() {
-                Robot.drivetrain.driveStraight(AutonMap.Baseline.DISTANCE, AutonMap.Baseline.START_POWER,
-                        AutonMap.Baseline.END_POWER);
+                
+                Robot.turret.setSpeed(0.01);
             }
         },
         Done {

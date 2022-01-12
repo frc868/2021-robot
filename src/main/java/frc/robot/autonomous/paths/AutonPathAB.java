@@ -221,6 +221,7 @@ public class AutonPathAB extends AutonPath {
             }
             @Override
             public void run(){
+                System.out.println("Finished");
 
             }
 

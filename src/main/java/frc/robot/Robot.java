@@ -21,6 +21,9 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 import frc.robot.autonomous.TurnToAngleGyro;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.Joystick;
 
 /** 
  * This class is run automatically, and dictates what functions are run during each of these stages.
@@ -79,6 +82,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         OI.init();
+        
     }
 
     @Override
@@ -87,6 +91,12 @@ public class Robot extends TimedRobot {
 
         OI.update();
         Scheduler.getInstance().run();
+        intake.toggle();
+        intake.setSpeed(0.0001);
+        
+        
+        
+        
     }
 
     @Override
@@ -98,5 +108,6 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
         OI.update();
         Scheduler.getInstance().run();
+       
     }
 }
