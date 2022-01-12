@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -22,16 +24,17 @@ public class Drivetrain {
     private static Drivetrain instance;
     private SpeedControllerGroup leftSpeedControl;
     private SpeedControllerGroup rightSpeedControl;
-    private PIDController leftPID;
+    private CANEncoder lEncoder, rEncoder;
     private double klP = 0.0;
     private double klI = 0.0;
     private double klD = 0.0;
-
     private double initialDistance = 0; // used for driveStraight()
+    private PIDController leftPID, rightPID;
     private double kP = 0;
     private double kI = 0;
     private double kD = 0;
-    private final double INCHES_PER_TICK = 1; // TODO: entirely untested!
+    private final double INCHES_PER_TICK = 1/ 18.064; // TODO: entirely untested!
+    private final double maxVelocity = 5676; // TODO: entirely untested! measured in RPM
 
     private Drivetrain() {
         l_primary = new CANSparkMax(RobotMap.Drivetrain.LEFT_PRIMARY, MotorType.kBrushless);
@@ -41,14 +44,21 @@ public class Drivetrain {
 
         leftSpeedControl = new SpeedControllerGroup(l_primary,l_secondary);
         rightSpeedControl = new SpeedControllerGroup(r_primary, r_secondary);
-        leftPID = new PIDController(klP, klI, klD);
+        // leftPID = new PIDController(klP, klI, klD);
+
         leftSpeedControl.setInverted(RobotMap.Drivetrain.LEFT_IS_INVERTED);
         rightSpeedControl.setInverted(RobotMap.Drivetrain.RIGHT_IS_INVERTED);
+
         leftPID = new PIDController(kP, kI, kD);
-        l_primary.getEncoder()
-            .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
-        r_primary.getEncoder()
-            .setPositionConversionFactor(INCHES_PER_TICK);
+        rightPID = new PIDController(kP, kI, kD);
+
+        // lEncoder = l_primary.getEncoder();
+        // rEncoder = r_primary.getEncoder();
+        // leftPID = new PIDController(kP, kI, kD);
+        // l_primary.getEncoder()
+        //     .setPositionConversionFactor(INCHES_PER_TICK); // set scale for encoder ticks
+        // r_primary.getEncoder()
+        //     .setPositionConversionFactor(INCHES_PER_TICK);
     }
 
     /**
@@ -107,18 +117,32 @@ public class Drivetrain {
      * @param endPower the ending power
      * @author hrl
      */
-    public void driveStraight(double targetDist, double startPower, double endPower) {
+    public void driveStraight(double targetDist, double maxSpeed, double endPower) {
+        double targetSpeed = 0;
+        
         if (this.initialDistance == 0) {
             this.initialDistance = Math.abs(getLeftPosition());
         }
 
-        double pGain = 0.5; // TODO: untested
-        double distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        // double distance = (targetDist / 18.064) / 2;
+        double distance = targetDist;
+        double distanceToTarget = distance;
+  
+        while (distanceToTarget >= distance / 2) {
+            targetSpeed = 0.1 + (1 - ((distanceToTarget-distance/2) / (distance / 2)));
+            setSpeed(maxSpeed * targetSpeed, maxSpeed * targetSpeed);
+            distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition()) - this.initialDistance;
+        }
+        
+        System.out.println("Midpoint reached: " + distanceToTarget);
+        // System.out.println();
 
-        double targetSpeed = pGain * (startPower + ((endPower - startPower) / distanceToTarget));
-        setSpeed(targetSpeed, targetSpeed);
-
-        distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition() - this.initialDistance);
+        while (distanceToTarget < distance / 2) {
+            targetSpeed = distanceToTarget / (distance / 2);
+            setSpeed(maxSpeed * targetSpeed, maxSpeed * targetSpeed);
+            distanceToTarget = Math.abs(targetDist) - Math.abs(getLeftPosition()) - this.initialDistance;
+            System.out.println(distanceToTarget);
+        }
     }
 
     /**
@@ -221,12 +245,5 @@ public class Drivetrain {
     @Override
     public String toString() {
         return "" + getAveragePosition();
-    }
-    public void turnLeft(){
-        Robot.drivetrain.resetEncoderPositions();
-        if(Robot.gyro.getAngle() < 90){
-            double pidOUT = leftPID.calculate(Robot.drivetrain.getCurrentDistance(), 0);
-            Robot.drivetrain.setRightSpeed(pidOUT);
-    }
     }
 }

@@ -14,207 +14,58 @@ public class AutonPathAB extends AutonPath {
         Start{
             @Override
             public PathABState nextState(){
-                return ToB3;
+                return FirstForward;
             }
+            @Override
             public void run(){
-                Robot.drivetrain.setSpeed(0, 0);
+
             }
         },
-        ToB3{
+        FirstForward{
             @Override
             public PathABState nextState(){
-                if(currentDistance < AutonMap.AutonPathAB.Distances.DISTANCE_B3){
-                    return this;
-                }
-                return TurnB3;
+                return FirstTurn;
             }
             @Override
             public void run(){
-                resetCurrentDistance();
-                Robot.drivetrain.driveStraight(AutonMap.AutonPathAB.Distances.DISTANCE_B3, AutonMap.AutonPathAB.START_POWER, AutonMap.AutonPathAB.END_POWER);
+                
             }
+
         },
-        TurnB3{
+        FirstTurn{ // 110 degrees
             @Override
             public PathABState nextState(){
-                if(currentAngle < AutonMap.AutonPathAB.Angles.ANGLE_B3){
-                    return this;
-                }
-                return ToC3;
+                return SecondForward;
             }
             @Override
             public void run(){
-                Robot.gyro.reset();
-                Robot.turn.run(AutonMap.AutonPathAB.Angles.ANGLE_B3);
-
+                
             }
 
         },
-        ToC3{
+        SecondForward{
             @Override
             public PathABState nextState(){
-                return TurnC3;
+                return SecondTurn;
             }
             @Override
             public void run(){
-
+                
             }
 
         },
-        TurnC3{
-            @Override 
-            public PathABState nextState(){
-                return ToD5;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToD5{
+        SecondTurn{
             @Override
             public PathABState nextState(){
-                return TurnD5;
+                return Final;
             }
             @Override
             public void run(){
-
+                
             }
 
         },
-        TurnD5{
-            @Override
-            public PathABState nextState(){
-                return ToE6;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToE6{
-            @Override
-            public PathABState nextState(){
-                return TurnE6;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        TurnE6{
-            @Override
-            public PathABState nextState(){
-                return ToA6;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToA6{
-            @Override
-            public PathABState nextState(){
-                return TurnA6;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        TurnA6{
-            @Override
-            public PathABState nextState(){
-                return ToB7;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToB7{
-            @Override
-            public PathABState nextState(){
-                return TurnB7;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        TurnB7{
-            @Override
-            public PathABState nextState(){
-                return ToB8;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToB8{
-            @Override
-            public PathABState nextState(){
-                return TurnB8;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        TurnB8{
-            @Override
-            public PathABState nextState(){
-                return ToD10;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToD10{
-            @Override
-            public PathABState nextState(){
-                return TurnD10;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        TurnD10{
-            @Override
-            public PathABState nextState(){
-                return ToD11;
-            }
-            @Override
-            public void run(){
-
-            }
-
-        },
-        ToD11{
-            @Override
-            public PathABState nextState(){
-                return Finish;
-            }
-            @Override
-            public void run(){
-
-            }
-        },
-        Finish{
+        Final{
             @Override
             public PathABState nextState(){
                 return this;
@@ -228,10 +79,12 @@ public class AutonPathAB extends AutonPath {
         };
 
 
+
         public abstract PathABState nextState();
         public abstract void run();
+       
         public void stop(){
-
+            Robot.drivetrain.setSpeed(0,0);
         }
         
 

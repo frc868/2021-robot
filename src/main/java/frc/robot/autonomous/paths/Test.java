@@ -39,7 +39,7 @@ public class Test extends AutonPath{
 
             @Override
             public void run(){
-                Robot.drivetrain.turnLeft();
+                // Robot.drivetrain.turnLeft();
             }
 
             @Override

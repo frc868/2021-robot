@@ -46,7 +46,9 @@ public class TurnToAngleGyro {
      * Resets the initial angle to wherever the robot currently is.
      */
     public void reset() {
-        this.initialAngle = Robot.gyro.getAngle();
+        // this.initialAngle = Robot.gyro.getAngle();
+        Robot.gyro.reset();
+        System.out.println(Robot.gyro.getAngle());
     }
 
     /**

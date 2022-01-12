@@ -23,11 +23,11 @@ public class OI {
     public static void update() {
 
         // GENERAL CONTROLS/CONTROL METHODS
-        // if (driver.isAltMode()) {
-        //     Robot.drivetrain.arcadeDrive(0.4); // driver LY and RX
-        // } else {
-        //     Robot.drivetrain.arcadeDrive(1); // TODO: edit method and try different controls like cubing
-        // }
+        if (driver.isAltMode()) {
+            Robot.drivetrain.arcadeDrive(0.5); // driver LY and RX
+        } else {
+            Robot.drivetrain.arcadeDrive(0.5); // TODO: edit method and try different controls like cubing
+        }
         // Robot.turret.manualTurret(); // operator LY
         // // ----------------------------------------------------------------------------------------
 
@@ -50,12 +50,16 @@ public class OI {
         // });
 
         // HOPPER
-        driver.bB.whileHeld(() -> Robot.hopper.reverse(-0.6, -0.8));
-        driver.bB.whenReleased(Robot.hopper::stop);
-        driver.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
-        driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
-        driver.bX.whileHeld(() -> Robot.intake.setSpeed(0.6));
-        driver.bX.whenReleased(() -> Robot.intake.setSpeed(0));
+        // driver.bB.whileHeld(() -> Robot.hopper.reverse(-0.6, -0.8));
+        // driver.bB.whenReleased(Robot.hopper::stop);
+        // driver.bA.whileHeld(() -> Robot.shooter.setSpeed(0.6));
+        // driver.bA.whenReleased(() -> Robot.shooter.setSpeed(0));
+        // driver.bX.whileHeld(() -> Robot.intake.setSpeed(0.6));
+        // driver.bX.whenReleased(() -> Robot.intake.setSpeed(0)); 
+        // driver.bY.whenPressed(() -> Robot.drivetrain.driveStraight(3.3259/2, 0.4, 0));
+        driver.bY.whenPressed(() -> Robot.turn.run(90, 0.4));
+        driver.bB.whenPressed(() -> Robot.shooter.setSpeed(0));
+        // driver.bX.whenPressed(() -> Robot.turn.reset());
 
         // // TURRET
         // // TODO: check if we want this back in
